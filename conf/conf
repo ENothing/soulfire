@@ -1,7 +1,7 @@
 RUN_MODE = debug
 
 [app]
-JWT_SECRET = 123456789
+JWT_SECRET = LoM3KjxSziTclmdPe0gkNYJFV7ar2G8A
 
 [server]
 HTTP_PORT = 8080
