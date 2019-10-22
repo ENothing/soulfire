@@ -1,0 +1,20 @@
+RUN_MODE = debug
+
+[app]
+JWT_SECRET = 123456789
+
+[server]
+HTTP_PORT = 8080
+READ_TIMEOUT = 60
+WRITE_TIMEOUT = 60
+
+[mysql]
+HOST = 127.0.0.1
+PORT = 3306
+DATABASE = gin-init
+USER = root
+PASSWORD = root
+
+[redis]
+
+[mongodb]
