@@ -2,14 +2,17 @@ package utils
 
 import (
 	"crypto/md5"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
 )
 
 /**
 创建文件并接着写入
- */
-func OpenFile(filepath ,filename string) *os.File {
+*/
+func OpenFile(filepath, filename string) *os.File {
 
 	_, err := os.Stat(filepath)
 
@@ -30,7 +33,6 @@ func OpenFile(filepath ,filename string) *os.File {
 
 }
 
-
 /**
 创建文件夹
 */
@@ -44,8 +46,8 @@ func Mkdir(filepath string) {
 
 /**
 md5加密
- */
-func Md5(password string)(md5str string)  {
+*/
+func Md5(password string) (md5str string) {
 
 	data := []byte(password)
 	has := md5.Sum(data)
@@ -53,3 +55,34 @@ func Md5(password string)(md5str string)  {
 
 }
 
+func HttpGet(request_url string) (map[string]string){
+
+	resp, err :=   http.Get(request_url)
+
+	if err != nil {
+		// handle error
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		// handle error
+		panic(err)
+	}
+
+	bodyMap := make(map[string]string)
+
+	err = json.Unmarshal(body,&bodyMap)
+
+	if err != nil {
+
+		panic(err)
+
+	}
+
+
+	return bodyMap
+}

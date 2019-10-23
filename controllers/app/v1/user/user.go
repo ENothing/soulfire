@@ -3,20 +3,38 @@ package user
 import (
 	"gin-init/pkg/rsp"
 	jwt "gin-init/pkg/token"
+	"gin-init/pkg/wechat"
 	"github.com/gin-gonic/gin"
 )
 
-func Login(c *gin.Context)  {
+func Login(c *gin.Context) {
 
 
-	 token,err := jwt.Encode()
 
-	if err != nil {
+	 data := wechat.Code2Session("123")
 
-		rsp.JsonResonse(c,rsp.GenerateTokenErr,nil)
+	if data["errcode"] == "0" {
+
+		userToken := jwt.UserToken{
+			2,
+			"test",
+			"123",
+			"321",
+		}
+
+		token, err := jwt.Encode(userToken)
+
+		if err != nil {
+
+			rsp.JsonResonse(c, rsp.GenerateTokenErr, nil)
+
+		}
+
+		rsp.JsonResonse(c, rsp.OK, token)
+	}else{
+
+		rsp.JsonResonse(c, rsp.LoginFailed, data)
 
 	}
 
-	rsp.JsonResonse(c,rsp.OK,token)
 }
-

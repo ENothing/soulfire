@@ -8,7 +8,10 @@ type Errno struct {
 var (
 	OK				= &Errno{0,"OK"}
 	DatabaseErr		= &Errno{10201,"Database Error"}
-	GenerateTokenErr				= &Errno{10202,"OK"}
+	GenerateTokenErr				= &Errno{10202,"Generare Token Error"}
+	InvalidToken				= &Errno{10203,"Invalid token"}
+
+	LoginFailed				= &Errno{10301,"登录失败"}
 
 )
 

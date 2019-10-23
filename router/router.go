@@ -2,6 +2,7 @@ package router
 
 import (
 	"gin-init/controllers/app/v1/user"
+	"gin-init/router/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -9,6 +10,7 @@ import (
 func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 	g.Use(gin.Recovery())
+	g.Use(middleware.Options)
 	g.Use(mw...)
 
 	g.NoRoute(func(context *gin.Context) {
@@ -18,11 +20,15 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	app := g.Group("app/v1/")
 	{
 
-		u := app.Group("user/")
+		mu := app.Group("user/")
 		{
-			u.POST("login",user.Login)
+			mu.POST("login",user.Login)
 		}
 
+		u := app.Group("user/").Use(middleware.Verify())
+		{
+			u.GET("")
+		}
 
 	}
 
