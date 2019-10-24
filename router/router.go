@@ -1,6 +1,7 @@
 package router
 
 import (
+	"gin-init/controllers/app/v1/activity"
 	"gin-init/controllers/app/v1/user"
 	"gin-init/router/middleware"
 	"github.com/gin-gonic/gin"
@@ -17,18 +18,27 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		context.JSON(http.StatusNotFound, "接口路由不存在~")
 	})
 
-	app := g.Group("app/v1/")
+	app := g.Group("app/v1")
 	{
 
-		mu := app.Group("user/")
+		u := app.Group("user")
 		{
-			mu.POST("login",user.Login)
+			u.POST("login",user.Login)
 		}
 
-		u := app.Group("user/").Use(middleware.Verify())
+		mu := app.Group("user").Use(middleware.Verify())
 		{
-			u.GET("")
+			mu.GET("")
 		}
+
+
+		a := app.Group("activity")
+		{
+			a.GET("index",activity.Index)
+
+		}
+
+
 
 	}
 

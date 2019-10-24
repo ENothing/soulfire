@@ -11,12 +11,12 @@ func Login(c *gin.Context) {
 
 
 
-	 data := wechat.Code2Session("123")
+	data := wechat.Code2Session("123")
 
 	if data["errcode"] == "0" {
 
 		userToken := jwt.UserToken{
-			2,
+			1,
 			"test",
 			"123",
 			"321",
@@ -28,9 +28,12 @@ func Login(c *gin.Context) {
 
 			rsp.JsonResonse(c, rsp.GenerateTokenErr, nil)
 
+		}else{
+
+			rsp.JsonResonse(c, rsp.OK, token)
+
 		}
 
-		rsp.JsonResonse(c, rsp.OK, token)
 	}else{
 
 		rsp.JsonResonse(c, rsp.LoginFailed, data)
