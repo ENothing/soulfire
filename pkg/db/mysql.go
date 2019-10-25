@@ -2,8 +2,8 @@ package db
 
 import (
 	"fmt"
-	"gin-init/pkg/config"
-	"gin-init/pkg/logging"
+	"soulfire/pkg/config"
+	"soulfire/pkg/logging"
 	"github.com/jinzhu/gorm"
 	_"github.com/go-sql-driver/mysql"
 )

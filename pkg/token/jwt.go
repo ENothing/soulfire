@@ -1,8 +1,8 @@
 package jwt
 
 import (
-	"gin-init/pkg/config"
-	"gin-init/pkg/logging"
+	"soulfire/pkg/config"
+	"soulfire/pkg/logging"
 	"github.com/dgrijalva/jwt-go"
 	"strconv"
 	"time"

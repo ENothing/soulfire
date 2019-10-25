@@ -1,10 +1,10 @@
 package main
 
 import (
-	"gin-init/pkg/config"
-	"gin-init/pkg/db"
-	"gin-init/pkg/logging"
-	"gin-init/router"
+	"soulfire/pkg/config"
+	"soulfire/pkg/db"
+	"soulfire/pkg/logging"
+	"soulfire/router"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"

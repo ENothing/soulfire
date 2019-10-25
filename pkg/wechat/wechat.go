@@ -1,8 +1,8 @@
 package wechat
 
 import (
-	"gin-init/pkg/config"
-	"gin-init/utils"
+	"soulfire/pkg/config"
+	"soulfire/utils"
 )
 
 var (

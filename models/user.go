@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	"gin-init/pkg/db"
+	"soulfire/pkg/db"
 	"time"
 )
 

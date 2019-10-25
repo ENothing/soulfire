@@ -1,7 +1,7 @@
 package logging
 
 import (
-	"gin-init/utils"
+	"soulfire/utils"
 	"log"
 	"path/filepath"
 	"runtime"

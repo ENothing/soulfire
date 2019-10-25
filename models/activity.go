@@ -1,7 +1,7 @@
 package models
 
 import (
-	"gin-init/pkg/db"
+	"soulfire/pkg/db"
 	"math"
 	"time"
 )

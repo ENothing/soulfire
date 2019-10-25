@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"fmt"
-	"gin-init/pkg/rsp"
-	jwt "gin-init/pkg/token"
+	"soulfire/pkg/rsp"
+	jwt "soulfire/pkg/token"
 	"github.com/gin-gonic/gin"
 	"strings"
 )

@@ -1,9 +1,9 @@
 package router
 
 import (
-	"gin-init/controllers/app/v1/activity"
-	"gin-init/controllers/app/v1/user"
-	"gin-init/router/middleware"
+	"soulfire/controllers/app/v1/activity"
+	"soulfire/controllers/app/v1/user"
+	"soulfire/router/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

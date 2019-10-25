@@ -1,9 +1,9 @@
 package user
 
 import (
-	"gin-init/pkg/rsp"
-	jwt "gin-init/pkg/token"
-	"gin-init/pkg/wechat"
+	"soulfire/pkg/rsp"
+	jwt "soulfire/pkg/token"
+	"soulfire/pkg/wechat"
 	"github.com/gin-gonic/gin"
 )
 

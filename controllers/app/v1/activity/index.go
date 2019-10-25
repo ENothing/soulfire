@@ -1,8 +1,8 @@
 package activity
 
 import (
-	"gin-init/models"
-	"gin-init/pkg/rsp"
+	"soulfire/models"
+	"soulfire/pkg/rsp"
 	"github.com/gin-gonic/gin"
 )
 
