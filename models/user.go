@@ -21,6 +21,10 @@ type User struct {
 	DeletedAt *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
 }
 
+func (User) TableName() string {
+	return "users"
+}
+
 func (u *User)GetUserByOpenid(openid string)  {
 
 	res := db.DB.Self.Where("openid = ?",openid).First(&u)

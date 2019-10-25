@@ -27,6 +27,9 @@ var (
 	//4活动
 	BannersNotExits		= &Errno{10401,"活动banner不存在"}
 	ActivityCateNotExits		= &Errno{10401,"活动分类不存在"}
+	VideoNotExits		= &Errno{10401,"活动banner-video不存在"}
+	ActivityListNotExits		= &Errno{10401,"活动不存在"}
+	ActivityNotExits		= &Errno{10401,"活动不存在"}
 
 )
 

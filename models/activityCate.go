@@ -9,6 +9,11 @@ type ActivityCate struct {
 	Name string `json:"name" gorm:"column:name;not null"`
 }
 
+func (ActivityCate) TableName() string {
+	return "article_cates"
+}
+
+
 func GetActivityCateLimitNum(num int64) ([]*ActivityCate,error) {
 
 	activityCates := make([]*ActivityCate,0)

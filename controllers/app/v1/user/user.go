@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Login(c *gin.Context) {
+func Login(ctx *gin.Context) {
 
 
 
@@ -26,17 +26,17 @@ func Login(c *gin.Context) {
 
 		if err != nil {
 
-			rsp.JsonResonse(c, rsp.GenerateTokenErr, nil)
+			rsp.JsonResonse(ctx, rsp.GenerateTokenErr, nil)
 
 		}else{
 
-			rsp.JsonResonse(c, rsp.OK, token)
+			rsp.JsonResonse(ctx, rsp.OK, token)
 
 		}
 
 	}else{
 
-		rsp.JsonResonse(c, rsp.LoginFailed, data)
+		rsp.JsonResonse(ctx, rsp.LoginFailed, data)
 
 	}
 

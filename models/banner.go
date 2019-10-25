@@ -15,7 +15,12 @@ type Banner struct {
 	DeletedAt *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
 }
 
-func GetBannerByCate(cateId int64) ([]*Banner,error) {
+func (Banner) TableName() string {
+	return "banners"
+}
+
+
+func GetBannersByCate(cateId int64) ([]*Banner,error) {
 
 	banners := make([]*Banner,0)
 
@@ -23,6 +28,15 @@ func GetBannerByCate(cateId int64) ([]*Banner,error) {
 
 	return banners,res.Error
 
+}
+
+func GetBannerByCate(cateId int64)(*Banner,error){
+
+	banner := &Banner{}
+
+	res := db.DB.Self.Where("cate_id = ?",cateId).First(&banner)
+
+	return banner,res.Error
 }
 
 

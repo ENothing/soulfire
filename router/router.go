@@ -35,6 +35,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		a := app.Group("activity")
 		{
 			a.GET("index",activity.Index)
+			a.GET("list",activity.List)
+			a.GET("detail/:id",activity.Detail)
 
 		}
 
