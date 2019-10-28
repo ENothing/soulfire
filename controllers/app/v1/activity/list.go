@@ -17,10 +17,10 @@ func List(ctx *gin.Context)  {
 
 	data := make(map[string]interface{})
 
-	activities,total,lastPage,err := models.Paginate(page,pageSize,sort,cateId,title)
+	activities,total,lastPage,err := models.ActivityPaginate(page,pageSize,sort,cateId,title)
 
 	if err != nil {
-		rsp.JsonResonse(ctx,rsp.ActivityListNotExits,nil)
+		rsp.JsonResonse(ctx,rsp.ActivityListNotExits,nil,"")
 		return
 	}
 
@@ -28,6 +28,19 @@ func List(ctx *gin.Context)  {
 	data["last_page"] = lastPage
 	data["activities"] = activities
 
-	rsp.JsonResonse(ctx,rsp.OK,data)
+	rsp.JsonResonse(ctx,rsp.OK,data,"")
+
+}
+
+func ActivityCates(ctx *gin.Context)  {
+
+	activityCates,err := models.GetActivityCateLimitNum(-1)
+
+	if err != nil {
+		rsp.JsonResonse(ctx,rsp.ActivityCateNotExits,nil,"")
+		return
+	}
+
+	rsp.JsonResonse(ctx,rsp.OK,activityCates,"")
 
 }

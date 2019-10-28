@@ -83,6 +83,5 @@ func HttpGet(request_url string) (map[string]string){
 
 	}
 
-
 	return bodyMap
 }

@@ -3,7 +3,6 @@ package user
 import (
 	"soulfire/pkg/rsp"
 	jwt "soulfire/pkg/token"
-	"soulfire/pkg/wechat"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,33 +10,33 @@ func Login(ctx *gin.Context) {
 
 
 
-	data := wechat.Code2Session("123")
+	//data := wechat.Code2Session("123")
 
-	if data["errcode"] == "0" {
+	//if data["errcode"] == "0" {
 
-		userToken := jwt.UserToken{
-			1,
-			"test",
-			"123",
-			"321",
-		}
+	userToken := jwt.UserToken{
+		1,
+		"test",
+		"123",
+		"321",
+	}
 
-		token, err := jwt.Encode(userToken)
+	token, err := jwt.Encode(userToken)
 
-		if err != nil {
+	if err != nil {
 
-			rsp.JsonResonse(ctx, rsp.GenerateTokenErr, nil)
-
-		}else{
-
-			rsp.JsonResonse(ctx, rsp.OK, token)
-
-		}
+		rsp.JsonResonse(ctx, rsp.GenerateTokenErr, nil,"")
 
 	}else{
 
-		rsp.JsonResonse(ctx, rsp.LoginFailed, data)
+		rsp.JsonResonse(ctx, rsp.OK, token,"")
 
 	}
+
+	//}else{
+	//
+	//	rsp.JsonResonse(ctx, rsp.LoginFailed, data)
+	//
+	//}
 
 }

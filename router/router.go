@@ -25,7 +25,6 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		{
 			u.POST("login",user.Login)
 		}
-
 		mu := app.Group("user").Use(middleware.Verify())
 		{
 			mu.GET("")
@@ -37,11 +36,15 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			a.GET("index",activity.Index)
 			a.GET("list",activity.List)
 			a.GET("detail/:id",activity.Detail)
+			a.GET("cates",activity.ActivityCates)
 
 		}
+		ma := app.Group("activity").Use(middleware.Verify())
+		{
+			ma.GET("like/:id",activity.Like)
+			ma.POST("enter",activity.Enter)
 
-
-
+		}
 	}
 
 

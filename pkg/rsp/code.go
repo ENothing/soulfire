@@ -26,10 +26,11 @@ var (
 
 	//4活动
 	BannersNotExits		= &Errno{10401,"活动banner不存在"}
-	ActivityCateNotExits		= &Errno{10401,"活动分类不存在"}
-	VideoNotExits		= &Errno{10401,"活动banner-video不存在"}
-	ActivityListNotExits		= &Errno{10401,"活动不存在"}
-	ActivityNotExits		= &Errno{10401,"活动不存在"}
+	ActivityCateNotExits		= &Errno{10402,"活动分类不存在"}
+	VideoNotExits		= &Errno{10403,"活动banner-video不存在"}
+	ActivityListNotExits		= &Errno{10404,"活动不存在"}
+	ActivityNotExits		= &Errno{10405,"活动不存在"}
+	EnterActivityRequired		= &Errno{10406,"信息填写不完整"}
 
 )
 

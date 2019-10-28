@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"soulfire/pkg/rsp"
 	jwt "soulfire/pkg/token"
 	"github.com/gin-gonic/gin"
@@ -10,28 +9,29 @@ import (
 
 func Verify() gin.HandlerFunc {
 
-	return func(context *gin.Context) {
+	return func(ctx *gin.Context) {
 
-		token := context.Request.Header.Get("Authorization")
+		token := ctx.Request.Header.Get("Authorization")
 
 		if len(token) == 0 {
 
-			rsp.JsonResonse(context,rsp.InvalidToken,nil)
-
+			rsp.JsonResonse(ctx,rsp.InvalidToken,nil,"")
+			return
 		}
 
 		token = strings.Fields(token)[1]
-		fmt.Println(token)
 
-		_, err := jwt.Parse(token)
+		userToken, err := jwt.Parse(token)
 
 		if  err != nil{
 
-			rsp.JsonResonse(context,rsp.InvalidToken,nil)
-
+			rsp.JsonResonse(ctx,rsp.InvalidToken,nil,"")
+			return
 		}
 
-		context.Next()
+		ctx.Set("user_id",userToken.Id)
+
+		ctx.Next()
 
 	}
 

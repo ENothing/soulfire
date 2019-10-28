@@ -12,7 +12,14 @@ type Response struct {
 }
 
 
-func JsonResonse(c *gin.Context,rsp *Errno,data interface{})  {
+func JsonResonse(c *gin.Context,rsp *Errno,data interface{},message string)  {
+
+	if message != "" {
+
+		rsp.Message = message
+
+	}
+
 	c.JSON(http.StatusOK,Response{
 		Code:rsp.Code,
 		Message:rsp.Message,

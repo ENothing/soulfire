@@ -12,6 +12,7 @@ type User struct {
 	ParentId int64 `json:"parent_id" gorm:"column:parent_id;not null"`
 	Openid string `json:"openid" gorm:"column:openid;not null"`
 	Nickname string `json:"nickname" gorm:"column:nickname;not null"`
+	Gender int64 `json:"gender" gorm:"column:gender;not null"`
 	HeadUrl string `json:"head_url" gorm:"column:head_url;not null"`
 	Mobile string `json:"mobile" gorm:"column:mobile;not null"`
 	Email string `json:"email" gorm:"column:email;not null"`
