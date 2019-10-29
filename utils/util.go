@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	uuid "github.com/satori/go.uuid"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -84,4 +85,18 @@ func HttpGet(request_url string) (map[string]string){
 	}
 
 	return bodyMap
+}
+
+func Uid(prefix string,num int64) string  {
+
+
+
+	uid,_ := uuid.NewV4()
+
+
+	err := uid.UnmarshalText(uid.Bytes())
+
+	fmt.Printf("Successfully parsed: %s\n", err)
+	fmt.Printf("Successfully parsed: %s\n", uid)
+	return "123"
 }
