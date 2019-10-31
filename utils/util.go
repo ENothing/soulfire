@@ -56,9 +56,9 @@ func Md5(password string) (md5str string) {
 
 }
 
-func HttpGet(request_url string) (map[string]string){
+func HttpGet(request_url string) (map[string]string) {
 
-	resp, err :=   http.Get(request_url)
+	resp, err := http.Get(request_url)
 
 	if err != nil {
 		// handle error
@@ -76,7 +76,7 @@ func HttpGet(request_url string) (map[string]string){
 
 	bodyMap := make(map[string]string)
 
-	err = json.Unmarshal(body,&bodyMap)
+	err = json.Unmarshal(body, &bodyMap)
 
 	if err != nil {
 
@@ -87,16 +87,11 @@ func HttpGet(request_url string) (map[string]string){
 	return bodyMap
 }
 
-func Uid(prefix string,num int64) string  {
+func Uid(prefix string) string {
 
 
+	uid := uuid.Must(uuid.NewV4())
 
-	uid,_ := uuid.NewV4()
+	return prefix + uid.String()
 
-
-	err := uid.UnmarshalText(uid.Bytes())
-
-	fmt.Printf("Successfully parsed: %s\n", err)
-	fmt.Printf("Successfully parsed: %s\n", uid)
-	return "123"
 }
