@@ -11,8 +11,11 @@ type Activity struct {
 	Model
 	Title        string     `json:"title" gorm:"column:title;not null"`
 	Thumb        string     `json:"thumb" gorm:"column:thumb;not null"`
-	CateId       int64     `json:"cate_id" gorm:"column:cate_id;not null"`
+	CateId       int64      `json:"cate_id" gorm:"column:cate_id;not null"`
 	Content      string     `json:"content" gorm:"column:content;not null"`
+	Kind         int64      `json:"kind" gorm:"column:kind;not null"`
+	CurPrice     float64    `json:"cur_price" gorm:"column:cur_price;not null"`
+	OriPrice     float64    `json:"ori_price" gorm:"column:ori_price;not null"`
 	StartAt      string     `json:"start_at" gorm:"column:start_at;not null"`
 	EndAt        string     `json:"end_at" gorm:"column:end_at;not null"`
 	StartEnterAt string     `json:"start_enter_at" gorm:"column:start_enter_at;not null"`

@@ -34,7 +34,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		a := app.Group("activity")
 		{
 			a.GET("index",activity.Index)
-			a.GET("list",activity.List)
+			a.GET("list",activity.ActivityList)
 			a.GET("detail/:id",activity.Detail)
 			a.GET("cates",activity.ActivityCates)
 
@@ -43,6 +43,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		{
 			ma.GET("like/:id",activity.Like)
 			ma.POST("enter",activity.Enter)
+			ma.GET("order/:id",activity.OrderDetail)
 
 		}
 	}

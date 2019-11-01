@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func List(ctx *gin.Context)  {
+func ActivityList(ctx *gin.Context)  {
 
 	cateId,_ :=strconv.ParseInt(ctx.DefaultQuery("cate_id","0"),10,64)
 	title := ctx.Query("title")

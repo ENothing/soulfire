@@ -28,3 +28,19 @@ func Detail(ctx *gin.Context) {
 	rsp.JsonResonse(ctx, rsp.OK, activity,"")
 
 }
+
+func OrderDetail(ctx *gin.Context)  {
+
+	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
+
+	activityOrder,err := models.GetActivityOrderById(id)
+
+	if err != nil {
+
+		rsp.JsonResonse(ctx, rsp.ActivityOrderNotExits, nil,"")
+		return
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, activityOrder,"")
+
+}

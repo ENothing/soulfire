@@ -30,7 +30,9 @@ var (
 	VideoNotExits		= &Errno{10403,"活动banner-video不存在"}
 	ActivityListNotExits		= &Errno{10404,"活动不存在"}
 	ActivityNotExits		= &Errno{10405,"活动不存在"}
-	EnterActivityRequired		= &Errno{10406,"信息填写不完整"}
+	EnterActivityRequired		= &Errno{10406,"报名信息填写不完整"}
+	CreateActivityOrderFaild		= &Errno{10407,"活动订单创建失败"}
+	ActivityOrderNotExits		= &Errno{10408,"活动订单不存在"}
 
 )
 

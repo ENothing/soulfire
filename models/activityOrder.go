@@ -8,22 +8,23 @@ import (
 
 type ActivityOrder struct {
 	Model
-	UserId        int64     `json:"user_id" gorm:"column:user_id;not null"`
-	ActivityId    int64     `json:"activity_id" gorm:"column:activity_id;not null"`
-	RefundId      int64     `json:"refund_id" gorm:"column:refund_id;not null"`
+	UserId        int64      `json:"user_id" gorm:"column:user_id;not null"`
+	ActivityId    int64      `json:"activity_id" gorm:"column:activity_id;not null"`
+	RefundId      int64      `json:"refund_id" gorm:"column:refund_id;not null"`
 	OrderN        string     `json:"order_n" gorm:"column:order_n;not null"`
 	Name          string     `json:"name" gorm:"column:name;not null"`
-	Sex           int64     `json:"sex" gorm:"column:sex;not null"`
+	Sex           int64      `json:"sex" gorm:"column:sex;not null"`
 	Mobile        string     `json:"mobile" gorm:"column:mobile;not null"`
-	UnitPrice     string     `json:"unit_price" gorm:"column:unit_price;not null"`
-	PersonNum     int64     `json:"person_num" gorm:"column:person_num;not null"`
-	TotalPrice    string     `json:"total_price" gorm:"column:total_price;not null"`
-	RealPrice     string     `json:"real_price" gorm:"column:real_price;not null"`
-	DiscountPrice string  `gorm:";column:discount_price" json:"discount_price"`
-	Status        int64  `gorm:";column:status" json:"status"`
+	UnitPrice     float64    `json:"unit_price" gorm:"column:unit_price;not null"`
+	PersonNum     int64      `json:"person_num" gorm:"column:person_num;not null"`
+	TotalPrice    float64    `json:"total_price" gorm:"column:total_price;not null"`
+	RealPrice     float64    `json:"real_price" gorm:"column:real_price;not null"`
+	DiscountPrice float64    `gorm:";column:discount_price" json:"discount_price"`
+	Status        int64      `gorm:";column:status" json:"status"`
 	CreatedAt     time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt     time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt     *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	Activity      Activity   `json:"activity" gorm:"foreignkey:ActivityId"`
 }
 
 func (ActivityOrder) TableName() string {
@@ -33,6 +34,17 @@ func (ActivityOrder) TableName() string {
 func (ao *ActivityOrder) Create() error {
 
 	return db.DB.Self.Create(&ao).Error
+
+}
+
+func GetActivityOrderById(id int64) (*ActivityOrder, error) {
+
+	activityOrder := &ActivityOrder{}
+
+	db.DB.Self.Where("id = ?", id).First(&activityOrder)
+	res := db.DB.Self.Model(&activityOrder).Select([]string{"title,thumb,kind"}).Related(&activityOrder.Activity)
+
+	return activityOrder, res.Error
 
 }
 

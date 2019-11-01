@@ -1,0 +1,5 @@
+package activity
+
+func Pay()  {
+	
+}

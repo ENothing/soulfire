@@ -16,6 +16,7 @@ func Verify() gin.HandlerFunc {
 		if len(token) == 0 {
 
 			rsp.JsonResonse(ctx,rsp.InvalidToken,nil,"")
+			ctx.Abort()
 			return
 		}
 
@@ -26,7 +27,9 @@ func Verify() gin.HandlerFunc {
 		if  err != nil{
 
 			rsp.JsonResonse(ctx,rsp.InvalidToken,nil,"")
+			ctx.Abort()
 			return
+
 		}
 
 		ctx.Set("user_id",userToken.Id)
