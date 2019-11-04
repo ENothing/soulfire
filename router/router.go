@@ -44,6 +44,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			ma.GET("like/:id",activity.Like)
 			ma.POST("enter",activity.Enter)
 			ma.GET("order/:id",activity.OrderDetail)
+			ma.POST("pay/:id",activity.Pay)
 
 		}
 	}
