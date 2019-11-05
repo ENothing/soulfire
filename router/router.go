@@ -2,6 +2,7 @@ package router
 
 import (
 	"soulfire/controllers/app/v1/activity"
+	"soulfire/controllers/app/v1/bbs"
 	"soulfire/controllers/app/v1/user"
 	"soulfire/router/middleware"
 	"github.com/gin-gonic/gin"
@@ -44,8 +45,18 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			ma.GET("like/:id",activity.Like)
 			ma.POST("enter",activity.Enter)
 			ma.GET("order/:id",activity.OrderDetail)
-			ma.POST("pay/:id",activity.Pay)
+			ma.POST("pay",activity.Pay)
+			ma.GET("order_list",activity.ActivityOrderList)
 
+		}
+
+		b := app.Group("bbs")
+		{
+			b.GET("list",bbs.ArticleList)
+		}
+		mb := app.Group("bbs").Use(middleware.Verify())
+		{
+			mb.GET("like/:id",activity.Like)
 		}
 	}
 

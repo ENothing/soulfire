@@ -31,9 +31,11 @@ func Detail(ctx *gin.Context) {
 
 func OrderDetail(ctx *gin.Context)  {
 
+	userId := ctx.MustGet("user_id").(int64)
+
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
-	activityOrder,err := models.GetActivityOrderById(id)
+	activityOrder,err := models.GetActivityOrderById(id,userId)
 
 	if err != nil {
 

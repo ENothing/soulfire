@@ -37,18 +37,18 @@ func (ao *ActivityOrder) Create() error {
 
 }
 
-func GetActivityOrderById(id int64) (*ActivityOrder, error) {
+func GetActivityOrderById(id,userId int64) (*ActivityOrder, error) {
 
 	activityOrder := &ActivityOrder{}
 
-	db.DB.Self.Where("id = ?", id).First(&activityOrder)
+	db.DB.Self.Where("id = ?", id).Where("user_id = ?",userId).First(&activityOrder)
 	res := db.DB.Self.Model(&activityOrder).Select([]string{"title,thumb,kind"}).Related(&activityOrder.Activity)
 
 	return activityOrder, res.Error
 
 }
 
-func ActivityOrderPaginate(page int64, pageSize int64, sort int64, cateId int64, title string) (activity []*Activity, total int64, lastPage int64, err error) {
+func ActivityOrderPaginate(page int64, pageSize int64, userId int64, status string) (activity []*Activity, total int64, lastPage int64, err error) {
 
 	activity = make([]*Activity, 0)
 
@@ -56,20 +56,23 @@ func ActivityOrderPaginate(page int64, pageSize int64, sort int64, cateId int64,
 
 	res := db.DB.Self
 
-	if cateId != 0 {
-		res = res.Where("cate_id = ?", cateId)
-	}
-	if title != "" {
-		res = res.Where("title LIKE ?", "%"+title+"%")
+	res = res.Where("user_id = ?", userId)
+
+	if status != "" {
+
+		if status == "4" {//退款退货
+
+			res = res.Where("refund_id != ?", 0)
+
+		}else{
+
+			res = res.Where("status = ?", status)
+
+		}
+
 	}
 
-	if sort == 0 {
-		res = res.Order("created_at desc")
-	} else {
-		res = res.Order("created_at asc")
-	}
-
-	res = res.Limit(pageSize).Offset(offset).Find(&activity)
+	res = res.Order("created_at desc").Limit(pageSize).Offset(offset).Find(&activity)
 	db.DB.Self.Model(&activity).Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
