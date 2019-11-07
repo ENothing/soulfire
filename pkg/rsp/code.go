@@ -34,6 +34,10 @@ var (
 	CreateActivityOrderFaild		= &Errno{10407,"活动订单创建失败"}
 	ActivityOrderNotExits		= &Errno{10408,"活动订单不存在"}
 
+
+	//5bbs
+	ArticleNotExits		= &Errno{10501,"文章不存在"}
+
 )
 
 

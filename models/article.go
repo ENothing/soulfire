@@ -9,35 +9,29 @@ import (
 
 type Article struct {
 	Model
-	Title        string     `json:"title" gorm:"column:title;not null"`
-	Thumb        string     `json:"thumb" gorm:"column:thumb;not null"`
-	CateId       int64      `json:"cate_id" gorm:"column:cate_id;not null"`
-	Content      string     `json:"content" gorm:"column:content;not null"`
-	Kind         int64      `json:"kind" gorm:"column:kind;not null"`
-	CurPrice     float64    `json:"cur_price" gorm:"column:cur_price;not null"`
-	OriPrice     float64    `json:"ori_price" gorm:"column:ori_price;not null"`
-	StartAt      string     `json:"start_at" gorm:"column:start_at;not null"`
-	EndAt        string     `json:"end_at" gorm:"column:end_at;not null"`
-	StartEnterAt string     `json:"start_enter_at" gorm:"column:start_enter_at;not null"`
-	EndEnterAt   string     `json:"end_enter_at" gorm:"column:end_enter_at;not null"`
-	PersonLimit  string     `json:"person_limit" gorm:"column:person_limit;not null"`
-	View         string     `json:"view" gorm:"column:view;not null"`
-	Likes        string     `json:"likes" gorm:"column:likes;not null"`
-	CreatedAt    time.Time  `gorm:";column:created_at" json:"created_at"`
-	UpdatedAt    time.Time  `gorm:";column:updated_at" json:"updated_at"`
-	DeletedAt    *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	UserId    string     `json:"user_id" gorm:"column:user_id;not null"`
+	Thumb     string     `json:"thumb" gorm:"column:thumb;not null"`
+	Title     int64      `json:"title" gorm:"column:title;not null"`
+	Content   string     `json:"content" gorm:"column:content;not null"`
+	Likes     string     `json:"likes" gorm:"column:likes;not null"`
+	View      string     `json:"view" gorm:"column:view;not null"`
+	CateId    string     `json:"cate_id" gorm:"column:cate_id;not null"`
+	IsPublish string     `json:"is_publish" gorm:"column:is_publish;not null"`
+	CreatedAt time.Time  `gorm:";column:created_at" json:"created_at"`
+	UpdatedAt time.Time  `gorm:";column:updated_at" json:"updated_at"`
+	DeletedAt *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
 }
 
-func (Activity) TableName() string {
-	return "activities"
+func (Article) TableName() string {
+	return "articles"
 }
 
-func ActivityViewAddOne(activityId int64) error {
+func ArticleViewAddOne(articleId int64) error {
 
-	activity := &Activity{}
+	article := &Article{}
 
-	res := db.DB.Self.Model(&activity).
-		Where("id = ?", activityId).
+	res := db.DB.Self.Model(&article).
+		Where("id = ?", articleId).
 		Where("view > 0").
 		UpdateColumn("view", gorm.Expr("view + ?", 1))
 
@@ -45,11 +39,11 @@ func ActivityViewAddOne(activityId int64) error {
 
 }
 
-func ActivityLikeAddOne(activityId int64) error {
+func ArticleLikeAddOne(activityId int64) error {
 
-	activity := &Activity{}
+	article := &Article{}
 
-	res := db.DB.Self.Model(&activity).
+	res := db.DB.Self.Model(&article).
 		Where("id = ?", activityId).
 		Where("likes > 0").
 		UpdateColumn("likes", gorm.Expr("likes + ?", 1))
@@ -58,11 +52,11 @@ func ActivityLikeAddOne(activityId int64) error {
 
 }
 
-func ActivityLikeCutOne(activityId int64) error {
+func ArticleLikeCutOne(activityId int64) error {
 
-	activity := &Activity{}
+	article := &Article{}
 
-	res := db.DB.Self.Model(&activity).
+	res := db.DB.Self.Model(&article).
 		Where("id = ?", activityId).
 		Where("likes > 0").
 		UpdateColumn("likes", gorm.Expr("likes - ?", 1))
@@ -71,19 +65,19 @@ func ActivityLikeCutOne(activityId int64) error {
 
 }
 
-func GetActivityById(id int64) (*Activity, error) {
+func GetArticleById(id int64) (*Article, error) {
 
-	activity := &Activity{}
+	article := &Article{}
 
-	res := db.DB.Self.Where("id = ?", id).First(&activity)
+	res := db.DB.Self.Where("id = ?", id).First(&article)
 
-	return activity, res.Error
+	return article, res.Error
 
 }
 
-func ActivityPaginate(page int64, pageSize int64, sort int64, cateId int64, title string) (activity []*Activity, total int64, lastPage int64, err error) {
+func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title string) (articles []*Article, total int64, lastPage int64, err error) {
 
-	activity = make([]*Activity, 0)
+	articles = make([]*Article, 0)
 
 	offset := (page - 1) * pageSize
 
@@ -102,10 +96,10 @@ func ActivityPaginate(page int64, pageSize int64, sort int64, cateId int64, titl
 		res = res.Order("created_at asc")
 	}
 
-	res = res.Limit(pageSize).Offset(offset).Find(&activity)
-	db.DB.Self.Model(&activity).Count(&total)
+	res = res.Limit(pageSize).Offset(offset).Find(&articles)
+	db.DB.Self.Model(&articles).Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 
-	return activity, total, lastPage, res.Error
+	return articles, total, lastPage, res.Error
 }
