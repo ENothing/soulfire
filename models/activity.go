@@ -32,12 +32,12 @@ func (Activity) TableName() string {
 	return "activities"
 }
 
-func ActivityViewAddOne(activityId int64) error {
+func ActivityViewAddOne(id int64) error {
 
 	activity := &Activity{}
 
 	res := db.DB.Self.Model(&activity).
-		Where("id = ?", activityId).
+		Where("id = ?", id).
 		Where("view > 0").
 		UpdateColumn("view", gorm.Expr("view + ?", 1))
 
@@ -45,12 +45,12 @@ func ActivityViewAddOne(activityId int64) error {
 
 }
 
-func ActivityLikeAddOne(activityId int64) error {
+func ActivityLikeAddOne(id int64) error {
 
 	activity := &Activity{}
 
 	res := db.DB.Self.Model(&activity).
-		Where("id = ?", activityId).
+		Where("id = ?", id).
 		Where("likes > 0").
 		UpdateColumn("likes", gorm.Expr("likes + ?", 1))
 
@@ -58,12 +58,12 @@ func ActivityLikeAddOne(activityId int64) error {
 
 }
 
-func ActivityLikeCutOne(activityId int64) error {
+func ActivityLikeCutOne(id int64) error {
 
 	activity := &Activity{}
 
 	res := db.DB.Self.Model(&activity).
-		Where("id = ?", activityId).
+		Where("id = ?", id).
 		Where("likes > 0").
 		UpdateColumn("likes", gorm.Expr("likes - ?", 1))
 

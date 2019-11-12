@@ -17,7 +17,7 @@ func ArticleList(ctx *gin.Context)  {
 
 	data := make(map[string]interface{})
 
-	activities,total,lastPage,err := models.ActivityPaginate(page,pageSize,sort,cateId,title)
+	articles,total,lastPage,err := models.ArticlePaginate(page,pageSize,sort,cateId,title)
 
 	if err != nil {
 		rsp.JsonResonse(ctx,rsp.ArticleNotExits,nil,"")
@@ -26,17 +26,8 @@ func ArticleList(ctx *gin.Context)  {
 
 	data["total"] = total
 	data["last_page"] = lastPage
-	data["activities"] = activities
+	data["articles"] = articles
 
 	rsp.JsonResonse(ctx,rsp.OK,data,"")
-
-
-
-
-
-
-
-
-
 
 }

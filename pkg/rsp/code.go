@@ -37,6 +37,12 @@ var (
 
 	//5bbs
 	ArticleNotExits		= &Errno{10501,"文章不存在"}
+	ArticleCreateFailed	= &Errno{10502,"文章发表失败"}
+	ArticleUpdateFailed	= &Errno{10502,"文章更新失败"}
+	ArticleDeleteFailed	= &Errno{10502,"文章删除失败"}
+
+	//评论
+	ArticleCommentCreateFailed	= &Errno{10602,"文章评论失败"}
 
 )
 

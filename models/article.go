@@ -9,14 +9,14 @@ import (
 
 type Article struct {
 	Model
-	UserId    string     `json:"user_id" gorm:"column:user_id;not null"`
+	UserId    int64     `json:"user_id" gorm:"column:user_id;not null"`
 	Thumb     string     `json:"thumb" gorm:"column:thumb;not null"`
-	Title     int64      `json:"title" gorm:"column:title;not null"`
+	Title     string      `json:"title" gorm:"column:title;not null"`
 	Content   string     `json:"content" gorm:"column:content;not null"`
-	Likes     string     `json:"likes" gorm:"column:likes;not null"`
-	View      string     `json:"view" gorm:"column:view;not null"`
-	CateId    string     `json:"cate_id" gorm:"column:cate_id;not null"`
-	IsPublish string     `json:"is_publish" gorm:"column:is_publish;not null"`
+	Likes     int64     `json:"likes" gorm:"column:likes;not null"`
+	View      int64     `json:"view" gorm:"column:view;not null"`
+	CateId    int64     `json:"cate_id" gorm:"column:cate_id;not null"`
+	IsPublish int64     `json:"is_publish" gorm:"column:is_publish;not null"`
 	CreatedAt time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
@@ -26,12 +26,30 @@ func (Article) TableName() string {
 	return "articles"
 }
 
-func ArticleViewAddOne(articleId int64) error {
+func (a *Article) Create() error {
+
+	return db.DB.Self.Create(&a).Error
+
+}
+
+func (a *Article)Update(id int64,userId int64) error  {
+
+	return db.DB.Self.Where("id = ?",id).Where("user_id = ?",userId).Updates(&a).Error
+
+}
+
+func (a *Article)Delete(id int64,userId int64)error{
+
+	return db.DB.Self.Where("id = ?",id).Where("user_id = ?",userId).Delete(&a).Error
+
+}
+
+func ArticleViewAddOne(id int64) error {
 
 	article := &Article{}
 
 	res := db.DB.Self.Model(&article).
-		Where("id = ?", articleId).
+		Where("id = ?", id).
 		Where("view > 0").
 		UpdateColumn("view", gorm.Expr("view + ?", 1))
 
@@ -39,12 +57,12 @@ func ArticleViewAddOne(articleId int64) error {
 
 }
 
-func ArticleLikeAddOne(activityId int64) error {
+func ArticleLikeAddOne(id int64) error {
 
 	article := &Article{}
 
 	res := db.DB.Self.Model(&article).
-		Where("id = ?", activityId).
+		Where("id = ?", id).
 		Where("likes > 0").
 		UpdateColumn("likes", gorm.Expr("likes + ?", 1))
 
@@ -52,12 +70,12 @@ func ArticleLikeAddOne(activityId int64) error {
 
 }
 
-func ArticleLikeCutOne(activityId int64) error {
+func ArticleLikeCutOne(id int64) error {
 
 	article := &Article{}
 
 	res := db.DB.Self.Model(&article).
-		Where("id = ?", activityId).
+		Where("id = ?", id).
 		Where("likes > 0").
 		UpdateColumn("likes", gorm.Expr("likes - ?", 1))
 
@@ -74,6 +92,17 @@ func GetArticleById(id int64) (*Article, error) {
 	return article, res.Error
 
 }
+
+func GetSelfArticleById(id int64,userId int64) (*Article, error) {
+
+	article := &Article{}
+
+	res := db.DB.Self.Where("id = ?", id).Where("user_id = ?",userId).First(&article)
+
+	return article, res.Error
+
+}
+
 
 func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title string) (articles []*Article, total int64, lastPage int64, err error) {
 
