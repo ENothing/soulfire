@@ -1,6 +1,7 @@
 package models
 
 import (
+	"math"
 	"soulfire/pkg/db"
 	"time"
 )
@@ -14,6 +15,7 @@ type ArticleComment struct {
 	CreatedAt time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	ArticleComments []ArticleComment `gorm:"foreignkey:ArticleId"`
 }
 
 func (ArticleComment) TableName() string {
@@ -74,31 +76,18 @@ func (ac *ArticleComment) Create() error {
 //
 //}
 
-//func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title string) (articles []*Article, total int64, lastPage int64, err error) {
-//
-//	articles = make([]*Article, 0)
-//
-//	offset := (page - 1) * pageSize
-//
-//	res := db.DB.Self
-//
-//	if cateId != 0 {
-//		res = res.Where("cate_id = ?", cateId)
-//	}
-//	if title != "" {
-//		res = res.Where("title LIKE ?", "%"+title+"%")
-//	}
-//
-//	if sort == 0 {
-//		res = res.Order("created_at desc")
-//	} else {
-//		res = res.Order("created_at asc")
-//	}
-//
-//	res = res.Limit(pageSize).Offset(offset).Find(&articles)
-//	db.DB.Self.Model(&articles).Count(&total)
-//
-//	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
-//
-//	return articles, total, lastPage, res.Error
-//}
+func ArticleCommentPaginate(page int64, pageSize int64, articleId int64) (articleComments []*ArticleComment, total int64, lastPage int64, err error) {
+
+	articleComments = make([]*ArticleComment, 0)
+
+	offset := (page - 1) * pageSize
+
+	res := db.DB.Self.Where("article_id = ?" ,articleId).Related(&articleComments)
+
+	res = res.Limit(pageSize).Offset(offset).Find(&articleComments)
+	db.DB.Self.Model(&articleComments).Count(&total)
+
+	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
+
+	return articleComments, total, lastPage, res.Error
+}

@@ -43,6 +43,7 @@ var (
 
 	//评论
 	ArticleCommentCreateFailed	= &Errno{10602,"文章评论失败"}
+	ArticleCommentListNotExits	= &Errno{10602,"文章评论获取失败"}
 
 )
 

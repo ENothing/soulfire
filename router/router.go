@@ -16,7 +16,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	g.Use(mw...)
 
 	g.NoRoute(func(context *gin.Context) {
-		context.JSON(http.StatusNotFound, "接口路由不存在~")
+		context.JSON(http.StatusNotFound, "访问地址不存在~")
 	})
 
 	app := g.Group("app/v1")
