@@ -34,7 +34,7 @@ func ArticleList(ctx *gin.Context) {
 
 func CommentList(ctx *gin.Context) {
 
-	articleId, _ := strconv.ParseInt(ctx.Param("article_id"), 10, 64)
+	articleId, _ := strconv.ParseInt(ctx.Query("article_id"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 

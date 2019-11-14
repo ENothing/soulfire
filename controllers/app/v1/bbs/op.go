@@ -136,7 +136,11 @@ func DeleteArticle(ctx *gin.Context){
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	userId := ctx.MustGet("user_id").(int64)
 
-	err := models.Article{}.Delete(id,userId)
+	article := models.Article{}
+
+	err := article.Delete(id,userId)
+
+
 	if err != nil {
 
 		rsp.JsonResonse(ctx, rsp.ArticleDeleteFailed, nil,"")

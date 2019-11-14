@@ -54,6 +54,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		{
 			b.GET("list",bbs.ArticleList)
 			b.GET("detail",bbs.Detail)
+
+			b.GET("comment_list",bbs.CommentList)
 		}
 		mb := app.Group("bbs").Use(middleware.Verify())
 		{
