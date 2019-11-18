@@ -15,8 +15,7 @@ type ArticleComment struct {
 	CreatedAt time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
-	ArticleComments []ArticleComment  `json:"article_comments"  gorm:"FOREIGNKEY:ParentId;"`
-
+	SubArticleComments []ArticleComment `gorm:"column:article_comments"`
 }
 
 func (ArticleComment) TableName() string {
@@ -83,18 +82,22 @@ func ArticleCommentPaginate(page int64, pageSize int64, articleId int64) (articl
 
 	articleComments = make([]*ArticleComment, 0)
 
+
+
+
+
 	//offset := (page - 1) * pageSize
 
 
-	res := db.DB.Self.Where("article_id = ?" ,articleId).Where("parent_id = ?",0).Find(&articleComments)
+	res := db.DB.Self.Where("article_id = ?" ,articleId).Where("parent_id = ?",0).Joins("").Find(&articleComments)
+	//
+	//for _,v := range articleComments{
+	//
+	//	db.DB.Self.Where("parent_id = ?",v.ParentId).Find(&v.ArticleComments)
+	//
+	//}
 
-	for _,v := range articleComments{
-
-		db.DB.Self.Where("parent_id = ?",v.ParentId).Find(&v.ArticleComments)
-
-	}
-
-
+	//res := db.DB.Self.Where("article_id = ?" ,articleId).Where("parent_id = ?",0).Preload("ArticleComment").Find(&articleComments)
 	//
 	//res = res.Limit(pageSize).Offset(offset).Find(&articleComments)
 	//db.DB.Self.Model(&articleComments).Count(&total)
