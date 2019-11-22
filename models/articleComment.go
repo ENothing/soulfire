@@ -8,16 +8,16 @@ import (
 
 type ArticleComment struct {
 	Model
-	UserId             int64            `json:"user_id" gorm:"column:user_id;not null"`
-	ArticleId          int64            `json:"article_id" gorm:"column:article_id;not null"`
-	Content            string           `json:"content" gorm:"column:content;not null"`
-	ParentId           int64            `json:"parent_id" gorm:"column:parent_id;not null"`
-	CreatedAt          time.Time        `gorm:";column:created_at" json:"created_at"`
-	UpdatedAt          time.Time        `gorm:";column:updated_at" json:"updated_at"`
-	DeletedAt          *time.Time       `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
-	SubComments []ArticleComment `json:"sub_comments" gorm:"foreignkey:parent_id;PRELOAD:false"`
-	User               User             `json:"user" gorm:"foreignkey:UserId;PRELOAD:false"`
-	ParentUser         User             `json:"parent_user" gorm:"foreignkey:ParentId;PRELOAD:false"`
+	UserId      int64            `json:"user_id" gorm:"column:user_id;not null"`
+	ArticleId   int64            `json:"article_id" gorm:"column:article_id;not null"`
+	Content     string           `json:"content" gorm:"column:content;not null"`
+	ParentId    int64            `json:"parent_id" gorm:"column:parent_id;not null"`
+	CreatedAt   time.Time        `gorm:";column:created_at" json:"created_at"`
+	UpdatedAt   time.Time        `gorm:";column:updated_at" json:"updated_at"`
+	DeletedAt   *time.Time       `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	//SubComments []ArticleComment `json:"sub_comments" gorm:"foreignkey:parent_id;PRELOAD:false"`
+	User        User             `json:"user" gorm:"foreignkey:UserId"`
+	ParentUser  User             `json:"parent_user" gorm:"foreignkey:ParentId"`
 }
 
 func (ArticleComment) TableName() string {
@@ -87,10 +87,8 @@ func ArticleCommentPaginate(page int64, pageSize int64, articleId int64) (articl
 
 	res := db.DB.Self.
 		Where("article_id = ?", articleId).
-		Where("parent_id = ?", 0).
-		Preload("SubComments").
-		Preload("SubComments.User").
-		Preload("SubComments.ParentUser")
+		Where("parent_id = ?", 0).Preload("User").Select([]string{"nickname"})
+
 
 	res = res.Limit(pageSize).Offset(offset).Find(&articleComments)
 
