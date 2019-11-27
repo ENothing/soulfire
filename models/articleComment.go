@@ -87,7 +87,7 @@ func ArticleCommentPaginate(page int64, pageSize int64, articleId int64) (articl
 
 	res := db.DB.Self.
 		Where("article_id = ?", articleId).
-		Where("parent_id = ?", 0).Preload("User").Select([]string{"nickname"})
+		Where("parent_id = ?", 0).Preload("User")
 
 
 	res = res.Limit(pageSize).Offset(offset).Find(&articleComments)
