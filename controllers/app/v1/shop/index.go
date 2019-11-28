@@ -17,6 +17,7 @@ func Index(ctx *gin.Context)  {
 
 
 
+
 	data["shop_banners"] = shopBanners
 	data["goods_cates"] = goodsCates
 

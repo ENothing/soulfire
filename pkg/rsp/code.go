@@ -45,6 +45,11 @@ var (
 	ArticleCommentCreateFailed	= &Errno{10602,"文章评论失败"}
 	ArticleCommentListNotExits	= &Errno{10602,"文章评论获取失败"}
 
+	//商城
+	GoodsListNotExits	= &Errno{10701,"商品列表获取失败"}
+	GoodsNotExits	= &Errno{10702,"商品获取失败"}
+
+
 )
 
 

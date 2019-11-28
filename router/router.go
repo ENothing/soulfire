@@ -72,6 +72,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		s := app.Group("shop")
 		{
 			s.GET("index",shop.Index)
+			s.GET("list",shop.GoodsList)
+			s.GET("goods_detail/:id",shop.GoodsDetail)
 		}
 
 	}
