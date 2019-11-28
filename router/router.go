@@ -3,6 +3,7 @@ package router
 import (
 	"soulfire/controllers/app/v1/activity"
 	"soulfire/controllers/app/v1/bbs"
+	"soulfire/controllers/app/v1/shop"
 	"soulfire/controllers/app/v1/user"
 	"soulfire/router/middleware"
 	"github.com/gin-gonic/gin"
@@ -61,9 +62,18 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		{
 			mb.GET("like/:id",bbs.Like)
 
+			mb.POST("publish_article",bbs.PublishArticle)
+			mb.POST("edit_article",bbs.EditArticle)
+			mb.POST("del_article",bbs.DeleteArticle)
 
 			mb.POST("post_comment",bbs.PostComment)
 		}
+
+		s := app.Group("shop")
+		{
+			s.GET("index",shop.Index)
+		}
+
 	}
 
 
