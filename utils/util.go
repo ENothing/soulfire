@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 /**
@@ -95,3 +96,33 @@ func Uid(prefix string) string {
 	return prefix + uid.String()
 
 }
+
+func Jsonencode(v interface{}) string {
+
+	jsonStr,_ := json.Marshal(v)
+
+	return string(jsonStr)
+
+}
+
+func JsonDecode(v string) interface{}  {
+
+	var bodyMap interface{}
+
+	json.Unmarshal([]byte(v), &bodyMap)
+
+	return bodyMap
+
+}
+
+func TimeFormat(t time.Time,formatType int64)(formatTime string) {
+
+	if formatType == 0 {
+		formatTime = t.Format("2006-01-02 15:04:05")
+	}else{
+		formatTime = t.Format("2006.01.02")
+	}
+	return formatTime
+}
+
+

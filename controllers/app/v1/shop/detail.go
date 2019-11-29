@@ -12,17 +12,33 @@ func GoodsDetail(ctx *gin.Context)  {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
-	fmt.Println(id)
+	data := make(map[string]interface{})
+
 
 	shopGoodsDetail,err := models.GetShopGoodsById(id)
 
 	fmt.Println(err)
 	if err != nil {
-
 		rsp.JsonResonse(ctx, rsp.GoodsNotExits, nil,"")
 		return
 	}
 
-	rsp.JsonResonse(ctx, rsp.OK, shopGoodsDetail,"")
+
+	shopGoodsSpus ,err := models.GetGoodsSpusById(id)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.GoodsNotExits, nil,"")
+		return
+	}
+
+	data["shop_goods_detail"] = shopGoodsDetail
+	data["shop_goods_spus"] = shopGoodsSpus
+
+
+
+
+
+
+
+	rsp.JsonResonse(ctx, rsp.OK, data,"")
 
 }

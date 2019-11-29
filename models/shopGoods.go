@@ -3,37 +3,46 @@ package models
 import (
 	"math"
 	"soulfire/pkg/db"
+	"soulfire/utils"
 	"time"
 )
 
 type ShopGoods struct {
 	Model
-	CateId       int64      `json:"cate_id" gorm:"column:cate_id;not null"`
-	BrandId      int64      `json:"brand_id" gorm:"column:brand_id;not null"`
-	Name         string     `json:"name" gorm:"column:name;not null"`
-	Thumb        string     `json:"thumb" gorm:"column:thumb;not null"`
-	Banners      string     `json:"banners" gorm:"column:banners;not null"`
-	GoodsContent string     `json:"goods_content" gorm:"column:goods_content;not null"`
-	CurPrice     float64    `json:"cur_price" gorm:"column:cur_price;not null"`
-	OriPrice     float64    `json:"ori_price" gorm:"column:ori_price;not null"`
-	Stock        int64      `json:"stock" gorm:"column:stock;not null"`
-	Sold         int64      `json:"sold" gorm:"column:sold;not null"`
-	CreatedAt    time.Time  `gorm:";column:created_at" json:"created_at"`
-	UpdatedAt    time.Time  `gorm:";column:updated_at" json:"updated_at"`
-	DeletedAt    *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	CateId          int64       `json:"cate_id" gorm:"column:cate_id;not null"`
+	BrandId         int64       `json:"brand_id" gorm:"column:brand_id;not null"`
+	Name            string      `json:"name" gorm:"column:name;not null"`
+	Thumb           string      `json:"thumb" gorm:"column:thumb;not null"`
+	Banners         string      `json:"banners" gorm:"column:banners;not null"`
+	GoodsContent    string      `json:"goods_content" gorm:"column:goods_content;not null"`
+	CurPrice        float64     `json:"cur_price" gorm:"column:cur_price;not null"`
+	OriPrice        float64     `json:"ori_price" gorm:"column:ori_price;not null"`
+	Stock           int64       `json:"stock" gorm:"column:stock;not null"`
+	Sold            int64       `json:"sold" gorm:"column:sold;not null"`
+	CreatedAt       time.Time   `gorm:";column:created_at" json:"created_at"`
+	UpdatedAt       time.Time   `gorm:";column:updated_at" json:"updated_at"`
+	PublishAt       time.Time   `gorm:";column:publish_at" json:"publish_at"`
+	DeletedAt       *time.Time  `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	DecodeBanners   interface{} `json:"decode_banners" gorm:"column:decode_banners"`
+	PublishAtFormat string      `json:"publish_at_format" gorm:"column:publish_at_format"`
 }
 
-func GetShopGoodsById(id int64) (*ShopGoods,error) {
+func (sg *ShopGoods) AfterFind() (err error) {
+
+	sg.DecodeBanners = utils.JsonDecode(sg.Banners)
+	sg.PublishAtFormat = utils.TimeFormat(sg.PublishAt,1)
+	return
+}
+
+func GetShopGoodsById(id int64) (*ShopGoods, error) {
 
 	shopGoods := &ShopGoods{}
 
-	res := db.DB.Self.Where("id = ? ",id).First(&shopGoods)
+	res := db.DB.Self.Where("id = ? ", id).First(&shopGoods)
 
-	return shopGoods,res.Error
+	return shopGoods, res.Error
 
 }
-
-
 
 func ShopGoodsPaginate(page int64, pageSize int64, sortType int64, sort int64, name string, cateId int64, brandId int64) (shopGoods []*ShopGoods, total int64, lastPage int64, err error) {
 
