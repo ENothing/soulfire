@@ -1,6 +1,7 @@
 package models
 
 import (
+	"soulfire/pkg/db"
 	"time"
 )
 
@@ -18,4 +19,14 @@ type ShopOrderGoods struct {
 	DeletedAt     *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
 }
 
+func GetPurchasersById(goodsId int64)(*[]ShopOrderGoods,error)   {
 
+	purchasers := &[]ShopOrderGoods{}
+
+	res := db.DB.Self.
+		Where("goods_id = ?",goodsId).
+		Find(&purchasers)
+
+	return purchasers,res.Error
+
+}

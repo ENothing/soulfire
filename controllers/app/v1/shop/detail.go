@@ -1,7 +1,6 @@
 package shop
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"soulfire/models"
 	"soulfire/pkg/rsp"
@@ -14,15 +13,11 @@ func GoodsDetail(ctx *gin.Context)  {
 
 	data := make(map[string]interface{})
 
-
 	shopGoodsDetail,err := models.GetShopGoodsById(id)
-
-	fmt.Println(err)
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.GoodsNotExits, nil,"")
 		return
 	}
-
 
 	shopGoodsSpus ,err := models.GetGoodsSpusById(id)
 	if err != nil {
@@ -30,14 +25,11 @@ func GoodsDetail(ctx *gin.Context)  {
 		return
 	}
 
+	purchasers,_ := models.GetPurchasersById(id)
+
 	data["shop_goods_detail"] = shopGoodsDetail
 	data["shop_goods_spus"] = shopGoodsSpus
-
-
-
-
-
-
+	data["purchasers"] = purchasers
 
 	rsp.JsonResonse(ctx, rsp.OK, data,"")
 
