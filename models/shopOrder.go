@@ -18,3 +18,6 @@ type ShopOrder struct {
 	DeletedAt     *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
 }
 
+func (ShopOrder) TableName() string {
+	return "shop_orders"
+}

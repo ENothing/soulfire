@@ -1,13 +1,14 @@
 package router
 
 import (
+	"github.com/gin-gonic/gin"
+	"net/http"
 	"soulfire/controllers/app/v1/activity"
+	"soulfire/controllers/app/v1/address"
 	"soulfire/controllers/app/v1/bbs"
 	"soulfire/controllers/app/v1/shop"
 	"soulfire/controllers/app/v1/user"
 	"soulfire/router/middleware"
-	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
@@ -25,59 +26,65 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 		u := app.Group("user")
 		{
-			u.POST("login",user.Login)
+			u.POST("login", user.Login)
 		}
 		mu := app.Group("user").Use(middleware.Verify())
 		{
 			mu.GET("")
 		}
 
-
 		a := app.Group("activity")
 		{
-			a.GET("index",activity.Index)
-			a.GET("list",activity.ActivityList)
-			a.GET("detail/:id",activity.Detail)
-			a.GET("cates",activity.ActivityCates)
+			a.GET("index", activity.Index)
+			a.GET("list", activity.ActivityList)
+			a.GET("detail/:id", activity.Detail)
+			a.GET("cates", activity.ActivityCates)
 
 		}
 		ma := app.Group("activity").Use(middleware.Verify())
 		{
-			ma.GET("like/:id",activity.Like)
-			ma.POST("enter",activity.Enter)
-			ma.GET("order/:id",activity.OrderDetail)
-			ma.POST("pay",activity.Pay)
-			ma.GET("order_list",activity.ActivityOrderList)
+			ma.GET("like/:id", activity.Like)
+			ma.POST("enter", activity.Enter)
+			ma.GET("order/:id", activity.OrderDetail)
+			ma.POST("pay", activity.Pay)
+			ma.GET("order_list", activity.ActivityOrderList)
 
 		}
 
 		b := app.Group("bbs")
 		{
-			b.GET("list",bbs.ArticleList)
-			b.GET("detail",bbs.Detail)
+			b.GET("list", bbs.ArticleList)
+			b.GET("detail", bbs.Detail)
 
-			b.GET("comment_list",bbs.CommentList)
+			b.GET("comment_list", bbs.CommentList)
 		}
 		mb := app.Group("bbs").Use(middleware.Verify())
 		{
-			mb.GET("like/:id",bbs.Like)
+			mb.GET("like/:id", bbs.Like)
 
-			mb.POST("publish_article",bbs.PublishArticle)
-			mb.POST("edit_article",bbs.EditArticle)
-			mb.POST("del_article",bbs.DeleteArticle)
+			mb.POST("publish_article", bbs.PublishArticle)
+			mb.POST("edit_article", bbs.EditArticle)
+			mb.POST("del_article", bbs.DeleteArticle)
 
-			mb.POST("post_comment",bbs.PostComment)
+			mb.POST("post_comment", bbs.PostComment)
 		}
 
 		s := app.Group("shop")
 		{
-			s.GET("index",shop.Index)
-			s.GET("list",shop.GoodsList)
-			s.GET("goods_detail/:id",shop.GoodsDetail)
+			s.GET("index", shop.Index)
+			s.GET("list", shop.GoodsList)
+			s.GET("goods_detail/:id", shop.GoodsDetail)
+			s.GET("purchasers/:id", shop.PurchasersList)
+		}
+
+		mad := app.Group("address").Use(middleware.Verify())
+		{
+			mad.GET("list", address.AddressList)
+			mad.POST("add", address.AddAddress)
+
 		}
 
 	}
-
 
 	return g
 

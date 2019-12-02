@@ -48,6 +48,10 @@ var (
 	//商城
 	GoodsListNotExits	= &Errno{10701,"商品列表获取失败"}
 	GoodsNotExits	= &Errno{10702,"商品获取失败"}
+	ShopOrderGoodsNotExits	= &Errno{10703,"已购买人获取失败"}
+
+	AddAddressRequired	= &Errno{10801,"地址添加缺少参数"}
+	AddAddressFailed	= &Errno{10801,"地址添加失败"}
 
 
 )

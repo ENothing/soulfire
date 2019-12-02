@@ -25,12 +25,36 @@ func GoodsDetail(ctx *gin.Context)  {
 		return
 	}
 
-	purchasers,_ := models.GetPurchasersById(id)
+	purchasers,pTotal,_ := models.GetPurchasersById(id)
 
 	data["shop_goods_detail"] = shopGoodsDetail
 	data["shop_goods_spus"] = shopGoodsSpus
 	data["purchasers"] = purchasers
+	data["p_total"] = pTotal
 
 	rsp.JsonResonse(ctx, rsp.OK, data,"")
+
+}
+
+func PreOrderDetail(ctx *gin.Context)  {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

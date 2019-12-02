@@ -33,3 +33,26 @@ func GoodsList(ctx *gin.Context)  {
 	rsp.JsonResonse(ctx, rsp.OK, data,"")
 
 }
+
+func PurchasersList(ctx *gin.Context)  {
+
+	goodsId, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
+	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
+
+	data := make(map[string]interface{})
+
+	purchasers, total, lastPage, err := models.ShopOrderGoodsPaginate(page, pageSize, goodsId)
+
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderGoodsNotExits, nil,"")
+		return
+	}
+
+	data["purchasers"]=purchasers
+	data["total"]=total
+	data["lastPage"]=lastPage
+
+	rsp.JsonResonse(ctx, rsp.OK, data,"")
+
+}
