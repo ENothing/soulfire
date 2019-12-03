@@ -77,6 +77,12 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			s.GET("purchasers/:id", shop.PurchasersList)
 		}
 
+		ms := app.Group("shop").Use(middleware.Verify())
+		{
+			ms.GET("pre_order_detail/:goods_spu_id", shop.PreOrderDetail)
+
+		}
+
 		mad := app.Group("address").Use(middleware.Verify())
 		{
 			mad.GET("list", address.AddressList)
