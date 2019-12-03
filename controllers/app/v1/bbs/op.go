@@ -46,7 +46,7 @@ type ArticleForm struct {
 	Title   string `json:"title" valid:"Required;" ch:"文章标题"`
 	Thumb   string `json:"Thumb" valid:"Required;" ch:"文章封面"`
 	Content string `json:"content" valid:"Required;" ch:"文章内容"`
-	CateId  int64 `json:"cate_id" valid:"Required;" ch:"文章分类"`
+	CateId  int64  `json:"cate_id" valid:"Required;" ch:"文章分类"`
 }
 
 func PublishArticle(ctx *gin.Context) {
@@ -55,7 +55,7 @@ func PublishArticle(ctx *gin.Context) {
 	thumb := ctx.PostForm("thumb")
 	title := ctx.PostForm("title")
 	content := ctx.PostForm("content")
-	cateId,_ := strconv.ParseInt(ctx.PostForm("cate_id"), 10, 64)
+	cateId, _ := strconv.ParseInt(ctx.PostForm("cate_id"), 10, 64)
 	isPublish, _ := strconv.ParseInt(ctx.PostForm("is_publish"), 10, 64)
 
 	articleForm := ArticleForm{
@@ -73,81 +73,80 @@ func PublishArticle(ctx *gin.Context) {
 	}
 
 	article := models.Article{
-		UserId:userId,
-		Thumb:thumb,
-		Title:title,
-		Content:content,
-		CateId:cateId,
-		IsPublish:isPublish,
+		UserId:    userId,
+		Thumb:     thumb,
+		Title:     title,
+		Content:   content,
+		CateId:    cateId,
+		IsPublish: isPublish,
 	}
 
 	err := article.Create()
 	if err != nil {
 
-		rsp.JsonResonse(ctx, rsp.ArticleCreateFailed, nil,"")
+		rsp.JsonResonse(ctx, rsp.ArticleCreateFailed, nil, "")
 		return
 	}
 
-	rsp.JsonResonse(ctx, rsp.OK, nil,"")
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
 
 }
 
-func EditArticle(ctx *gin.Context)  {
+func EditArticle(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	userId := ctx.MustGet("user_id").(int64)
 	thumb := ctx.PostForm("thumb")
 	title := ctx.PostForm("title")
 	content := ctx.PostForm("content")
-	cateId,_ := strconv.ParseInt(ctx.PostForm("cate_id"), 10, 64)
+	cateId, _ := strconv.ParseInt(ctx.PostForm("cate_id"), 10, 64)
 	isPublish, _ := strconv.ParseInt(ctx.PostForm("is_publish"), 10, 64)
 
-	_,err := models.GetSelfArticleById(id,userId)
+	_, err := models.GetSelfArticleById(id, userId)
 
 	if err != nil {
 
-		rsp.JsonResonse(ctx, rsp.ArticleNotExits, nil,"")
+		rsp.JsonResonse(ctx, rsp.ArticleNotExits, nil, "")
 		return
 
 	}
 
 	article := models.Article{
-		Title:title,
-		Thumb:thumb,
-		Content:content,
-		CateId:cateId,
-		IsPublish:isPublish,
+		Title:     title,
+		Thumb:     thumb,
+		Content:   content,
+		CateId:    cateId,
+		IsPublish: isPublish,
 	}
 
-	err = article.Update(id,userId)
+	err = article.Update(id, userId)
 	if err != nil {
 
-		rsp.JsonResonse(ctx, rsp.ArticleUpdateFailed, nil,"")
+		rsp.JsonResonse(ctx, rsp.ArticleUpdateFailed, nil, "")
 		return
 
 	}
 
-	rsp.JsonResonse(ctx, rsp.OK, nil,"")
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
 
 }
 
-func DeleteArticle(ctx *gin.Context){
+func DeleteArticle(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	userId := ctx.MustGet("user_id").(int64)
 
 	article := models.Article{}
 
-	err := article.Delete(id,userId)
-
+	err := article.Delete(id, userId)
 
 	if err != nil {
 
-		rsp.JsonResonse(ctx, rsp.ArticleDeleteFailed, nil,"")
+		rsp.JsonResonse(ctx, rsp.ArticleDeleteFailed, nil, "")
 		return
 
 	}
 
-	rsp.JsonResonse(ctx, rsp.OK, nil,"")
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
 
 }

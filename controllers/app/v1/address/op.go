@@ -92,11 +92,10 @@ func UpdateAddress(ctx *gin.Context) {
 	district := ctx.PostForm("district")
 	detailAddress := ctx.PostForm("detail_address")
 
-
-	_,err := models.GetAddressById(id,userId)
+	_, err := models.GetAddressById(id, userId)
 	if err != nil {
 
-		rsp.JsonResonse(ctx,rsp.AddressNotExits,nil,"")
+		rsp.JsonResonse(ctx, rsp.AddressNotExits, nil, "")
 
 	}
 
@@ -140,13 +139,12 @@ func UpdateAddress(ctx *gin.Context) {
 
 }
 
-func UpdateDefaultAddress(ctx *gin.Context)  {
+func UpdateDefaultAddress(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
-
-	err := models.UpdateDefaultAddress(id,userId)
+	err := models.UpdateDefaultAddress(id, userId)
 
 	if err != nil {
 
@@ -158,23 +156,22 @@ func UpdateDefaultAddress(ctx *gin.Context)  {
 
 }
 
-func DelAddress(ctx *gin.Context)  {
+func DelAddress(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
 	shipAddress := models.ShipAddress{}
 
-	err := shipAddress.Delete(id,userId)
+	err := shipAddress.Delete(id, userId)
 
 	if err != nil {
 
-		rsp.JsonResonse(ctx, rsp.AddressDeleteFailed, nil,"")
+		rsp.JsonResonse(ctx, rsp.AddressDeleteFailed, nil, "")
 		return
 
 	}
 
-	rsp.JsonResonse(ctx, rsp.OK, nil,"")
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
 
 }
-
