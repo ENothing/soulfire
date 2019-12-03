@@ -50,8 +50,13 @@ var (
 	GoodsNotExits	= &Errno{10702,"商品获取失败"}
 	ShopOrderGoodsNotExits	= &Errno{10703,"已购买人获取失败"}
 
+	//地址
 	AddAddressRequired	= &Errno{10801,"地址添加缺少参数"}
-	AddAddressFailed	= &Errno{10801,"地址添加失败"}
+	AddAddressFailed	= &Errno{10802,"地址添加失败"}
+	EditAddressFailed	= &Errno{10803,"地址更新失败"}
+	AddressNotExits	= &Errno{10804,"地址获取失败"}
+	UpdateDefaultAddressFailed	= &Errno{10805,"默认地址更新失败"}
+	AddressDeleteFailed	= &Errno{10805,"地址删除失败"}
 
 
 )

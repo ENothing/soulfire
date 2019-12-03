@@ -31,7 +31,27 @@ func (sa *ShipAddress)Create() error {
 
 }
 
+func (sa *ShipAddress)Update(id int64,userId int64) error  {
 
+	return db.DB.Self.Model(&sa).Where("id = ?",id).Where("user_id = ?",userId).Updates(&sa).Error
+
+}
+
+func (sa *ShipAddress)Delete(id ,userId int64)error{
+
+	return db.DB.Self.Where("id = ?",id).Where("user_id = ?",userId).Delete(&sa).Error
+
+}
+
+func GetAddressById(id,userId int64) (*ShipAddress, error) {
+
+	shipAddress := &ShipAddress{}
+
+	res := db.DB.Self.Where("id = ?", id).Where("user_id = ?",userId).First(&shipAddress)
+
+	return shipAddress, res.Error
+
+}
 
 func GetDefaultAddress(userId int64) (*ShipAddress,error) {
 
@@ -39,11 +59,27 @@ func GetDefaultAddress(userId int64) (*ShipAddress,error) {
 
 	res := db.DB.Self.
 		Where("user_id = ?",userId).
-		Where("is_default",1).
+		Where("is_default = ?",1).
 		First(&defaultShipAddress)
 
 
 	return defaultShipAddress,res.Error
+
+}
+
+func UpdateDefaultAddress(id,userId int64) error {
+
+	sa := &ShipAddress{}
+
+	updateAllErr := db.DB.Self.Model(&sa).Where("user_id = ?", userId).Where("is_default = ?",1).Update("is_default", 0).Error
+
+	if updateAllErr != nil {
+		return updateAllErr
+	}
+
+	res := db.DB.Self.Model(&sa).Where("id = ?",id).Where("user_id = ?",userId).Update("is_default", 1)
+
+	return res.Error
 
 }
 
@@ -61,3 +97,5 @@ func AddressPaginate(page int64, pageSize int64, userId int64) (shipAddresses []
 	return shipAddresses, total, lastPage, res.Error
 
 }
+
+

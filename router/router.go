@@ -81,6 +81,10 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		{
 			mad.GET("list", address.AddressList)
 			mad.POST("add", address.AddAddress)
+			mad.POST("update/:id", address.UpdateAddress)
+			mad.GET("update_default/:id", address.UpdateDefaultAddress)
+			mad.GET("detail/:id", address.Detail)
+			mad.GET("del/:id", address.DelAddress)
 
 		}
 

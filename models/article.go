@@ -34,7 +34,7 @@ func (a *Article) Create() error {
 
 func (a *Article)Update(id int64,userId int64) error  {
 
-	return db.DB.Self.Where("id = ?",id).Where("user_id = ?",userId).Updates(&a).Error
+	return db.DB.Self.Model(&a).Where("id = ?",id).Where("user_id = ?",userId).Updates(&a).Error
 
 }
 
