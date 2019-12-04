@@ -58,7 +58,7 @@ func Md5(password string) (md5str string) {
 
 }
 
-func HttpGet(request_url string) (map[string]string) {
+func HttpGet(request_url string) map[string]string {
 
 	resp, err := http.Get(request_url)
 
@@ -91,22 +91,21 @@ func HttpGet(request_url string) (map[string]string) {
 
 func Uid(prefix string) string {
 
-
 	uid := uuid.Must(uuid.NewV4())
 
 	return prefix + uid.String()
 
 }
 
-func Jsonencode(v interface{}) string {
+func JsonEncode(v interface{}) string {
 
-	jsonStr,_ := json.Marshal(v)
+	jsonStr, _ := json.Marshal(v)
 
 	return string(jsonStr)
 
 }
 
-func JsonDecode(v string) interface{}  {
+func JsonDecode(v string) interface{} {
 
 	var bodyMap interface{}
 
@@ -116,49 +115,43 @@ func JsonDecode(v string) interface{}  {
 
 }
 
-func TimeFormat(t time.Time,formatType int64)(formatTime string) {
+func TimeFormat(t time.Time, formatType int64) (formatTime string) {
 
 	if formatType == 0 {
 		formatTime = t.Format("2006-01-02 15:04:05")
-	}else{
+	} else {
 		formatTime = t.Format("2006.01.02")
 	}
 	return formatTime
 }
 
-func TimeSpan(t time.Time) string  {
+func TimeSpan(t time.Time) string {
 
-	 nowTime := time.Now().Unix()
-	 var timeStr string
+	nowTime := time.Now().Unix()
+	var timeStr string
 
 	tTime := t.Unix()
 
 	resTime := nowTime - tTime
 
+	if resTime > 0 && resTime < 3600 {
 
-	if resTime >0 && resTime < 3600 {
+		timeStr = string(resTime/60) + "分钟前"
 
-		timeStr = string(resTime / 60)+"分钟前"
+	} else if resTime >= 3600 && resTime < 86400 {
 
-	}else if resTime >=3600 && resTime < 86400{
+		timeStr = strconv.FormatInt(resTime/3600, 10) + "小时前"
 
-		timeStr = strconv.FormatInt(resTime / 3600,10)+"小时前"
+	} else if resTime >= 86400 && resTime < 604800 {
 
-	}else if resTime >= 86400 && resTime < 604800{
+		timeStr = string(resTime/86400) + "天前"
 
-		timeStr = string(resTime / 86400)+"天前"
-
-
-	}else{
+	} else {
 
 		timeStr = t.Format("01月02日")
 
 	}
 
-
 	return timeStr
 
 }
-
-
-

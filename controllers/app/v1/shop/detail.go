@@ -43,8 +43,9 @@ func PreOrderDetail(ctx *gin.Context) {
 
 	data := make(map[string]interface{}, 0)
 
-	goodsSpu, err := models.GetGoodsSpuById(goodsSpuId)
+	defaultAddress, _ := models.GetDefaultAddress(userId)
 
+	goodsSpu, err := models.GetGoodsSpuById(goodsSpuId)
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.ShopGoodsSpuNotExits, nil, "")
 		return
@@ -52,6 +53,7 @@ func PreOrderDetail(ctx *gin.Context) {
 
 	data["goods"] = goodsSpu
 	data["userId"] = userId
+	data["default_address"] = defaultAddress
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
