@@ -4,12 +4,13 @@ import "soulfire/pkg/db"
 
 type ShopGoodsSpu struct {
 	Model
-	GoodsId   string `json:"goods_id" gorm:"column:goods_id;not null"`
-	Name      string `json:"name" gorm:"column:name;not null"`
-	Price     string `json:"price" gorm:"column:price;not null"`
-	Stock     string `json:"stock" gorm:"column:stock;not null"`
-	GoodsName string `json:"goods_name" gorm:"column:goods_name;not null"`
-	Thumb     string `json:"thumb" gorm:"column:thumb;not null"`
+	GoodsId   int64   `json:"goods_id" gorm:"column:goods_id;not null"`
+	Name      string  `json:"name" gorm:"column:name;not null"`
+	Price     float64 `json:"price" gorm:"column:price;not null"`
+	Stock     int64   `json:"stock" gorm:"column:stock;not null"`
+	GoodsName string  `json:"goods_name" gorm:"column:goods_name;not null"`
+	Thumb     string  `json:"thumb" gorm:"column:thumb;not null"`
+	PostPrice float64 `json:"post_price" gorm:"column:post_price;not null"`
 }
 
 func (ShopGoodsSpu) TableName() string {

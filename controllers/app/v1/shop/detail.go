@@ -51,9 +51,11 @@ func PreOrderDetail(ctx *gin.Context) {
 		return
 	}
 
+	couponsCount := models.GetCanUseCouponCountById(userId, goodsSpu.GoodsId)
+
 	data["goods"] = goodsSpu
-	data["userId"] = userId
 	data["default_address"] = defaultAddress
+	data["coupons_count"] = couponsCount
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
