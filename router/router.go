@@ -80,6 +80,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		ms := app.Group("shop").Use(middleware.Verify())
 		{
 			ms.GET("pre_order_detail/:goods_spu_id", shop.PreOrderDetail)
+			ms.POST("can_use_coupons", shop.UserCouponsList)
 
 		}
 

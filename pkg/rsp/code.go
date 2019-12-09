@@ -49,4 +49,8 @@ var (
 	AddressNotExits            = &Errno{10804, "地址获取失败"}
 	UpdateDefaultAddressFailed = &Errno{10805, "默认地址更新失败"}
 	AddressDeleteFailed        = &Errno{10805, "地址删除失败"}
+
+	//优惠券
+	CouponNotExits      = &Errno{10901, "优惠券获取失败"}
+	CouponsListNotExits = &Errno{10902, "优惠券获取失败"}
 )

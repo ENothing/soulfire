@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func GoodsList(ctx *gin.Context)  {
+func GoodsList(ctx *gin.Context) {
 
 	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	brandId, _ := strconv.ParseInt(ctx.DefaultQuery("brand_id", "0"), 10, 64)
@@ -19,22 +19,22 @@ func GoodsList(ctx *gin.Context)  {
 
 	data := make(map[string]interface{})
 
-	goods, total, lastPage, err := models.ShopGoodsPaginate(page, pageSize, sortType,sort,name, cateId, brandId)
+	goods, total, lastPage, err := models.ShopGoodsPaginate(page, pageSize, sortType, sort, name, cateId, brandId)
 
 	if err != nil {
-		rsp.JsonResonse(ctx, rsp.GoodsListNotExits, nil,"")
+		rsp.JsonResonse(ctx, rsp.GoodsListNotExits, nil, "")
 		return
 	}
 
-	data["goods"]=goods
-	data["total"]=total
-	data["lastPage"]=lastPage
+	data["goods"] = goods
+	data["total"] = total
+	data["lastPage"] = lastPage
 
-	rsp.JsonResonse(ctx, rsp.OK, data,"")
+	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }
 
-func PurchasersList(ctx *gin.Context)  {
+func PurchasersList(ctx *gin.Context) {
 
 	goodsId, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
@@ -45,14 +45,38 @@ func PurchasersList(ctx *gin.Context)  {
 	purchasers, total, lastPage, err := models.ShopOrderGoodsPaginate(page, pageSize, goodsId)
 
 	if err != nil {
-		rsp.JsonResonse(ctx, rsp.ShopOrderGoodsNotExits, nil,"")
+		rsp.JsonResonse(ctx, rsp.ShopOrderGoodsNotExits, nil, "")
 		return
 	}
 
-	data["purchasers"]=purchasers
-	data["total"]=total
-	data["lastPage"]=lastPage
+	data["purchasers"] = purchasers
+	data["total"] = total
+	data["lastPage"] = lastPage
 
-	rsp.JsonResonse(ctx, rsp.OK, data,"")
+	rsp.JsonResonse(ctx, rsp.OK, data, "")
+
+}
+
+func UserCouponsList(ctx *gin.Context) {
+
+	userId := ctx.MustGet("user_id").(int64)
+	goodsId, _ := strconv.ParseInt(ctx.PostForm("goods_id"), 10, 64)
+	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
+	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
+
+	data := make(map[string]interface{})
+
+	userCoupons, total, lastPage, err := models.UserCouponsPaginate(page, pageSize, userId, goodsId)
+
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.CouponsListNotExits, nil, "")
+		return
+	}
+
+	data["user_coupons"] = userCoupons
+	data["total"] = total
+	data["lastPage"] = lastPage
+
+	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }
