@@ -150,3 +150,51 @@ func DeleteArticle(ctx *gin.Context) {
 	rsp.JsonResonse(ctx, rsp.OK, nil, "")
 
 }
+
+func Follow(ctx *gin.Context) {
+
+	userId := ctx.MustGet("user_id").(int64)
+	followId, _ := strconv.ParseInt(ctx.PostForm("follow_id"), 10, 64)
+
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+	if userId == followId {
+		rsp.JsonResonse(ctx, rsp.FollowedSelfFailed, nil, "")
+		return
+	}
+
+	res := models.GetUserFollowById(userId, followId)
+
+	userFollow := models.UserFollow{
+		UserId:   userId,
+		FollowId: followId,
+	}
+
+	if res {
+
+		err := userFollow.Delete()
+
+		if err != nil {
+
+			rsp.JsonResonse(ctx, rsp.FollowCancelFailed, nil, "")
+			return
+
+		}
+
+	} else {
+
+		err := userFollow.Create()
+		if err != nil {
+
+			rsp.JsonResonse(ctx, rsp.FollowedFailed, nil, "")
+			return
+
+		}
+
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
+
+}

@@ -6,6 +6,7 @@ import (
 	"soulfire/controllers/app/v1/activity"
 	"soulfire/controllers/app/v1/address"
 	"soulfire/controllers/app/v1/bbs"
+	"soulfire/controllers/app/v1/coupon"
 	"soulfire/controllers/app/v1/shop"
 	"soulfire/controllers/app/v1/user"
 	"soulfire/router/middleware"
@@ -53,8 +54,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 		b := app.Group("bbs")
 		{
-			b.GET("list", bbs.ArticleList)
-			b.GET("detail", bbs.Detail)
+
+			b.GET("user_articles/:user_id", bbs.UserArticleList)
 
 			b.GET("comment_list", bbs.CommentList)
 		}
@@ -67,6 +68,11 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mb.POST("del_article", bbs.DeleteArticle)
 
 			mb.POST("post_comment", bbs.PostComment)
+			mb.POST("follow", bbs.Follow)
+
+			b.GET("list", bbs.ArticleList)
+			b.GET("detail/:id", bbs.Detail)
+			b.GET("user_detail/:user_id", bbs.UserDetail)
 		}
 
 		s := app.Group("shop")
@@ -80,8 +86,6 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		ms := app.Group("shop").Use(middleware.Verify())
 		{
 			ms.GET("pre_order_detail/:goods_spu_id", shop.PreOrderDetail)
-			ms.POST("can_use_coupons", shop.UserCouponsList)
-
 		}
 
 		mad := app.Group("address").Use(middleware.Verify())
@@ -94,7 +98,11 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mad.GET("del/:id", address.DelAddress)
 
 		}
-
+		mc := app.Group("coupon").Use(middleware.Verify())
+		{
+			mc.POST("can_use_coupons", coupon.CanUseCouponsList)
+			mc.POST("user_coupons", coupon.UserCouponList)
+		}
 	}
 
 	return g

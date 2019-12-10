@@ -15,6 +15,8 @@ var (
 	LoginFailed      = &Errno{10301, "登录失败"}
 	GenerateTokenErr = &Errno{10302, "Generare Token Error"}
 	InvalidToken     = &Errno{10303, "Invalid token"}
+	UserNotExits     = &Errno{10304, "用户信息获取失败"}
+	PleaseLogin      = &Errno{10304, "请先授权登录"}
 
 	//4活动
 	BannersNotExits          = &Errno{10401, "活动banner不存在"}
@@ -26,7 +28,7 @@ var (
 	CreateActivityOrderFaild = &Errno{10407, "活动订单创建失败"}
 	ActivityOrderNotExits    = &Errno{10408, "活动订单不存在"}
 
-	//5bbs
+	//bbs
 	ArticleNotExits     = &Errno{10501, "文章不存在"}
 	ArticleCreateFailed = &Errno{10502, "文章发表失败"}
 	ArticleUpdateFailed = &Errno{10502, "文章更新失败"}
@@ -51,6 +53,12 @@ var (
 	AddressDeleteFailed        = &Errno{10805, "地址删除失败"}
 
 	//优惠券
-	CouponNotExits      = &Errno{10901, "优惠券获取失败"}
-	CouponsListNotExits = &Errno{10902, "优惠券获取失败"}
+	CouponNotExits          = &Errno{10901, "优惠券获取失败"}
+	CouponsListNotExits     = &Errno{10902, "优惠券获取失败"}
+	UserCouponsListNotExits = &Errno{10903, "用户优惠券获取失败"}
+
+	//关注
+	FollowCancelFailed = &Errno{1101, "取消关注失败"}
+	FollowedFailed     = &Errno{1101, "关注失败"}
+	FollowedSelfFailed = &Errno{1101, "不能关注自己"}
 )

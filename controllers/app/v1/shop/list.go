@@ -56,27 +56,3 @@ func PurchasersList(ctx *gin.Context) {
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }
-
-func UserCouponsList(ctx *gin.Context) {
-
-	userId := ctx.MustGet("user_id").(int64)
-	goodsId, _ := strconv.ParseInt(ctx.PostForm("goods_id"), 10, 64)
-	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
-	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
-
-	data := make(map[string]interface{})
-
-	userCoupons, total, lastPage, err := models.UserCouponsPaginate(page, pageSize, userId, goodsId)
-
-	if err != nil {
-		rsp.JsonResonse(ctx, rsp.CouponsListNotExits, nil, "")
-		return
-	}
-
-	data["user_coupons"] = userCoupons
-	data["total"] = total
-	data["lastPage"] = lastPage
-
-	rsp.JsonResonse(ctx, rsp.OK, data, "")
-
-}

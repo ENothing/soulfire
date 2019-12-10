@@ -45,7 +45,7 @@ func GetCanUseCouponCountById(userId int64, goodsId int64) (count int64) {
 
 }
 
-func UserCouponsPaginate(page int64, pageSize int64, userId, goodsId int64) (userCoupon []*UserCoupon, total int64, lastPage int64, err error) {
+func CanUseCouponsPaginate(page int64, pageSize int64, userId, goodsId int64) (userCoupon []*UserCoupon, total int64, lastPage int64, err error) {
 
 	userCoupon = make([]*UserCoupon, 0)
 	nowTime := utils.TimeFormat(time.Now(), 0)
@@ -63,6 +63,40 @@ func UserCouponsPaginate(page int64, pageSize int64, userId, goodsId int64) (use
 		Limit(pageSize).
 		Offset(offset).
 		Find(&userCoupon)
+
+	db.DB.Self.Model(&userCoupon).Count(&total)
+
+	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
+
+	return userCoupon, total, lastPage, res.Error
+
+}
+
+func UserCouponsPaginate(page int64, pageSize int64, userId, status int64) (userCoupon []*UserCoupon, total int64, lastPage int64, err error) {
+
+	userCoupon = make([]*UserCoupon, 0)
+	nowTime := utils.TimeFormat(time.Now(), 0)
+
+	offset := (page - 1) * pageSize
+
+	res := db.DB.Self.Where("user_id = ?", userId)
+
+	switch status {
+	case 0:
+		res = res.Where("is_used = ?", 0).Where("end_time >= ?", nowTime)
+		break
+	case 1:
+		res = res.Where("is_used = ?", 1)
+		break
+	case 2:
+		res = res.Where("is_used = ?", 0).Where("end_time < ?", nowTime)
+		break
+	default:
+		res = res.Where("is_used = ?", 0).Where("end_time >= ?", nowTime)
+	}
+
+	res = res.Joins("LEFT JOIN coupons as c on c.id = user_coupons.coupon_id").
+		Preload("Coupon").Limit(pageSize).Offset(offset).Find(&userCoupon)
 
 	db.DB.Self.Model(&userCoupon).Count(&total)
 

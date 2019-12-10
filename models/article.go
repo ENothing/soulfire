@@ -9,17 +9,18 @@ import (
 
 type Article struct {
 	Model
-	UserId    int64     `json:"user_id" gorm:"column:user_id;not null"`
-	Thumb     string     `json:"thumb" gorm:"column:thumb;not null"`
-	Title     string      `json:"title" gorm:"column:title;not null"`
-	Content   string     `json:"content" gorm:"column:content;not null"`
-	Likes     int64     `json:"likes" gorm:"column:likes;not null"`
-	View      int64     `json:"view" gorm:"column:view;not null"`
-	CateId    int64     `json:"cate_id" gorm:"column:cate_id;not null"`
-	IsPublish int64     `json:"is_publish" gorm:"column:is_publish;not null"`
-	CreatedAt time.Time  `gorm:";column:created_at" json:"created_at"`
-	UpdatedAt time.Time  `gorm:";column:updated_at" json:"updated_at"`
-	DeletedAt *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	UserId     int64      `json:"user_id" gorm:"column:user_id;not null"`
+	Thumb      string     `json:"thumb" gorm:"column:thumb;not null"`
+	Title      string     `json:"title" gorm:"column:title;not null"`
+	Content    string     `json:"content" gorm:"column:content;not null"`
+	Likes      int64      `json:"likes" gorm:"column:likes;not null"`
+	View       int64      `json:"view" gorm:"column:view;not null"`
+	CateId     int64      `json:"cate_id" gorm:"column:cate_id;not null"`
+	IsPublish  int64      `json:"is_publish" gorm:"column:is_publish;not null"`
+	IsFollowed int64      `json:"is_followed" gorm:"column:is_followed;not null"`
+	CreatedAt  time.Time  `gorm:";column:created_at" json:"created_at"`
+	UpdatedAt  time.Time  `gorm:";column:updated_at" json:"updated_at"`
+	DeletedAt  *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
 }
 
 func (Article) TableName() string {
@@ -32,15 +33,15 @@ func (a *Article) Create() error {
 
 }
 
-func (a *Article)Update(id int64,userId int64) error  {
+func (a *Article) Update(id int64, userId int64) error {
 
-	return db.DB.Self.Model(&a).Where("id = ?",id).Where("user_id = ?",userId).Updates(&a).Error
+	return db.DB.Self.Model(&a).Where("id = ?", id).Where("user_id = ?", userId).Updates(&a).Error
 
 }
 
-func (a *Article)Delete(id int64,userId int64)error{
+func (a *Article) Delete(id int64, userId int64) error {
 
-	return db.DB.Self.Where("id = ?",id).Where("user_id = ?",userId).Delete(&a).Error
+	return db.DB.Self.Where("id = ?", id).Where("user_id = ?", userId).Delete(&a).Error
 
 }
 
@@ -83,26 +84,34 @@ func ArticleLikeCutOne(id int64) error {
 
 }
 
-func GetArticleById(id int64) (*Article, error) {
+func GetArticleById(id, userId int64) (*Article, error) {
 
 	article := &Article{}
 
 	res := db.DB.Self.Where("id = ?", id).First(&article)
 
+	isFollowed := GetUserFollowById(userId, article.UserId)
+
+	status := 0
+	if isFollowed {
+		status = 1
+	}
+
+	article.IsFollowed = int64(status)
+
 	return article, res.Error
 
 }
 
-func GetSelfArticleById(id int64,userId int64) (*Article, error) {
+func GetSelfArticleById(id int64, userId int64) (*Article, error) {
 
 	article := &Article{}
 
-	res := db.DB.Self.Where("id = ?", id).Where("user_id = ?",userId).First(&article)
+	res := db.DB.Self.Where("id = ?", id).Where("user_id = ?", userId).First(&article)
 
 	return article, res.Error
 
 }
-
 
 func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title string) (articles []*Article, total int64, lastPage int64, err error) {
 
@@ -124,6 +133,24 @@ func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title
 	} else {
 		res = res.Order("created_at asc")
 	}
+
+	res = res.Limit(pageSize).Offset(offset).Find(&articles)
+	db.DB.Self.Model(&articles).Count(&total)
+
+	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
+
+	return articles, total, lastPage, res.Error
+}
+
+func UserArticlePaginate(page int64, pageSize int64, userId int64) (articles []*Article, total int64, lastPage int64, err error) {
+
+	articles = make([]*Article, 0)
+
+	offset := (page - 1) * pageSize
+
+	res := db.DB.Self.Where("user_id = ?", userId)
+
+	res = res.Order("created_at desc")
 
 	res = res.Limit(pageSize).Offset(offset).Find(&articles)
 	db.DB.Self.Model(&articles).Count(&total)
