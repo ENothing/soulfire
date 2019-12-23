@@ -21,6 +21,9 @@ type Article struct {
 	CreatedAt  time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt  time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt  *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+
+	NickName string `json:"nickname" gorm:"column:nickname;not null"`
+	Avatar   string `json:"avatar" gorm:"column:avatar;not null"`
 }
 
 func (Article) TableName() string {
@@ -88,7 +91,11 @@ func GetArticleById(id, userId int64) (*Article, error) {
 
 	article := &Article{}
 
-	res := db.DB.Self.Where("id = ?", id).First(&article)
+	res := db.DB.Self.
+		Where("articles.id = ?", id).
+		Joins("LEFT JOIN users AS u ON u.id=articles.user_id").
+		Select("articles.*,u.nickname as nickname,u.head_url as avatar").
+		First(&article)
 
 	isFollowed := GetUserFollowById(userId, article.UserId)
 
@@ -129,12 +136,17 @@ func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title
 	}
 
 	if sort == 0 {
-		res = res.Order("created_at desc")
+		res = res.Order("articles.created_at desc")
 	} else {
-		res = res.Order("created_at asc")
+		res = res.Order("articles.created_at asc")
 	}
 
-	res = res.Limit(pageSize).Offset(offset).Find(&articles)
+	res = res.
+		Joins("LEFT JOIN users AS u ON u.id=articles.user_id").
+		Select("articles.id,articles.user_id,articles.title,articles.thumb,articles.likes").
+		Limit(pageSize).
+		Offset(offset).
+		Find(&articles)
 	db.DB.Self.Model(&articles).Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))

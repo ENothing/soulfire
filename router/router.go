@@ -70,9 +70,9 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mb.POST("post_comment", bbs.PostComment)
 			mb.POST("follow", bbs.Follow)
 
-			b.GET("list", bbs.ArticleList)
-			b.GET("detail/:id", bbs.Detail)
-			b.GET("user_detail/:user_id", bbs.UserDetail)
+			mb.GET("list", bbs.ArticleList)
+			mb.GET("user_detail/:user_id", bbs.UserDetail)
+			mb.GET("detail/:id", bbs.Detail)
 		}
 
 		s := app.Group("shop")
