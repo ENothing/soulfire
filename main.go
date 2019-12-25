@@ -1,13 +1,12 @@
 package main
 
 import (
-	"soulfire/pkg/config"
-	"soulfire/pkg/db"
-	"soulfire/pkg/logging"
-	"soulfire/router"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"soulfire/pkg/config"
+	"soulfire/pkg/db"
+	"soulfire/router"
 )
 
 func main() {
@@ -21,11 +20,9 @@ func main() {
 
 	middlewares := []gin.HandlerFunc{}
 
-	router.Load(g,middlewares...)
+	router.Load(g, middlewares...)
 
-
-	logging.Logging(logging.INFO,"test")
-	log.Printf("服务开始运行：%s",":8080")
-	log.Printf(http.ListenAndServe(":8080",g).Error())
+	log.Printf("服务开始运行：%s", ":8080")
+	log.Printf(http.ListenAndServe(":8080", g).Error())
 
 }
