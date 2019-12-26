@@ -6,23 +6,16 @@ import (
 	"soulfire/pkg/rsp"
 )
 
-func Index(ctx *gin.Context)  {
+func Index(ctx *gin.Context) {
 
 	data := make(map[string]interface{})
 
-	shopBanners,_ := models.GetBannersByCate(3)
-
-
-	goodsCates,_ := models.GetGoodsCateLimitNum(8)
-
-
-
+	shopBanners, _ := models.GetBannersByCate(3)
+	goodsCates, _ := models.GetGoodsCateLimitNum(8)
 
 	data["shop_banners"] = shopBanners
 	data["goods_cates"] = goodsCates
 
-
-	rsp.JsonResonse(ctx, rsp.OK, data,"")
-
+	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }

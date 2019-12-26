@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -20,4 +21,10 @@ type ShopOrder struct {
 
 func (ShopOrder) TableName() string {
 	return "shop_orders"
+}
+
+func (so *ShopOrder) Create(userId, num, goodsSpuId, addressId, couponId int64) {
+
+	fmt.Println(123)
+
 }

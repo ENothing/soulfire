@@ -53,7 +53,7 @@ func PreOrderDetail(ctx *gin.Context) {
 
 	couponsCount := models.GetCanUseCouponCountById(userId, goodsSpu.GoodsId)
 
-	data["goods"] = goodsSpu
+	data["goods_spu"] = goodsSpu
 	data["default_address"] = defaultAddress
 	data["coupons_count"] = couponsCount
 

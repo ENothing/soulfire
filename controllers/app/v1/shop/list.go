@@ -56,3 +56,11 @@ func PurchasersList(ctx *gin.Context) {
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }
+
+func CateWithBrandList(ctx *gin.Context) {
+
+	goodsCates, _ := models.GetCateWithBrand()
+
+	rsp.JsonResonse(ctx, rsp.OK, goodsCates, "")
+
+}

@@ -24,6 +24,7 @@ type Article struct {
 
 	NickName string `json:"nickname" gorm:"column:nickname;not null"`
 	Avatar   string `json:"avatar" gorm:"column:avatar;not null"`
+	IsLike   string `json:"is_like" gorm:"column:is_like;not null"`
 }
 
 func (Article) TableName() string {
@@ -120,7 +121,7 @@ func GetSelfArticleById(id int64, userId int64) (*Article, error) {
 
 }
 
-func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title string) (articles []*Article, total int64, lastPage int64, err error) {
+func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title string, userId int64) (articles []*Article, total int64, lastPage int64, err error) {
 
 	articles = make([]*Article, 0)
 
@@ -143,7 +144,8 @@ func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title
 
 	res = res.
 		Joins("LEFT JOIN users AS u ON u.id=articles.user_id").
-		Select("articles.id,articles.user_id,articles.title,articles.thumb,articles.likes").
+		Joins("LEFT JOIN user_likes AS ul ON ul.type_id=articles.id AND ul.type=2 AND ul.user_id = ?", userId).
+		Select("articles.id,articles.user_id,articles.title,articles.thumb,articles.likes,if(ul.id is null,0,1) as is_like").
 		Limit(pageSize).
 		Offset(offset).
 		Find(&articles)

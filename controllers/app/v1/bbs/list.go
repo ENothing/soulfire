@@ -9,6 +9,7 @@ import (
 
 func ArticleList(ctx *gin.Context) {
 
+	userId, _ := strconv.ParseInt(ctx.Param("user_id"), 10, 64)
 	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	title := ctx.Query("title")
 	sort, _ := strconv.ParseInt(ctx.DefaultQuery("sort", "0"), 10, 64)
@@ -17,7 +18,7 @@ func ArticleList(ctx *gin.Context) {
 
 	data := make(map[string]interface{})
 
-	articles, total, lastPage, err := models.ArticlePaginate(page, pageSize, sort, cateId, title)
+	articles, total, lastPage, err := models.ArticlePaginate(page, pageSize, sort, cateId, title, userId)
 
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.ArticleNotExits, nil, "")
