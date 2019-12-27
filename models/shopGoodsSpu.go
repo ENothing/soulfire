@@ -1,6 +1,9 @@
 package models
 
-import "soulfire/pkg/db"
+import (
+	"github.com/jinzhu/gorm"
+	"soulfire/pkg/db"
+)
 
 type ShopGoodsSpu struct {
 	Model
@@ -15,6 +18,17 @@ type ShopGoodsSpu struct {
 
 func (ShopGoodsSpu) TableName() string {
 	return "shop_goods_spus"
+}
+
+func CutGoodsSpuStock(goodsSpuId, num int64) error {
+	shopGoodsSpu := &ShopGoodsSpu{}
+
+	res := db.DB.Self.Model(&shopGoodsSpu).
+		Where("id = ?", goodsSpuId).
+		Where("stock >= ", num).
+		UpdateColumn("stock", gorm.Expr("stock - ?", num))
+
+	return res.Error
 }
 
 func GetGoodsSpuById(goodsSpuId int64) (*ShopGoodsSpu, error) {

@@ -10,29 +10,33 @@ import (
 
 type ShopOrderGoods struct {
 	Model
-	OrderId       int64      `json:"order_id" gorm:"column:order_id;not null"`
-	GoodsId       int64      `json:"goods_id" gorm:"column:goods_id;not null"`
-	Num           int64      `json:"num" gorm:"column:num;not null"`
-	UnitPrice     float64    `json:"unit_price" gorm:"column:unit_price;not null"`
-	TotalPrice    float64    `json:"total_price" gorm:"column:total_price;not null"`
-	RealPrice     float64    `json:"real_price" gorm:"column:real_price;not null"`
-	DiscountPrice float64    `json:"discount_price" gorm:"column:discount_price;not null"`
-	CreatedAt     time.Time  `gorm:";column:created_at" json:"created_at"`
-	UpdatedAt     time.Time  `gorm:";column:updated_at" json:"updated_at"`
-	DeletedAt     *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
-	NickName string `json:"nickname" gorm:"column:nickname;not null"`
-	Avatar string `json:"avatar" gorm:"column:avatar;not null"`
-	CreatedAtFormat     string  `gorm:";column:created_at_format" json:"created_at_format"`
-	Specification     string  `gorm:";column:specification" json:"specification"`
-
+	OrderId         int64      `json:"order_id" gorm:"column:order_id;not null"`
+	GoodsId         int64      `json:"goods_id" gorm:"column:goods_id;not null"`
+	Num             int64      `json:"num" gorm:"column:num;not null"`
+	UnitPrice       float64    `json:"unit_price" gorm:"column:unit_price;not null"`
+	TotalPrice      float64    `json:"total_price" gorm:"column:total_price;not null"`
+	RealPrice       float64    `json:"real_price" gorm:"column:real_price;not null"`
+	DiscountPrice   float64    `json:"discount_price" gorm:"column:discount_price;not null"`
+	CreatedAt       time.Time  `gorm:";column:created_at" json:"created_at"`
+	UpdatedAt       time.Time  `gorm:";column:updated_at" json:"updated_at"`
+	DeletedAt       *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	NickName        string     `json:"nickname" gorm:"column:nickname;not null"`
+	Avatar          string     `json:"avatar" gorm:"column:avatar;not null"`
+	CreatedAtFormat string     `gorm:";column:created_at_format" json:"created_at_format"`
+	Specification   string     `gorm:";column:specification" json:"specification"`
 }
-
 
 func (ShopOrderGoods) TableName() string {
 	return "shop_order_goods"
 }
 
-func GetPurchasersById(goodsId int64) ([]*ShopOrderGoods,int64, error) {
+func (sog *ShopOrderGoods) Create() error {
+
+	return db.DB.Self.Create(&sog).Error
+
+}
+
+func GetPurchasersById(goodsId int64) ([]*ShopOrderGoods, int64, error) {
 
 	purchasers := make([]*ShopOrderGoods, 0)
 	var total int64
@@ -45,7 +49,7 @@ func GetPurchasersById(goodsId int64) ([]*ShopOrderGoods,int64, error) {
 		Limit(5).
 		Find(&purchasers)
 
-	for _,value := range purchasers {
+	for _, value := range purchasers {
 
 		fmt.Println(value.CreatedAt)
 		value.CreatedAtFormat = utils.TimeSpan(value.CreatedAt)
@@ -54,10 +58,9 @@ func GetPurchasersById(goodsId int64) ([]*ShopOrderGoods,int64, error) {
 
 	db.DB.Self.Table("shop_order_goods").Where("goods_id = ?", goodsId).Count(&total)
 
-	return purchasers,total, res.Error
+	return purchasers, total, res.Error
 
 }
-
 
 func ShopOrderGoodsPaginate(page int64, pageSize int64, goodsId int64) (shopOrderGoods []*ShopOrderGoods, total int64, lastPage int64, err error) {
 
@@ -78,7 +81,6 @@ func ShopOrderGoodsPaginate(page int64, pageSize int64, goodsId int64) (shopOrde
 	for _, value := range shopOrderGoods {
 		value.CreatedAtFormat = utils.TimeSpan(value.CreatedAt)
 	}
-
 
 	db.DB.Self.Model(&shopOrderGoods).Count(&total)
 

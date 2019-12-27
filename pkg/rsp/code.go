@@ -42,7 +42,10 @@ var (
 	GoodsListNotExits      = &Errno{10701, "商品列表获取失败"}
 	GoodsNotExits          = &Errno{10702, "商品获取失败"}
 	ShopOrderGoodsNotExits = &Errno{10703, "已购买人获取失败"}
-	ShopGoodsSpuNotExits   = &Errno{10703, "商品规格获取失败"}
+	ShopGoodsSpuNotExits   = &Errno{10704, "商品规格获取失败"}
+
+	ShopOrderCreateFailed = &Errno{10705, "订单创建失败，请重试~"}
+	ShopGoodsNotEnough    = &Errno{10705, "商品库存不足~"}
 
 	//地址
 	AddAddressRequired         = &Errno{10801, "地址添加缺少参数"}
@@ -50,7 +53,7 @@ var (
 	EditAddressFailed          = &Errno{10803, "地址更新失败"}
 	AddressNotExits            = &Errno{10804, "地址获取失败"}
 	UpdateDefaultAddressFailed = &Errno{10805, "默认地址更新失败"}
-	AddressDeleteFailed        = &Errno{10805, "地址删除失败"}
+	AddressDeleteFailed        = &Errno{10806, "地址删除失败"}
 
 	//优惠券
 	CouponNotExits          = &Errno{10901, "优惠券获取失败"}
@@ -58,7 +61,7 @@ var (
 	UserCouponsListNotExits = &Errno{10903, "用户优惠券获取失败"}
 
 	//关注
-	FollowCancelFailed = &Errno{1101, "取消关注失败"}
-	FollowedFailed     = &Errno{1101, "关注失败"}
-	FollowedSelfFailed = &Errno{1101, "不能关注自己"}
+	FollowCancelFailed = &Errno{11001, "取消关注失败"}
+	FollowedFailed     = &Errno{11002, "关注失败"}
+	FollowedSelfFailed = &Errno{11003, "不能关注自己"}
 )

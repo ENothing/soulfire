@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/jinzhu/gorm"
 	"math"
 	"soulfire/pkg/db"
 	"soulfire/utils"
@@ -30,8 +31,22 @@ type ShopGoods struct {
 func (sg *ShopGoods) AfterFind() (err error) {
 
 	sg.DecodeBanners = utils.JsonDecode(sg.Banners)
-	sg.PublishAtFormat = utils.TimeFormat(sg.PublishAt,1)
+	sg.PublishAtFormat = utils.TimeFormat(sg.PublishAt, 1)
 	return
+}
+
+func CutGoodsStockAndAddSold(goodsId, num int64) error {
+
+	shopGoods := &ShopGoods{}
+
+	res := db.DB.Self.Model(&shopGoods).
+		Where("id = ?", goodsId).
+		Where("stock >= ", num).
+		UpdateColumn("stock", gorm.Expr("stock - ?", num)).
+		UpdateColumn("sold", gorm.Expr("sold + ?", num))
+
+	return res.Error
+
 }
 
 func GetShopGoodsById(id int64) (*ShopGoods, error) {
