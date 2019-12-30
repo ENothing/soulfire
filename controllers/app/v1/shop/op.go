@@ -1,6 +1,7 @@
 package shop
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"soulfire/models"
@@ -32,7 +33,7 @@ func Buy(ctx *gin.Context) {
 		return
 	}
 
-	userCoupon, _ := models.GetUserCouponById(userId, goodsId, couponId)
+	userCoupon, userCouponErr := models.GetUserCouponById(userId, goodsId, couponId)
 
 	goodsSpu, err := models.GetGoodsSpuById(goodsSpuId)
 	if err == gorm.ErrRecordNotFound || err != nil {
@@ -48,26 +49,47 @@ func Buy(ctx *gin.Context) {
 
 	//优惠类型 1：满减 2：立减 3：打折
 	switch userCoupon["coupon_type"] {
-	case 1:
+	case int64(1):
 		if totalPrice >= (userCoupon["full_price"]).(float64) {
+			fmt.Println(123)
 			realPrice = totalPrice - (userCoupon["reduction_price"]).(float64)
+			fmt.Println(realPrice)
+
+			if realPrice < float64(0) {
+				realPrice = float64(0)
+			}
 			discountPrice = (userCoupon["reduction_price"]).(float64)
 		}
 		break
-	case 2:
+	case int64(2):
 		realPrice = totalPrice - (userCoupon["immediately_price"]).(float64)
+		if realPrice < float64(0) {
+			realPrice = float64(0)
+		}
 		discountPrice = (userCoupon["immediately_price"]).(float64)
 		break
-	case 3:
+	case int64(3):
 		realPrice = totalPrice * (userCoupon["discount"]).(float64)
 		discountPrice = totalPrice - realPrice
+		if discountPrice < float64(0) {
+			discountPrice = float64(0)
+		}
 		break
+	default:
+		realPrice = totalPrice
+		discountPrice = float64(0)
 	}
 
 	orderRealPrice := realPrice + goodsSpu.PostPrice
 
 	/* 订单创建事务-START */
 	transaction := db.DB.Self.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			transaction.Rollback()
+		}
+	}()
 
 	shopOrder := models.ShopOrder{
 		UserId:        userId,
@@ -94,43 +116,54 @@ func Buy(ctx *gin.Context) {
 		rsp.JsonResonse(ctx, rsp.ShopOrderCreateFailed, nil, "")
 		return
 	}
-	transaction.Rollback()
-	return
 
-	//shopOrderGoods := models.ShopOrderGoods{
-	//	OrderId:       orderId,
-	//	GoodsId:       goodsSpu.GoodsId,
-	//	Num:           num,
-	//	UnitPrice:     goodsSpu.Price,
-	//	TotalPrice:    totalPrice,
-	//	RealPrice:     realPrice,
-	//	DiscountPrice: discountPrice,
-	//}
-	//
-	//err = shopOrderGoods.Create()
-	//if err != nil {
-	//	transaction.Rollback()
-	//	rsp.JsonResonse(ctx, rsp.ShopOrderCreateFailed, nil, "")
-	//	return
-	//}
+	shopOrderGoods := models.ShopOrderGoodsCreateForm{
+		UserId:        userId,
+		OrderId:       orderId,
+		GoodsId:       goodsSpu.GoodsId,
+		Num:           num,
+		UnitPrice:     goodsSpu.Price,
+		TotalPrice:    totalPrice,
+		RealPrice:     realPrice,
+		DiscountPrice: discountPrice,
+		SpuId:         goodsSpuId,
+	}
 
-	///* 减库存-START */
-	//
-	//err = models.CutGoodsSpuStock(goodsSpuId, num)
-	//if err != nil {
-	//	transaction.Rollback()
-	//	rsp.JsonResonse(ctx, rsp.ShopGoodsNotEnough, nil, "")
-	//	return
-	//}
-	//
-	//err = models.CutGoodsStockAndAddSold(goodsId, num)
-	//if err != nil {
-	//	transaction.Rollback()
-	//	rsp.JsonResonse(ctx, rsp.ShopGoodsNotEnough, nil, "")
-	//	return
-	//}
-	//
-	///* 减库存-END */
+	err = shopOrderGoods.Create(transaction)
+	if err != nil {
+		transaction.Rollback()
+		rsp.JsonResonse(ctx, rsp.ShopOrderCreateFailed, nil, "")
+		return
+	}
+
+	/* 减库存-START */
+
+	err = models.CutGoodsSpuStock(goodsSpuId, num, transaction)
+	if err != nil {
+		transaction.Rollback()
+		rsp.JsonResonse(ctx, rsp.ShopGoodsNotEnough, nil, "")
+		return
+	}
+
+	err = models.CutGoodsStockAndAddSold(goodsId, num, transaction)
+	if err != nil {
+		transaction.Rollback()
+		rsp.JsonResonse(ctx, rsp.ShopGoodsNotEnough, nil, "")
+		return
+	}
+
+	/* 减库存-END */
+
+	/* 修改用户优惠券状态-START */
+	if userCouponErr != gorm.ErrRecordNotFound && userCouponErr == nil {
+		err = models.UpdateUserCouponIsUsed(userId, couponId, transaction)
+		if err != nil {
+			transaction.Rollback()
+			rsp.JsonResonse(ctx, rsp.ShopOrderCreateFailed, nil, "")
+			return
+		}
+	}
+	/* 修改用户优惠券状态-END */
 
 	transaction.Commit()
 	/* 订单创建事务-END */

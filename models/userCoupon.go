@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/jinzhu/gorm"
 	"math"
 	"soulfire/pkg/db"
 	"soulfire/utils"
@@ -26,6 +27,19 @@ func (UserCoupon) TableName() string {
 	return "user_coupons"
 }
 
+func UpdateUserCouponIsUsed(userId, couponId int64, transaction *gorm.DB) error {
+
+	userCoupon := &UserCoupon{}
+
+	res := transaction.Model(&userCoupon).
+		Where("user_id = ?", userId).
+		Where("coupon_id = ?", couponId).
+		UpdateColumn("is_used", 1)
+
+	return res.Error
+
+}
+
 func GetUserCouponById(userId, goodsId, couponId int64) (map[string]interface{}, error) {
 	userCoupon := &UserCoupon{}
 	nowTime := utils.TimeFormat(time.Now(), 0)
@@ -37,7 +51,13 @@ func GetUserCouponById(userId, goodsId, couponId int64) (map[string]interface{},
 		Where("is_used = ?", 0).
 		Where("end_time >= ?", nowTime).
 		Where("(is_goods = 1 AND FIND_IN_SET(?,goods_ids)) OR is_goods = 0", goodsId).
-		Select("user_coupons.*,c.coupon_type as coupon_type,c.full_price as full_price,c.reduction_price as reduction_price,c.immediately_price as immediately_price,c.discount as discount").
+		Select("" +
+			"user_coupons.*," +
+			"c.coupon_type as coupon_type," +
+			"c.full_price as full_price," +
+			"c.reduction_price as reduction_price," +
+			"c.immediately_price as immediately_price," +
+			"c.discount as discount").
 		First(&userCoupon)
 
 	data := make(map[string]interface{}, 0)
@@ -46,6 +66,9 @@ func GetUserCouponById(userId, goodsId, couponId int64) (map[string]interface{},
 	data["reduction_price"] = userCoupon.ReductionPrice
 	data["immediately_price"] = userCoupon.ImmediatelyPrice
 	data["discount"] = userCoupon.Discount
+	data["end_time"] = userCoupon.EndTime
+	data["is_used"] = userCoupon.IsUsed
+	data["id"] = userCoupon.Id
 
 	return data, res.Error
 

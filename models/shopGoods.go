@@ -35,13 +35,13 @@ func (sg *ShopGoods) AfterFind() (err error) {
 	return
 }
 
-func CutGoodsStockAndAddSold(goodsId, num int64) error {
+func CutGoodsStockAndAddSold(goodsId, num int64, transaction *gorm.DB) error {
 
 	shopGoods := &ShopGoods{}
 
-	res := db.DB.Self.Model(&shopGoods).
+	res := transaction.Model(&shopGoods).
 		Where("id = ?", goodsId).
-		Where("stock >= ", num).
+		Where("stock >= ?", num).
 		UpdateColumn("stock", gorm.Expr("stock - ?", num)).
 		UpdateColumn("sold", gorm.Expr("sold + ?", num))
 

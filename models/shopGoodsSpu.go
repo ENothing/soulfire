@@ -20,12 +20,12 @@ func (ShopGoodsSpu) TableName() string {
 	return "shop_goods_spus"
 }
 
-func CutGoodsSpuStock(goodsSpuId, num int64) error {
+func CutGoodsSpuStock(goodsSpuId, num int64, transaction *gorm.DB) error {
 	shopGoodsSpu := &ShopGoodsSpu{}
 
-	res := db.DB.Self.Model(&shopGoodsSpu).
+	res := transaction.Model(&shopGoodsSpu).
 		Where("id = ?", goodsSpuId).
-		Where("stock >= ", num).
+		Where("stock >= ?", num).
 		UpdateColumn("stock", gorm.Expr("stock - ?", num))
 
 	return res.Error

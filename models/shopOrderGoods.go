@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/jinzhu/gorm"
 	"math"
 	"soulfire/pkg/db"
 	"soulfire/utils"
@@ -10,6 +11,7 @@ import (
 
 type ShopOrderGoods struct {
 	Model
+	UserId          int64      `json:"user_id" gorm:"column:user_id;not null"`
 	OrderId         int64      `json:"order_id" gorm:"column:order_id;not null"`
 	GoodsId         int64      `json:"goods_id" gorm:"column:goods_id;not null"`
 	Num             int64      `json:"num" gorm:"column:num;not null"`
@@ -20,19 +22,40 @@ type ShopOrderGoods struct {
 	CreatedAt       time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt       time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt       *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	SpuId           int64      `json:"spu_id" gorm:"column:spu_id;not null"`
 	NickName        string     `json:"nickname" gorm:"column:nickname;not null"`
 	Avatar          string     `json:"avatar" gorm:"column:avatar;not null"`
 	CreatedAtFormat string     `gorm:";column:created_at_format" json:"created_at_format"`
 	Specification   string     `gorm:";column:specification" json:"specification"`
 }
 
+type ShopOrderGoodsCreateForm struct {
+	Model
+	UserId        int64      `json:"user_id" gorm:"column:user_id;not null"`
+	OrderId       int64      `json:"order_id" gorm:"column:order_id;not null"`
+	GoodsId       int64      `json:"goods_id" gorm:"column:goods_id;not null"`
+	Num           int64      `json:"num" gorm:"column:num;not null"`
+	UnitPrice     float64    `json:"unit_price" gorm:"column:unit_price;not null"`
+	TotalPrice    float64    `json:"total_price" gorm:"column:total_price;not null"`
+	RealPrice     float64    `json:"real_price" gorm:"column:real_price;not null"`
+	DiscountPrice float64    `json:"discount_price" gorm:"column:discount_price;not null"`
+	CreatedAt     time.Time  `gorm:";column:created_at" json:"created_at"`
+	UpdatedAt     time.Time  `gorm:";column:updated_at" json:"updated_at"`
+	DeletedAt     *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	SpuId         int64      `json:"spu_id" gorm:"column:spu_id;not null"`
+}
+
 func (ShopOrderGoods) TableName() string {
 	return "shop_order_goods"
 }
 
-func (sog *ShopOrderGoods) Create() error {
+func (ShopOrderGoodsCreateForm) TableName() string {
+	return "shop_order_goods"
+}
 
-	return db.DB.Self.Create(&sog).Error
+func (sogcf *ShopOrderGoodsCreateForm) Create(transaction *gorm.DB) error {
+
+	return transaction.Create(&sogcf).Error
 
 }
 

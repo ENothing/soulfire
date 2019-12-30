@@ -93,7 +93,7 @@ func Uid(prefix string) string {
 
 	uid := uuid.Must(uuid.NewV4())
 
-	return prefix + uid.String()
+	return (prefix + uid.String())[0:32]
 
 }
 

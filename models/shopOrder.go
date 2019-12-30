@@ -1,7 +1,7 @@
 package models
 
 import (
-	"soulfire/pkg/db"
+	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -32,7 +32,7 @@ func (ShopOrder) TableName() string {
 	return "shop_orders"
 }
 
-func (so *ShopOrder) Create(transaction *db.Database) (id int64, err error) {
+func (so *ShopOrder) Create(transaction *gorm.DB) (id int64, err error) {
 
 	err = transaction.Create(&so).Error
 	id = so.Id
