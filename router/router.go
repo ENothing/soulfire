@@ -88,6 +88,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		{
 			ms.GET("pre_order_detail/:goods_spu_id", shop.PreOrderDetail) //预订单详情
 			ms.POST("buy", shop.Buy)                                      //下单
+			ms.GET("order_detail/:order_id", shop.OrderDetail)            //订单详情
 		}
 
 		mad := app.Group("address").Use(middleware.Verify())

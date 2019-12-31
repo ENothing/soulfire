@@ -44,8 +44,9 @@ var (
 	ShopOrderGoodsNotExits = &Errno{10703, "已购买人获取失败"}
 	ShopGoodsSpuNotExits   = &Errno{10704, "商品规格获取失败"}
 
-	ShopOrderCreateFailed = &Errno{10705, "订单创建失败，请重试~"}
-	ShopGoodsNotEnough    = &Errno{10705, "商品库存不足~"}
+	ShopOrderCreateFailed = &Errno{10705, "订单创建失败，请重试"}
+	ShopGoodsNotEnough    = &Errno{10705, "商品库存不足"}
+	ShopOrderNotExits     = &Errno{10706, "订单详情获取失败"}
 
 	//地址
 	AddAddressRequired         = &Errno{10801, "地址添加缺少参数"}
@@ -56,7 +57,6 @@ var (
 	AddressDeleteFailed        = &Errno{10806, "地址删除失败"}
 
 	//优惠券
-	CouponNotExits          = &Errno{10901, "优惠券获取失败"}
 	CouponsListNotExits     = &Errno{10902, "优惠券获取失败"}
 	UserCouponsListNotExits = &Errno{10903, "用户优惠券获取失败"}
 

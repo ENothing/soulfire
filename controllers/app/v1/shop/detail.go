@@ -60,3 +60,19 @@ func PreOrderDetail(ctx *gin.Context) {
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }
+
+func OrderDetail(ctx *gin.Context) {
+
+	userId := ctx.MustGet("user_id").(int64)
+	orderId, _ := strconv.ParseInt(ctx.Param("order_id"), 10, 64)
+
+	order, err := models.GetOrderDetailById(userId, orderId)
+
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderNotExits, nil, "")
+		return
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, order, "")
+
+}

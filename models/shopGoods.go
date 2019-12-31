@@ -35,6 +35,10 @@ func (sg *ShopGoods) AfterFind() (err error) {
 	return
 }
 
+func (ShopGoods) TableName() string {
+	return "shop_goods"
+}
+
 func CutGoodsStockAndAddSold(goodsId, num int64, transaction *gorm.DB) error {
 
 	shopGoods := &ShopGoods{}
