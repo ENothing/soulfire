@@ -56,7 +56,7 @@ func ArticleViewAddOne(id int64) error {
 	res := db.DB.Self.Model(&article).
 		Where("id = ?", id).
 		Where("view > 0").
-		UpdateColumn("view", gorm.Expr("view + ?", 1))
+		Update("view", gorm.Expr("view + ?", 1))
 
 	return res.Error
 

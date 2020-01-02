@@ -46,8 +46,8 @@ func CutGoodsStockAndAddSold(goodsId, num int64, transaction *gorm.DB) error {
 	res := transaction.Model(&shopGoods).
 		Where("id = ?", goodsId).
 		Where("stock >= ?", num).
-		UpdateColumn("stock", gorm.Expr("stock - ?", num)).
-		UpdateColumn("sold", gorm.Expr("sold + ?", num))
+		Update("stock", gorm.Expr("stock - ?", num)).
+		Update("sold", gorm.Expr("sold + ?", num))
 
 	return res.Error
 

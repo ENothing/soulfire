@@ -9,8 +9,12 @@ import (
 	"soulfire/pkg/rsp"
 	"soulfire/utils"
 	"strconv"
+	"time"
 )
 
+/**
+下单
+*/
 func Buy(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
@@ -168,5 +172,121 @@ func Buy(ctx *gin.Context) {
 	transaction.Commit()
 	/* 订单创建事务-END */
 
+	//todo 队列:两小时关闭订单
+
 	rsp.JsonResonse(ctx, rsp.OK, orderId, "")
+}
+
+/**
+取消订单
+*/
+func CancelOrder(ctx *gin.Context) {
+
+	userId := ctx.MustGet("user_id").(int64)
+	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
+
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
+	err := models.UpdateOrderStatusToCancel(userId, orderId)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderCancelFailed, nil, "")
+		return
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
+
+}
+
+/**
+发起退款（待审核）
+*/
+func InitiateRefund(ctx *gin.Context) {
+
+	userId := ctx.MustGet("user_id").(int64)
+	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
+	orderGoodsId, _ := strconv.ParseInt(ctx.PostForm("order_goods_id"), 10, 64)
+	reason := ctx.PostForm("reason")
+	rType, _ := strconv.ParseInt(ctx.DefaultPostForm("r_type", "0"), 10, 64)
+	reasonPics := ctx.PostForm("reason_pics")
+
+	nowTime := utils.TimeFormat(time.Now(), 0)
+
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
+	hasShopOrderRefund, err := models.GetShopOrderRefundById(userId, orderId, orderGoodsId)
+	if err == nil && err != gorm.ErrRecordNotFound {
+		if hasShopOrderRefund.Status == models.PendingReview || hasShopOrderRefund.Status == models.Refunding || hasShopOrderRefund.Status == models.Refunded || hasShopOrderRefund.Status == models.AgreeRefund {
+			rsp.JsonResonse(ctx, rsp.ReShopOrderRefund, nil, "")
+			return
+		}
+	}
+
+	order, err := models.GetOrderById(userId, orderId)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderNotExits, nil, "")
+		return
+	}
+
+	if order.Status != models.ToBeDelivered && order.Status != models.ToBeReceived && order.Status != models.Completed {
+		rsp.JsonResonse(ctx, rsp.ShopOrderRefundRejected, nil, "")
+		return
+	}
+
+	if order.CompletedAtFormat != "" {
+		duringDays := utils.BetweenDays(nowTime, order.CompletedAtFormat)
+		if duringDays > int64(7) {
+			rsp.JsonResonse(ctx, rsp.ShopOrderRefundRejected, nil, "")
+			return
+		}
+	}
+
+	price := order.RealPrice
+	if order.Status == models.ToBeReceived || order.Status == models.Completed {
+		price = price - order.PostPrice
+		if price < float64(0) {
+			price = float64(0)
+		}
+	}
+
+	shopOrderRefund := models.ShopOrderRefund{
+		OrderGoodsId: orderGoodsId,
+		RefundN:      utils.Uid("RO"),
+		Price:        price,
+		Status:       models.PendingReview,
+		RType:        rType,
+		ReasonPics:   reasonPics,
+		Reason:       reason,
+		UserId:       userId,
+	}
+
+	err = shopOrderRefund.Create()
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderRefundFailed, nil, "")
+		return
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
+
+}
+
+/*
+退货退款状态填写快递信息
+*/
+func PostReturnInfo(ctx *gin.Context) {
+
+	userId := ctx.MustGet("user_id").(int64)
+	refundId, _ := strconv.ParseInt(ctx.PostForm("refund_id"), 10, 64)
+	express_id, _ := strconv.ParseInt(ctx.PostForm("express_id"), 10, 64)
+
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
 }

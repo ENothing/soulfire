@@ -26,7 +26,7 @@ func CutGoodsSpuStock(goodsSpuId, num int64, transaction *gorm.DB) error {
 	res := transaction.Model(&shopGoodsSpu).
 		Where("id = ?", goodsSpuId).
 		Where("stock >= ?", num).
-		UpdateColumn("stock", gorm.Expr("stock - ?", num))
+		Update("stock", gorm.Expr("stock - ?", num))
 
 	return res.Error
 }

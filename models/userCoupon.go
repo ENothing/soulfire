@@ -34,7 +34,7 @@ func UpdateUserCouponIsUsed(userId, couponId int64, transaction *gorm.DB) error 
 	res := transaction.Model(&userCoupon).
 		Where("user_id = ?", userId).
 		Where("coupon_id = ?", couponId).
-		UpdateColumn("is_used", 1)
+		Update("is_used", 1)
 
 	return res.Error
 

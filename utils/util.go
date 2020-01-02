@@ -155,3 +155,12 @@ func TimeSpan(t time.Time) string {
 	return timeStr
 
 }
+
+func BetweenDays(startTime, endTime string) int64 {
+
+	startT, _ := time.Parse("2006-01-02 15:04:05", startTime)
+	endT, _ := time.Parse("2006-01-02 15:04:05", endTime)
+	duringDays := int64((startT.Sub(endT).Hours()) / 24)
+
+	return duringDays
+}

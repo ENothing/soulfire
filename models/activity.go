@@ -39,7 +39,7 @@ func ActivityViewAddOne(id int64) error {
 	res := db.DB.Self.Model(&activity).
 		Where("id = ?", id).
 		Where("view > 0").
-		UpdateColumn("view", gorm.Expr("view + ?", 1))
+		Update("view", gorm.Expr("view + ?", 1))
 
 	return res.Error
 

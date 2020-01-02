@@ -9,7 +9,7 @@ var (
 	OK = &Errno{0, "OK"}
 
 	//2 系统
-	DatabaseErr = &Errno{10101, "Database Error"}
+	DatabaseErr = &Errno{10201, "Database Error"}
 
 	//3 用户
 	LoginFailed      = &Errno{10301, "登录失败"}
@@ -45,8 +45,13 @@ var (
 	ShopGoodsSpuNotExits   = &Errno{10704, "商品规格获取失败"}
 
 	ShopOrderCreateFailed = &Errno{10705, "订单创建失败，请重试"}
-	ShopGoodsNotEnough    = &Errno{10705, "商品库存不足"}
-	ShopOrderNotExits     = &Errno{10706, "订单详情获取失败"}
+	ShopGoodsNotEnough    = &Errno{10706, "商品库存不足"}
+	ShopOrderNotExits     = &Errno{10707, "订单获取失败"}
+	ShopOrderCancelFailed = &Errno{10708, "订单取消失败或已付款"}
+
+	ShopOrderRefundRejected = &Errno{10709, "当前订单不支持退款退货"}
+	ShopOrderRefundFailed   = &Errno{10710, "发起退款失败，请重试"}
+	ReShopOrderRefund       = &Errno{10710, "请勿重复发起退款"}
 
 	//地址
 	AddAddressRequired         = &Errno{10801, "地址添加缺少参数"}
