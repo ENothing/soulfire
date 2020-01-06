@@ -214,14 +214,19 @@ func InitiateRefund(ctx *gin.Context) {
 
 	nowTime := utils.TimeFormat(time.Now(), 0)
 
+	if reason == "" {
+		rsp.JsonResonse(ctx, rsp.ShopOrderRefundReasonEmpty, nil, "")
+		return
+	}
+
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}
 
-	hasShopOrderRefund, err := models.GetShopOrderRefundById(userId, orderId, orderGoodsId)
+	hasShopOrderRefund, err := models.GetShopOrderRefundByAnotherId(userId, orderId, orderGoodsId)
 	if err == nil && err != gorm.ErrRecordNotFound {
-		if hasShopOrderRefund.Status == models.PendingReview || hasShopOrderRefund.Status == models.Refunding || hasShopOrderRefund.Status == models.Refunded || hasShopOrderRefund.Status == models.AgreeRefund {
+		if hasShopOrderRefund.Status == models.PendingReview || hasShopOrderRefund.Status == models.Refunding || hasShopOrderRefund.Status == models.Refunded || hasShopOrderRefund.Status == models.AgreeRefund || hasShopOrderRefund.Status == models.PendingPass {
 			rsp.JsonResonse(ctx, rsp.ReShopOrderRefund, nil, "")
 			return
 		}
@@ -265,7 +270,13 @@ func InitiateRefund(ctx *gin.Context) {
 		UserId:       userId,
 	}
 
-	err = shopOrderRefund.Create()
+	refundId, err := shopOrderRefund.Create()
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderRefundFailed, nil, "")
+		return
+	}
+
+	err = models.UpdateOrderRefundId(userId, orderId, refundId)
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.ShopOrderRefundFailed, nil, "")
 		return
@@ -282,11 +293,36 @@ func PostReturnInfo(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
 	refundId, _ := strconv.ParseInt(ctx.PostForm("refund_id"), 10, 64)
-	express_id, _ := strconv.ParseInt(ctx.PostForm("express_id"), 10, 64)
+	expressN := ctx.PostForm("express_n")
+	expressId, _ := strconv.ParseInt(ctx.PostForm("express_id"), 10, 64)
 
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}
+
+	shopOrderRefund, err := models.GetShopOrderRefundById(userId, refundId)
+	if err != nil && err == gorm.ErrRecordNotFound {
+		rsp.JsonResonse(ctx, rsp.ShopOrderRefundNotExits, nil, "")
+		return
+	}
+
+	if shopOrderRefund.Status != models.AgreeRefund {
+		rsp.JsonResonse(ctx, rsp.ReShopOrderRefund, nil, "")
+		return
+	}
+	shopOrderRefundUpdate := models.ShopOrderRefund{
+		ExpressId: expressId,
+		ExpressN:  expressN,
+		Status:    models.PendingPass,
+	}
+	err = shopOrderRefundUpdate.UpdateShopOrderRefundExpress()
+
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderRefundPostFailed, nil, "")
+		return
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
 
 }

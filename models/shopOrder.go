@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
+	"math"
 	"soulfire/pkg/db"
 	"soulfire/utils"
 	"time"
@@ -113,15 +114,22 @@ func GetOrderById(userId, orderId int64) (*ShopOrder, error) {
 
 func UpdateOrderStatusToCancel(userId, orderId int64) error {
 
+	nowTime := utils.TimeFormat(time.Now(), 0)
+
 	return db.DB.Self.Model(&ShopOrderCreateForm{}).
 		Where("user_id = ?", userId).
 		Where("id = ?", orderId).
 		Where("status = ?", 0).
-		Update("status", CancelOrder).Error
+		Update("status", CancelOrder).Update("cancel_at", nowTime).Error
 
 }
 
-func UpdateOrderStatusToRefund(userId, orderId int64) {
+func UpdateOrderRefundId(userId, orderId, refundId int64) error {
+
+	return db.DB.Self.Model(&ShopOrderCreateForm{}).
+		Where("user_id = ?", userId).
+		Where("id = ?", orderId).
+		Update("refund_id", refundId).Error
 
 }
 
@@ -140,18 +148,62 @@ func GetOrderDetailById(userId, orderId int64) (interface{}, error) {
 		Select("shop_orders.*,sg.thumb as thumb,sg.name as goods_name,sgs.name as goods_spu_name").
 		First(&order)
 
-	db.DB.Self.Model(&ShopOrderRefund{}).
-		Where("shop_orders.id = ?", orderId).
-		Where("shop_orders.user_id = ?", userId).
+	refundOrderRes := db.DB.Self.Model(&ShopOrderRefund{}).
+		Where("order_id = ?", orderId).
+		Where("user_id = ?", userId).
+		First(&refundOrder)
+
+	data["order"] = order
+
+	if refundOrderRes.Error != nil || refundOrderRes.Error == gorm.ErrRecordNotFound {
+
+		data["refund_order"] = nil
+
+	} else {
+		data["refund_order"] = refundOrder
+	}
+
+	return data, res.Error
+
+}
+
+func ShopOrderPaginate(page int64, pageSize int64, userId int64, status string) (shopOrder []*ShopOrder, total int64, lastPage int64, err error) {
+
+	shopOrder = make([]*ShopOrder, 0)
+
+	offset := (page - 1) * pageSize
+
+	res := db.DB.Self
+
+	res = res.Where("shop_orders.user_id = ?", userId)
+
+	if status != "" {
+
+		if status == "4" { //退款退货
+
+			res = res.Where("shop_orders.refund_id != ?", 0)
+
+		} else {
+
+			res = res.Where("shop_orders.status = ?", status)
+
+		}
+
+	}
+
+	res = res.
 		Joins("LEFT JOIN shop_order_goods as sog ON sog.order_id = shop_orders.id").
 		Joins("LEFT JOIN shop_goods as sg ON sg.id = sog.goods_id").
 		Joins("LEFT JOIN shop_goods_spus as sgs ON sgs.id = sog.spu_id").
 		Select("shop_orders.*,sg.thumb as thumb,sg.name as goods_name,sgs.name as goods_spu_name").
-		First(&order)
+		Order("created_at desc").
+		Limit(pageSize).
+		Offset(offset).
+		Find(&shopOrder)
 
-	data["order"] = order
-	data["refund_order"] = refundOrder
+	db.DB.Self.Model(&shopOrder).Count(&total)
 
-	return order, res.Error
+	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 
+	return shopOrder, total, lastPage, res.Error
 }

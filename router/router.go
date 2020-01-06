@@ -31,7 +31,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		}
 		mu := app.Group("user").Use(middleware.Verify())
 		{
-			mu.GET("")
+			mu.POST("feedback", user.PostFeedback) //提交反馈
+
 		}
 
 		a := app.Group("activity")
@@ -91,8 +92,10 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 			ms.POST("buy", shop.Buy) //下单
 
-			ms.POST("order_cancel", shop.CancelOrder)       //取消订单
-			ms.POST("initiate_refund", shop.InitiateRefund) //发起退款
+			ms.POST("order_cancel", shop.CancelOrder)        //取消订单
+			ms.POST("initiate_refund", shop.InitiateRefund)  //发起退款
+			ms.POST("post_return_info", shop.PostReturnInfo) //填写退款单号
+			ms.GET("order_list", shop.OrderList)             //填写退款单号
 
 			ms.POST("pay", shop.Pay) //支付
 

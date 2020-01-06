@@ -12,11 +12,13 @@ var (
 	DatabaseErr = &Errno{10201, "Database Error"}
 
 	//3 用户
-	LoginFailed      = &Errno{10301, "登录失败"}
-	GenerateTokenErr = &Errno{10302, "Generare Token Error"}
-	InvalidToken     = &Errno{10303, "Invalid token"}
-	UserNotExits     = &Errno{10304, "用户信息获取失败"}
-	PleaseLogin      = &Errno{10304, "请先授权登录"}
+	LoginFailed         = &Errno{10301, "登录失败"}
+	GenerateTokenErr    = &Errno{10302, "Generare Token Error"}
+	InvalidToken        = &Errno{10303, "Invalid token"}
+	UserNotExits        = &Errno{10304, "用户信息获取失败"}
+	PleaseLogin         = &Errno{10305, "请先授权登录"}
+	FeedbackParamsEmpty = &Errno{10306, "缺少参数"}
+	FeedbackPostFailed  = &Errno{10306, "反馈提交失败,请重试"}
 
 	//4活动
 	BannersNotExits          = &Errno{10401, "活动banner不存在"}
@@ -44,14 +46,17 @@ var (
 	ShopOrderGoodsNotExits = &Errno{10703, "已购买人获取失败"}
 	ShopGoodsSpuNotExits   = &Errno{10704, "商品规格获取失败"}
 
-	ShopOrderCreateFailed = &Errno{10705, "订单创建失败，请重试"}
+	ShopOrderCreateFailed = &Errno{10705, "订单创建失败,请重试"}
 	ShopGoodsNotEnough    = &Errno{10706, "商品库存不足"}
 	ShopOrderNotExits     = &Errno{10707, "订单获取失败"}
 	ShopOrderCancelFailed = &Errno{10708, "订单取消失败或已付款"}
 
-	ShopOrderRefundRejected = &Errno{10709, "当前订单不支持退款退货"}
-	ShopOrderRefundFailed   = &Errno{10710, "发起退款失败，请重试"}
-	ReShopOrderRefund       = &Errno{10710, "请勿重复发起退款"}
+	ShopOrderRefundRejected    = &Errno{10709, "当前订单不支持退款退货"}
+	ShopOrderRefundFailed      = &Errno{10710, "发起退款失败,请重试"}
+	ReShopOrderRefund          = &Errno{10711, "请勿重复发起退款"}
+	ShopOrderRefundNotExits    = &Errno{10712, "退款订单获取失败,请重试"}
+	ShopOrderRefundPostFailed  = &Errno{10713, "退款表单提交失败"}
+	ShopOrderRefundReasonEmpty = &Errno{10714, "退款理由不能为空"}
 
 	//地址
 	AddAddressRequired         = &Errno{10801, "地址添加缺少参数"}
