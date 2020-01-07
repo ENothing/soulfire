@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	uuid "github.com/satori/go.uuid"
-	"io/ioutil"
-	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -56,37 +54,6 @@ func Md5(password string) (md5str string) {
 	has := md5.Sum(data)
 	return fmt.Sprintf("%x", has)
 
-}
-
-func HttpGet(request_url string) map[string]string {
-
-	resp, err := http.Get(request_url)
-
-	if err != nil {
-		// handle error
-		panic(err)
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		// handle error
-		panic(err)
-	}
-
-	bodyMap := make(map[string]string)
-
-	err = json.Unmarshal(body, &bodyMap)
-
-	if err != nil {
-
-		panic(err)
-
-	}
-
-	return bodyMap
 }
 
 func Uid(prefix string) string {

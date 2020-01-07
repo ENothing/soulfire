@@ -105,7 +105,7 @@ func Buy(ctx *gin.Context) {
 		RealPrice:     orderRealPrice,
 		DiscountPrice: discountPrice,
 		PostPrice:     goodsSpu.PostPrice,
-		Status:        int64(0),
+		Status:        models.PendingPay,
 		Name:          shipAddress.Name,
 		Mobile:        shipAddress.Mobile,
 		Province:      shipAddress.Province,

@@ -21,11 +21,11 @@ func Like(ctx *gin.Context) {
 
 		if err != nil {
 
-			rsp.JsonResonse(ctx, rsp.ActivityNotExits, nil,"")
+			rsp.JsonResonse(ctx, rsp.ActivityNotExits, nil, "")
 			return
 		}
 
-		rsp.JsonResonse(ctx, rsp.OK, likes,"")
+		rsp.JsonResonse(ctx, rsp.OK, likes, "")
 		return
 
 	}
@@ -34,10 +34,45 @@ func Like(ctx *gin.Context) {
 
 	if err != nil {
 
-		rsp.JsonResonse(ctx, rsp.ActivityNotExits, nil,"")
+		rsp.JsonResonse(ctx, rsp.ActivityNotExits, nil, "")
 		return
 	}
 
-	rsp.JsonResonse(ctx, rsp.OK, likes,"")
+	rsp.JsonResonse(ctx, rsp.OK, likes, "")
+
+}
+
+func Favor(ctx *gin.Context) {
+
+	userId := ctx.MustGet("user_id").(int64)
+
+	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
+
+	favor := models.FavorAndUnFavor(userId, id, 1)
+
+	if favor == true {
+
+		err := models.ActivityFavorAddOne(id)
+
+		if err != nil {
+
+			rsp.JsonResonse(ctx, rsp.ActivityNotExits, nil, "")
+			return
+		}
+
+		rsp.JsonResonse(ctx, rsp.OK, favor, "")
+		return
+
+	}
+
+	err := models.ActivityFavorCutOne(id)
+
+	if err != nil {
+
+		rsp.JsonResonse(ctx, rsp.ActivityNotExits, nil, "")
+		return
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, favor, "")
 
 }

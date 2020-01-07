@@ -88,6 +88,32 @@ func ArticleLikeCutOne(id int64) error {
 
 }
 
+func ArticleFavorAddOne(id int64) error {
+
+	article := &Article{}
+
+	res := db.DB.Self.Model(&article).
+		Where("id = ?", id).
+		Where("favor > 0").
+		UpdateColumn("favor", gorm.Expr("favor + ?", 1))
+
+	return res.Error
+
+}
+
+func ArticleFavorCutOne(id int64) error {
+
+	article := &Article{}
+
+	res := db.DB.Self.Model(&article).
+		Where("id = ?", id).
+		Where("favor > 0").
+		UpdateColumn("favor", gorm.Expr("favor - ?", 1))
+
+	return res.Error
+
+}
+
 func GetArticleById(id, userId int64) (*Article, error) {
 
 	article := &Article{}

@@ -198,3 +198,37 @@ func Follow(ctx *gin.Context) {
 	rsp.JsonResonse(ctx, rsp.OK, nil, "")
 
 }
+
+func Favor(ctx *gin.Context) {
+
+	userId := ctx.MustGet("user_id").(int64)
+
+	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
+
+	favor := models.FavorAndUnFavor(userId, id, 2)
+
+	if favor == true {
+
+		err := models.ActivityFavorAddOne(id)
+
+		if err != nil {
+
+			rsp.JsonResonse(ctx, rsp.ArticleNotExits, nil, "")
+			return
+		}
+
+		rsp.JsonResonse(ctx, rsp.OK, favor, "")
+		return
+
+	}
+
+	err := models.ActivityFavorCutOne(id)
+
+	if err != nil {
+
+		rsp.JsonResonse(ctx, rsp.ArticleNotExits, nil, "")
+		return
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, favor, "")
+}

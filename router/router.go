@@ -31,7 +31,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		}
 		mu := app.Group("user").Use(middleware.Verify())
 		{
-			mu.POST("feedback", user.PostFeedback) //提交反馈
+			mu.POST("feedback", user.PostFeedback)         //提交反馈
+			mu.GET("per_collect", user.PersonalCollection) //用户收藏列表
 
 		}
 
@@ -50,6 +51,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			ma.GET("order/:id", activity.OrderDetail)        //活动订单详情
 			ma.POST("pay", activity.Pay)                     //活动支付
 			ma.GET("order_list", activity.ActivityOrderList) //活动订单列表
+
+			ma.GET("favor/:id", activity.Favor) //收藏活动
 
 		}
 
@@ -70,6 +73,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 			mb.POST("post_comment", bbs.PostComment) //发表评论
 			mb.POST("follow", bbs.Follow)            //用户关注
+			mb.GET("favor/:id", bbs.Favor)           //收藏活动
 
 			mb.GET("list", bbs.ArticleList)                //文章列表
 			mb.GET("user_detail/:user_id", bbs.UserDetail) //用户个人页面信息

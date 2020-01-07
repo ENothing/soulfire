@@ -71,6 +71,32 @@ func ActivityLikeCutOne(id int64) error {
 
 }
 
+func ActivityFavorAddOne(id int64) error {
+
+	activity := &Activity{}
+
+	res := db.DB.Self.Model(&activity).
+		Where("id = ?", id).
+		Where("favor > 0").
+		UpdateColumn("favor", gorm.Expr("favor + ?", 1))
+
+	return res.Error
+
+}
+
+func ActivityFavorCutOne(id int64) error {
+
+	activity := &Activity{}
+
+	res := db.DB.Self.Model(&activity).
+		Where("id = ?", id).
+		Where("favor > 0").
+		UpdateColumn("favor", gorm.Expr("favor - ?", 1))
+
+	return res.Error
+
+}
+
 func GetActivityById(id int64) (*Activity, error) {
 
 	activity := &Activity{}

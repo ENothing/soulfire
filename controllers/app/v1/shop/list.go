@@ -70,7 +70,7 @@ func OrderList(ctx *gin.Context) {
 	userId := ctx.MustGet("user_id").(int64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
-	status := ctx.DefaultQuery("pageSize", "")
+	status := ctx.DefaultQuery("status", "")
 
 	data := make(map[string]interface{})
 
