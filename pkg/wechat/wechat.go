@@ -1,8 +1,8 @@
-package config
+package wechat
 
 import (
-	"fmt"
 	"soulfire/pkg/config"
+	"soulfire/pkg/wechat/login"
 )
 
 type Config struct {
@@ -22,11 +22,14 @@ func init() {
 
 	app, _ := config.Cfg.GetSection("wechat")
 
-	weConfig := Config{}
+	weConfig := &Config{}
 	weConfig.AppId = app.Key("APPID").String()
 	weConfig.Secret = app.Key("SECRET").String()
 	weConfig.MchId = app.Key("MCHID").String()
 	weConfig.Key = app.Key("KEY").String()
 
-	fmt.Println(weConfig)
+}
+
+func Login() *login.Login {
+	return login.NewLogin()
 }

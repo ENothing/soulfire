@@ -15,7 +15,7 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	data := wechat.Code2Session(code)
+	data := wechat.Login().Code2Session(code)
 
 	//if data["errcode"] == "0" {
 
