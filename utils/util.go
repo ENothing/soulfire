@@ -72,9 +72,9 @@ func JsonEncode(v interface{}) string {
 
 }
 
-func JsonDecode(v string) interface{} {
+func JsonDecode(v string) map[string]interface{} {
 
-	var bodyMap interface{}
+	var bodyMap map[string]interface{}
 
 	json.Unmarshal([]byte(v), &bodyMap)
 

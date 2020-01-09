@@ -1,40 +1,24 @@
 package login
 
 import (
-	"fmt"
-	"soulfire/pkg/wechat"
+	"soulfire/pkg/wechat/config"
 	"soulfire/utils"
 )
 
-type Login struct {
-}
+type Login struct{}
 
-func NewLogin() *Login {
+func (l *Login) Code2Session(code string) map[string]interface{} {
 
-	srv := new(Login)
-	return srv
-}
+	conf := config.NewConfig()
 
-func (l Login) Code2Session(code string) interface{} {
+	url := config.Code2SessionURL + "?appid=" + conf.AppId + "&secret=" + conf.Secret + "&js_code=" + code + "&grant_type=authorization_code"
 
-	config := wechat.Config{}
-
-	fmt.Println(config.AppId)
-
-	url := wechat.Code2SessionURL + "?appid=" + config.AppId + "&secret=" + config.Secret + "&js_code=" + code + "&grant_type=authorization_code"
-
-	var response []byte
-
-	response, _ = utils.HttpGet(url)
-	//if err != nil {
-	//	panic(err)
-	//}
+	response, err := utils.HttpGet(url)
+	if err != nil {
+		panic(err)
+	}
 
 	res := utils.JsonDecode(string(response))
 
 	return res
-
-	//str := (*string)(unsafe.Pointer(&response))
-	//response[0] = 'i'
-	//fmt.Println(*str)
 }

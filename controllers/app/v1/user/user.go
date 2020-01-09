@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"soulfire/pkg/rsp"
 	"soulfire/pkg/wechat"
@@ -10,14 +11,38 @@ func Login(ctx *gin.Context) {
 
 	code := ctx.PostForm("code")
 
-	if code != "" {
+	if code == "" {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}
 
-	data := wechat.Login().Code2Session(code)
+	wc := wechat.Wc{}
 
-	//if data["errcode"] == "0" {
+	data := wc.Login().Code2Session(code)
+
+	if data["errcode"] != nil && data["errcode"] != int64(0) {
+		rsp.JsonResonse(ctx, rsp.LoginFailed, nil, (data["errmsg"]).(string))
+		return
+	}
+	fmt.Println(data)
+
+	//_,err := models.GetUserByOpenid((data["openid"]).(string))
+	//if err != nil {
+	//	rsp.JsonResonse(ctx, rsp.DatabaseErr, nil,"")
+	//	return
+	//}
+	//if err == gorm.ErrRecordNotFound {
+	//
+	//	//user := models.User{
+	//	//
+	//	//}
+	//
+	//
+	//
+	//
+	//}
+
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
 
 	//userToken := jwt.UserToken{
 	//	1,
@@ -35,12 +60,6 @@ func Login(ctx *gin.Context) {
 	//}else{
 	//
 	//	rsp.JsonResonse(ctx, rsp.OK, token,"")
-	//
-	//}
-
-	//}else{
-	//
-	rsp.JsonResonse(ctx, rsp.LoginFailed, data, "")
 	//
 	//}
 

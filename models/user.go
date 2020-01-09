@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"soulfire/pkg/db"
 	"time"
 )
@@ -30,11 +29,13 @@ func (User) TableName() string {
 	return "users"
 }
 
-func (u *User) GetUserByOpenid(openid string) {
+func GetUserByOpenid(openid string) (*User, error) {
 
-	res := db.DB.Self.Where("openid = ?", openid).First(&u)
+	user := &User{}
 
-	fmt.Println(res)
+	res := db.DB.Self.Where("openid = ?", openid).First(&user)
+
+	return user, res.Error
 
 }
 
