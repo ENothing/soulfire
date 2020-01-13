@@ -19,6 +19,8 @@ var (
 	PleaseLogin         = &Errno{10305, "请先授权登录"}
 	FeedbackParamsEmpty = &Errno{10306, "缺少参数"}
 	FeedbackPostFailed  = &Errno{10306, "反馈提交失败,请重试"}
+	UserInfoGotFailed   = &Errno{10306, "用户信息获取失败"}
+	UserCreateFailed    = &Errno{10306, "用户信息创建失败,请重试"}
 
 	//4活动
 	BannersNotExits          = &Errno{10401, "活动banner不存在"}
