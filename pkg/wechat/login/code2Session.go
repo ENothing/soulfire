@@ -13,7 +13,7 @@ func (l *Login) Code2Session(code string) map[string]interface{} {
 
 	url := config.Code2SessionURL + "?appid=" + conf.AppId + "&secret=" + conf.Secret + "&js_code=" + code + "&grant_type=authorization_code"
 
-	response, err := utils.HttpGet(url)
+	response, err := utils.HttpGet(url, []utils.Header{})
 	if err != nil {
 		panic(err)
 	}

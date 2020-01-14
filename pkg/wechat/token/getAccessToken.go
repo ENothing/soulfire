@@ -13,7 +13,7 @@ func (t *Token) GetAccessToken() map[string]interface{} {
 
 	url := config.AccessTokenURL + "&appid=" + conf.AppId + "&secret=" + conf.Secret
 
-	response, err := utils.HttpGet(url)
+	response, err := utils.HttpGet(url, []utils.Header{})
 	if err != nil {
 		panic(err)
 	}

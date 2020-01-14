@@ -1,0 +1,11 @@
+package bbs
+
+func upload()  {
+
+
+
+
+
+
+
+}

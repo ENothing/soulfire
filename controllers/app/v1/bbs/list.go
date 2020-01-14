@@ -78,3 +78,16 @@ func UserArticleList(ctx *gin.Context) {
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }
+
+func ArticleCateList(ctx *gin.Context)  {
+
+	articleCates,err := models.GetArticleCates()
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ArticleCateGetFailed, nil, "")
+		return
+	}
+
+
+	rsp.JsonResonse(ctx, rsp.OK, articleCates, "")
+
+}

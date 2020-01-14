@@ -33,10 +33,11 @@ var (
 	ActivityOrderNotExits    = &Errno{10408, "活动订单不存在"}
 
 	//bbs
-	ArticleNotExits     = &Errno{10501, "文章不存在"}
-	ArticleCreateFailed = &Errno{10502, "文章发表失败"}
-	ArticleUpdateFailed = &Errno{10502, "文章更新失败"}
-	ArticleDeleteFailed = &Errno{10502, "文章删除失败"}
+	ArticleNotExits      = &Errno{10501, "文章不存在"}
+	ArticleCreateFailed  = &Errno{10502, "文章发表失败"}
+	ArticleUpdateFailed  = &Errno{10502, "文章更新失败"}
+	ArticleDeleteFailed  = &Errno{10502, "文章删除失败"}
+	ArticleCateGetFailed = &Errno{10503, "文章分类获取失败"}
 
 	//评论
 	ArticleCommentCreateFailed = &Errno{10602, "文章评论失败"}
@@ -76,4 +77,7 @@ var (
 	FollowCancelFailed = &Errno{11001, "取消关注失败"}
 	FollowedFailed     = &Errno{11002, "关注失败"}
 	FollowedSelfFailed = &Errno{11003, "不能关注自己"}
+
+	//快递
+	ExpressGetFailed = &Errno{12001, "暂未获取到快递信息"}
 )

@@ -209,7 +209,7 @@ func Favor(ctx *gin.Context) {
 
 	if favor == true {
 
-		err := models.ActivityFavorAddOne(id)
+		err := models.ArticleFavorAddOne(id)
 
 		if err != nil {
 
@@ -222,7 +222,7 @@ func Favor(ctx *gin.Context) {
 
 	}
 
-	err := models.ActivityFavorCutOne(id)
+	err := models.ArticleFavorCutOne(id)
 
 	if err != nil {
 

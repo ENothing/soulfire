@@ -10,7 +10,7 @@ type ActivityCate struct {
 }
 
 func (ActivityCate) TableName() string {
-	return "article_cates"
+	return "activity_cates"
 }
 
 
