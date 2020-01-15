@@ -19,7 +19,7 @@ func Md5(password string) (md5str string) {
 
 func Uid(prefix string) string {
 
-	uid := uuid.Must(uuid.NewV4())
+	uid := uuid.Must(uuid.NewV4(), nil)
 
 	return (prefix + uid.String())[0:32]
 

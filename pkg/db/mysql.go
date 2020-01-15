@@ -2,14 +2,14 @@ package db
 
 import (
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 	"soulfire/pkg/config"
 	"soulfire/pkg/logging"
-	"github.com/jinzhu/gorm"
-	_"github.com/go-sql-driver/mysql"
 )
 
 type Database struct {
-	Self   *gorm.DB
+	Self *gorm.DB
 	//Docker *gorm.DB
 }
 
@@ -17,13 +17,11 @@ var (
 	DB *Database
 )
 
-func (db *Database)Init()  {
+func (db *Database) Init() {
 	DB = &Database{
-		Self:GetSelfDB(),
+		Self: GetSelfDB(),
 	}
 }
-
-
 
 func GetSelfDB() *gorm.DB {
 
@@ -35,7 +33,7 @@ func GetSelfDB() *gorm.DB {
 	user := mysqlConfig.Key("USER").String()
 	password := mysqlConfig.Key("PASSWORD").String()
 
-	return connect(user,password,host+":"+port,database)
+	return connect(user, password, host+":"+port, database)
 }
 
 //func GetDockerDB() *gorm.DB {
@@ -50,7 +48,6 @@ func GetSelfDB() *gorm.DB {
 //
 //	return connect(user,password,host+":"+port,database)
 //}
-
 
 func connect(user, password, host, database string) *gorm.DB {
 
