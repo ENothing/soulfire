@@ -232,3 +232,7 @@ func Favor(ctx *gin.Context) {
 
 	rsp.JsonResonse(ctx, rsp.OK, favor, "")
 }
+
+func Upload() {
+
+}
