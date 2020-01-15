@@ -1,7 +1,7 @@
 RUN_MODE = debug
 
 [app]
-JWT_SECRET = LoM3KjxSziTclmdPe0gkNYJFV7ar2G8A
+JWT_SECRET =
 TOKEN_EXPIRESAT = 86400
 
 [server]
@@ -22,12 +22,16 @@ PASSWORD = root
 
 
 [wechat]
-APPID=wx276d9d32df17f41f
-SECRET=364c49fe0fb8759fe9b05be2f2afebc5
+APPID=
+SECRET=
 MCHID=123
 KEY=123
 
 [express]
-AppKey = 24718016
-AppSecret = 07c5b8b2d5f9f90e36b9e180541c9d15
-AppCode = c55de834cd664fb5a13ff1ea95c701dc
+AppKey =
+AppSecret =
+AppCode =
+
+[qiniu]
+AccessKey=
+secretKey=
