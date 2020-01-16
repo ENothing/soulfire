@@ -10,6 +10,7 @@ var (
 
 	//2 系统
 	DatabaseErr = &Errno{10201, "Database Error"}
+	UploadErr   = &Errno{10202, "文件上传失败，请重试"}
 
 	//3 用户
 	LoginFailed         = &Errno{10301, "登录失败"}
@@ -18,9 +19,9 @@ var (
 	UserNotExits        = &Errno{10304, "用户信息获取失败"}
 	PleaseLogin         = &Errno{10305, "请先授权登录"}
 	FeedbackParamsEmpty = &Errno{10306, "缺少参数"}
-	FeedbackPostFailed  = &Errno{10306, "反馈提交失败,请重试"}
-	UserInfoGotFailed   = &Errno{10306, "用户信息获取失败"}
-	UserCreateFailed    = &Errno{10306, "用户信息创建失败,请重试"}
+	FeedbackPostFailed  = &Errno{10307, "反馈提交失败,请重试"}
+	UserInfoGotFailed   = &Errno{10308, "用户信息获取失败"}
+	UserCreateFailed    = &Errno{10309, "用户信息创建失败,请重试"}
 
 	//4活动
 	BannersNotExits          = &Errno{10401, "活动banner不存在"}
@@ -40,7 +41,7 @@ var (
 	ArticleCateGetFailed = &Errno{10503, "文章分类获取失败"}
 
 	//评论
-	ArticleCommentCreateFailed = &Errno{10602, "文章评论失败"}
+	ArticleCommentCreateFailed = &Errno{10601, "文章评论失败"}
 	ArticleCommentListNotExits = &Errno{10602, "文章评论获取失败"}
 
 	//商城

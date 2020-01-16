@@ -63,7 +63,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 			b.GET("comment_list", bbs.CommentList) //评论列表
 
-			b.GET("article_cate", bbs.ArticleCateList)               //文章分类
+			b.GET("article_cate", bbs.ArticleCateList) //文章分类
 
 		}
 		mb := app.Group("bbs").Use(middleware.Verify())
@@ -81,6 +81,9 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mb.GET("list", bbs.ArticleList)                //文章列表
 			mb.GET("user_detail/:user_id", bbs.UserDetail) //用户个人页面信息
 			mb.GET("detail/:id", bbs.Detail)               //文章详情
+
+			mb.POST("upload", bbs.Upload) //文章详情
+
 		}
 
 		s := app.Group("shop")
@@ -105,8 +108,6 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			ms.GET("order_list", shop.OrderList)             //填写退款单号
 
 			ms.POST("pay", shop.Pay) //支付
-
-
 
 			ms.POST("exp_info", shop.GetExpress) //快递查询
 

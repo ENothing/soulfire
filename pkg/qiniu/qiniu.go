@@ -2,15 +2,11 @@ package qiniu
 
 import (
 	"context"
-	"fmt"
 	"github.com/qiniu/api.v7/storage"
 	"soulfire/pkg/qiniu/config"
-	"soulfire/utils"
 )
 
-func Upload(bucket, localFile string) {
-
-	key := utils.Uid("FE").png
+func Upload(bucket, localFile string, key string) (string, error) {
 
 	cfg := config.NewConfig()
 	upToken := config.UpToken(bucket)
@@ -20,9 +16,9 @@ func Upload(bucket, localFile string) {
 	putExtra := storage.PutExtra{}
 	err := formUploader.PutFile(context.Background(), &ret, upToken, key, localFile, &putExtra)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return "", err
 	}
-	fmt.Println(ret.Key, ret.Hash)
+
+	return ret.Key, nil
 
 }

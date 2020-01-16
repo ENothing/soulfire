@@ -2,9 +2,14 @@ package bbs
 
 import (
 	"github.com/gin-gonic/gin"
+	"os"
+	"path"
 	"soulfire/models"
+	"soulfire/pkg/config"
+	"soulfire/pkg/qiniu"
 	"soulfire/pkg/rsp"
 	"soulfire/pkg/verify"
+	"soulfire/utils"
 	"strconv"
 )
 
@@ -233,6 +238,35 @@ func Favor(ctx *gin.Context) {
 	rsp.JsonResonse(ctx, rsp.OK, favor, "")
 }
 
-func Upload() {
+func Upload(ctx *gin.Context) {
+
+	app, _ := config.Cfg.GetSection("qiniu")
+	bbsMediaUrl := app.Key("BbsMediaUrl").String()
+	file, _ := ctx.FormFile("file")
+	bucket := "soulfire-bbs"
+
+	ext := path.Ext(file.Filename)
+	key := utils.Uid("FE") + ext
+
+	dst := "runtime/tmp/imgs/" + key
+
+	err := ctx.SaveUploadedFile(file, dst)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.UploadErr, nil, "")
+		return
+	}
+
+	img, err := qiniu.Upload(bucket, dst, key)
+
+	url := bbsMediaUrl + "/" + img
+
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.UploadErr, nil, "")
+		return
+	}
+
+	_ = os.Remove(dst)
+
+	rsp.JsonResonse(ctx, rsp.OK, url, "")
 
 }

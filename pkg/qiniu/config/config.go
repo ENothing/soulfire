@@ -6,6 +6,28 @@ import (
 	"soulfire/pkg/config"
 )
 
+type Config struct {
+	AccessKey   string
+	SecretKey   string
+	BbsMediaUrl string
+}
+
+func GetQiniuConfig() *Config {
+
+	app, _ := config.Cfg.GetSection("qiniu")
+
+	accessKey := app.Key("AccessKey").String()
+	secretKey := app.Key("SecretKey").String()
+	mediaUrl := app.Key("BbsMediaUrl").String()
+
+	return &Config{
+		AccessKey:   accessKey,
+		SecretKey:   secretKey,
+		BbsMediaUrl: mediaUrl,
+	}
+
+}
+
 func NewConfig() *storage.Config {
 
 	cfg := storage.Config{}
@@ -17,18 +39,23 @@ func NewConfig() *storage.Config {
 
 }
 
+func NewMac() *qbox.Mac {
+
+	conf := GetQiniuConfig()
+
+	mac := qbox.NewMac(conf.AccessKey, conf.SecretKey)
+
+	return mac
+
+}
+
 func UpToken(bucket string) string {
 
-	app, _ := config.Cfg.GetSection("qiniu")
-
-	accessKey := app.Key("AccessKey").String()
-	secretKey := app.Key("SecretKey").String()
+	mac := NewMac()
 
 	putPolicy := storage.PutPolicy{
 		Scope: bucket,
 	}
-
-	mac := qbox.NewMac(accessKey, secretKey)
 
 	return putPolicy.UploadToken(mac)
 
