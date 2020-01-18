@@ -32,6 +32,7 @@ var (
 	EnterActivityRequired    = &Errno{10406, "报名信息填写不完整"}
 	CreateActivityOrderFaild = &Errno{10407, "活动订单创建失败"}
 	ActivityOrderNotExits    = &Errno{10408, "活动订单不存在"}
+	ActivityPersonIsFull    = &Errno{10408, "活动名额不足"}
 
 	//bbs
 	ArticleNotExits      = &Errno{10501, "文章不存在"}

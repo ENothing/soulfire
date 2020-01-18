@@ -97,7 +97,7 @@ func Buy(ctx *gin.Context) {
 
 	shopOrder := models.ShopOrderCreateForm{
 		UserId:        userId,
-		OrderN:        utils.Uid("SF"),
+		OrderN:        utils.Uid("SH"),
 		UserCouponId:  couponId,
 		Num:           num,
 		UnitPrice:     goodsSpu.Price,

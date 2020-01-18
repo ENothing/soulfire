@@ -16,13 +16,16 @@ type Activity struct {
 	Kind         int64      `json:"kind" gorm:"column:kind;not null"`
 	CurPrice     float64    `json:"cur_price" gorm:"column:cur_price;not null"`
 	OriPrice     float64    `json:"ori_price" gorm:"column:ori_price;not null"`
-	StartAt      string     `json:"start_at" gorm:"column:start_at;not null"`
-	EndAt        string     `json:"end_at" gorm:"column:end_at;not null"`
-	StartEnterAt string     `json:"start_enter_at" gorm:"column:start_enter_at;not null"`
-	EndEnterAt   string     `json:"end_enter_at" gorm:"column:end_enter_at;not null"`
-	PersonLimit  string     `json:"person_limit" gorm:"column:person_limit;not null"`
-	View         string     `json:"view" gorm:"column:view;not null"`
-	Likes        string     `json:"likes" gorm:"column:likes;not null"`
+	StartAt      time.Time  `json:"start_at" gorm:"column:start_at;not null"`
+	EndAt        time.Time  `json:"end_at" gorm:"column:end_at;not null"`
+	StartEnterAt time.Time  `json:"start_enter_at" gorm:"column:start_enter_at;not null"`
+	EndEnterAt   time.Time  `json:"end_enter_at" gorm:"column:end_enter_at;not null"`
+	PersonLimit  int64      `json:"person_limit" gorm:"column:person_limit;not null"`
+	View         int64      `json:"view" gorm:"column:view;not null"`
+	Likes        int64      `json:"likes" gorm:"column:likes;not null"`
+	Favor        int64      `json:"favor" gorm:"column:favor;not null"`
+	Sold         int64      `json:"sold" gorm:"column:sold;not null"`
+	IsPublish    int64      `json:"is_publish" gorm:"column:is_publish;not null"`
 	CreatedAt    time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt    time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt    *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
@@ -96,6 +99,19 @@ func ActivityFavorCutOne(id int64) error {
 	return res.Error
 
 }
+
+func ActivitySoldOne(id int64) error {
+
+	activity := &Activity{}
+
+	res := db.DB.Self.Model(&activity).
+		Where("id = ?", id).
+		UpdateColumn("sold", gorm.Expr("sold + ?", 1))
+
+	return res.Error
+
+}
+
 
 func GetActivityById(id int64) (*Activity, error) {
 
