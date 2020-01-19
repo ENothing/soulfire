@@ -1,26 +1,26 @@
 package activity
 
 import (
+	"github.com/gin-gonic/gin"
 	"soulfire/models"
 	"soulfire/pkg/rsp"
-	"github.com/gin-gonic/gin"
 	"strconv"
 )
 
-func ActivityList(ctx *gin.Context)  {
+func ActivityList(ctx *gin.Context) {
 
-	cateId,_ :=strconv.ParseInt(ctx.DefaultQuery("cate_id","0"),10,64)
+	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	title := ctx.Query("title")
-	sort,_ := strconv.ParseInt(ctx.DefaultQuery("sort","0"),10,64)
-	page,_ := strconv.ParseInt(ctx.DefaultQuery("page","1"),10,64)
-	pageSize,_ := strconv.ParseInt(ctx.DefaultQuery("pageSize","10"),10,64)
+	sort, _ := strconv.ParseInt(ctx.DefaultQuery("sort", "0"), 10, 64)
+	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
+	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "3"), 10, 64)
 
 	data := make(map[string]interface{})
 
-	activities,total,lastPage,err := models.ActivityPaginate(page,pageSize,sort,cateId,title)
+	activities, total, lastPage, err := models.ActivityPaginate(page, pageSize, sort, cateId, title)
 
 	if err != nil {
-		rsp.JsonResonse(ctx,rsp.ActivityListNotExits,nil,"")
+		rsp.JsonResonse(ctx, rsp.ActivityListNotExits, nil, "")
 		return
 	}
 
@@ -28,34 +28,34 @@ func ActivityList(ctx *gin.Context)  {
 	data["last_page"] = lastPage
 	data["activities"] = activities
 
-	rsp.JsonResonse(ctx,rsp.OK,data,"")
+	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }
 
-func ActivityCates(ctx *gin.Context)  {
+func ActivityCates(ctx *gin.Context) {
 
-	activityCates,err := models.GetActivityCateLimitNum(-1)
+	activityCates, err := models.GetActivityCateLimitNum(-1)
 
 	if err != nil {
-		rsp.JsonResonse(ctx,rsp.ActivityCateNotExits,nil,"")
+		rsp.JsonResonse(ctx, rsp.ActivityCateNotExits, nil, "")
 		return
 	}
 
-	rsp.JsonResonse(ctx,rsp.OK,activityCates,"")
+	rsp.JsonResonse(ctx, rsp.OK, activityCates, "")
 
 }
 
-func ActivityOrderList(ctx *gin.Context)  {
+func ActivityOrderList(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
-	page,_ := strconv.ParseInt(ctx.DefaultQuery("page","1"),10,64)
-	pageSize,_ := strconv.ParseInt(ctx.DefaultQuery("pageSize","10"),10,64)
-	status := ctx.DefaultQuery("pageSize","")
+	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
+	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
+	status := ctx.DefaultQuery("pageSize", "")
 
-	activityOrderList,total,lastPage,err := models.ActivityOrderPaginate(page,pageSize,userId,status)
+	activityOrderList, total, lastPage, err := models.ActivityOrderPaginate(page, pageSize, userId, status)
 
 	if err != nil {
-		rsp.JsonResonse(ctx,rsp.ActivityListNotExits,nil,"")
+		rsp.JsonResonse(ctx, rsp.ActivityListNotExits, nil, "")
 		return
 	}
 
@@ -65,6 +65,6 @@ func ActivityOrderList(ctx *gin.Context)  {
 	data["last_page"] = lastPage
 	data["activities"] = activityOrderList
 
-	rsp.JsonResonse(ctx,rsp.OK,data,"")
+	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }

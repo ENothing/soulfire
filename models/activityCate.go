@@ -6,23 +6,20 @@ import (
 
 type ActivityCate struct {
 	Model
-	Name string `json:"name" gorm:"column:name;not null"`
+	Name    string `json:"name" gorm:"column:name;not null"`
+	IconUrl string `json:"icon_url" gorm:"column:icon_url;not null"`
 }
 
 func (ActivityCate) TableName() string {
 	return "activity_cates"
 }
 
+func GetActivityCateLimitNum(num int64) ([]*ActivityCate, error) {
 
-func GetActivityCateLimitNum(num int64) ([]*ActivityCate,error) {
-
-	activityCates := make([]*ActivityCate,0)
+	activityCates := make([]*ActivityCate, 0)
 
 	res := db.DB.Self.Limit(num).Find(&activityCates)
 
-	return activityCates,res.Error
+	return activityCates, res.Error
 
 }
-
-
-
