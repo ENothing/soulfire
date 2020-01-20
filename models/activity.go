@@ -32,6 +32,9 @@ type Activity struct {
 	UpdatedAt       time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt       *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
 	CreatedAtFormat string     `json:"created_at_format" gorm:"column:created_at_format"`
+	StartAtFormat   string     `json:"start_at_format" gorm:"column:start_at_format"`
+	EndAtFormat     string     `json:"end_at_format" gorm:"column:end_at_format"`
+	Mobile          string     `json:"mobile" gorm:"column:mobile"`
 }
 
 func (Activity) TableName() string {
@@ -41,6 +44,8 @@ func (Activity) TableName() string {
 func (a *Activity) AfterFind() (err error) {
 
 	a.CreatedAtFormat = utils.TimeFormat(a.CreatedAt, 1)
+	a.StartAtFormat = utils.TimeFormat(a.StartAt, 0)
+	a.EndAtFormat = utils.TimeFormat(a.EndAt, 0)
 	return
 }
 func ActivityViewAddOne(id int64) error {

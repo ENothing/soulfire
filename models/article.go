@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"math"
 	"soulfire/pkg/db"
+	"soulfire/utils"
 	"time"
 )
 
@@ -21,14 +22,25 @@ type Article struct {
 	CreatedAt  time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt  time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt  *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+}
 
-	NickName string `json:"nickname" gorm:"column:nickname;not null"`
-	Avatar   string `json:"avatar" gorm:"column:avatar;not null"`
-	IsLike   string `json:"is_like" gorm:"column:is_like;not null"`
+type ArticleDetail struct {
+	Article
+	NickName        string `json:"nickname" gorm:"column:nickname;not null"`
+	Avatar          string `json:"avatar" gorm:"column:avatar;not null"`
+	Liked           bool   `json:"liked" gorm:"column:liked;not null"`
+	Follows         int64  `json:"follows" gorm:"column:follows;not null"`
+	CreatedAtFormat string `json:"created_at_format" gorm:"column:created_at_format"`
 }
 
 func (Article) TableName() string {
 	return "articles"
+}
+
+func (a *ArticleDetail) AfterFind() (err error) {
+
+	a.CreatedAtFormat = utils.TimeFormat(a.CreatedAt, 1)
+	return
 }
 
 func (a *Article) Create() error {
@@ -114,14 +126,14 @@ func ArticleFavorCutOne(id int64) error {
 
 }
 
-func GetArticleById(id, userId int64) (*Article, error) {
+func GetArticleById(id, userId int64) (*ArticleDetail, error) {
 
-	article := &Article{}
+	article := &ArticleDetail{}
 
 	res := db.DB.Self.
 		Where("articles.id = ?", id).
 		Joins("LEFT JOIN users AS u ON u.id=articles.user_id").
-		Select("articles.*,u.nickname as nickname,u.head_url as avatar").
+		Select("articles.*,u.nickname as nickname,u.head_url as avatar,u.follows as follows").
 		First(&article)
 
 	isFollowed := GetUserFollowById(userId, article.UserId)
@@ -147,9 +159,9 @@ func GetSelfArticleById(id int64, userId int64) (*Article, error) {
 
 }
 
-func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title string, userId int64) (articles []*Article, total int64, lastPage int64, err error) {
+func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title string, userId int64) (articles []*ArticleDetail, total int64, lastPage int64, err error) {
 
-	articles = make([]*Article, 0)
+	articles = make([]*ArticleDetail, 0)
 
 	offset := (page - 1) * pageSize
 
@@ -170,8 +182,8 @@ func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title
 
 	res = res.
 		Joins("LEFT JOIN users AS u ON u.id=articles.user_id").
-		Joins("LEFT JOIN user_likes AS ul ON ul.type_id=articles.id AND ul.type=2 AND ul.user_id = ?", userId).
-		Select("articles.id,articles.user_id,articles.title,articles.thumb,articles.likes,if(ul.id is null,0,1) as is_like").
+		Joins("LEFT JOIN user_likes AS ul ON ul.type_id=articles.id AND ul.own=2 AND ul.user_id = ?", userId).
+		Select("articles.id,articles.user_id,articles.title,articles.thumb,articles.likes,if(ul.id is null,false,true) as liked,u.nickname,u.head_url as avatar").
 		Limit(pageSize).
 		Offset(offset).
 		Find(&articles)

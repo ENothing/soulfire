@@ -9,12 +9,12 @@ import (
 
 func ArticleList(ctx *gin.Context) {
 
-	userId, _ := strconv.ParseInt(ctx.Param("user_id"), 10, 64)
+	userId := ctx.MustGet("user_id").(int64)
 	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	title := ctx.Query("title")
 	sort, _ := strconv.ParseInt(ctx.DefaultQuery("sort", "0"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
-	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
+	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "5"), 10, 64)
 
 	data := make(map[string]interface{})
 
@@ -44,7 +44,7 @@ func CommentList(ctx *gin.Context) {
 	articleComments, total, lastPage, err := models.ArticleCommentPaginate(page, pageSize, articleId)
 
 	if err != nil {
-		rsp.JsonResonse(ctx, rsp.ArticleCommentListNotExits, nil, "")
+		rsp.JsonResonse(ctx, rsp.OK, "", "")
 		return
 	}
 
@@ -79,14 +79,13 @@ func UserArticleList(ctx *gin.Context) {
 
 }
 
-func ArticleCateList(ctx *gin.Context)  {
+func ArticleCateList(ctx *gin.Context) {
 
-	articleCates,err := models.GetArticleCates()
+	articleCates, err := models.GetArticleCates()
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.ArticleCateGetFailed, nil, "")
 		return
 	}
-
 
 	rsp.JsonResonse(ctx, rsp.OK, articleCates, "")
 
