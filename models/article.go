@@ -15,6 +15,7 @@ type Article struct {
 	Title      string     `json:"title" gorm:"column:title;not null"`
 	Content    string     `json:"content" gorm:"column:content;not null"`
 	Likes      int64      `json:"likes" gorm:"column:likes;not null"`
+	Favor      int64      `json:"favor" gorm:"column:favor;not null"`
 	View       int64      `json:"view" gorm:"column:view;not null"`
 	CateId     int64      `json:"cate_id" gorm:"column:cate_id;not null"`
 	IsPublish  int64      `json:"is_publish" gorm:"column:is_publish;not null"`
@@ -183,7 +184,7 @@ func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title
 	res = res.
 		Joins("LEFT JOIN users AS u ON u.id=articles.user_id").
 		Joins("LEFT JOIN user_likes AS ul ON ul.type_id=articles.id AND ul.own=2 AND ul.user_id = ?", userId).
-		Select("articles.id,articles.user_id,articles.title,articles.thumb,articles.likes,if(ul.id is null,false,true) as liked,u.nickname,u.head_url as avatar").
+		Select("articles.id,articles.user_id,articles.title,articles.thumb,articles.likes,if(ul.id is null,false,true) as liked,u.nickname,u.head_url as avatar,articles.favor").
 		Limit(pageSize).
 		Offset(offset).
 		Find(&articles)

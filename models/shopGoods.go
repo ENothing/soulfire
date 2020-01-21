@@ -1,6 +1,7 @@
 package models
 
 import (
+	"encoding/json"
 	"github.com/jinzhu/gorm"
 	"math"
 	"soulfire/pkg/db"
@@ -28,9 +29,14 @@ type ShopGoods struct {
 	PublishAtFormat string      `json:"publish_at_format" gorm:"column:publish_at_format"`
 }
 
+type Banners struct {
+}
+
 func (sg *ShopGoods) AfterFind() (err error) {
 
-	sg.DecodeBanners = utils.JsonDecode(sg.Banners)
+	var decodeBanner interface{}
+	json.Unmarshal([]byte(sg.Banners), &decodeBanner)
+	sg.DecodeBanners = decodeBanner
 	sg.PublishAtFormat = utils.TimeFormat(sg.PublishAt, 1)
 	return
 }

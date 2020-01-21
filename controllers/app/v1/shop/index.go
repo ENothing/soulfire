@@ -10,7 +10,7 @@ func Index(ctx *gin.Context) {
 
 	data := make(map[string]interface{})
 
-	shopBanners, _ := models.GetBannersByCate(3)
+	shopBanners, _ := models.GetBannersByCate(2)
 	goodsCates, _ := models.GetGoodsCateLimitNum(8)
 
 	data["shop_banners"] = shopBanners

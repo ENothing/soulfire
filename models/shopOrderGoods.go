@@ -67,7 +67,7 @@ func GetPurchasersById(goodsId int64) ([]*ShopOrderGoods, int64, error) {
 	res := db.DB.Self.
 		Where("shop_order_goods.goods_id = ?", goodsId).
 		Joins("LEFT JOIN users as user ON user.id = shop_order_goods.user_id").
-		Joins("LEFT JOIN shop_goods_spus as sgs ON sgs.id = shop_order_goods.goods_spu_id").
+		Joins("LEFT JOIN shop_goods_spus as sgs ON sgs.id = shop_order_goods.spu_id").
 		Select("shop_order_goods.*,user.nickname as nickname,user.head_url as avatar, sgs.name as specification").
 		Limit(5).
 		Find(&purchasers)
@@ -94,7 +94,7 @@ func ShopOrderGoodsPaginate(page int64, pageSize int64, goodsId int64) (shopOrde
 	res := db.DB.Self.
 		Where("shop_order_goods.goods_id = ?", goodsId).
 		Joins("LEFT JOIN users as user ON user.id = shop_order_goods.user_id").
-		Joins("LEFT JOIN shop_goods_spus as sgs ON sgs.id = shop_order_goods.goods_spu_id").
+		Joins("LEFT JOIN shop_goods_spus as sgs ON sgs.id = shop_order_goods.spu_id").
 		Select("shop_order_goods.*,user.nickname as nickname,user.head_url as avatar, sgs.name as specification").
 		Order("created_at desc").
 		Limit(pageSize).

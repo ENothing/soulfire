@@ -6,7 +6,12 @@ import (
 
 type ShopGoodsCate struct {
 	Model
-	Name   string           `json:"name" gorm:"column:name;not null"`
+	Name    string `json:"name" gorm:"column:name;not null"`
+	IconUrl string `json:"icon_url" gorm:"column:icon_url;not null"`
+}
+
+type ShopGoodsCateWithBrand struct {
+	ShopGoodsCate
 	Brands []ShopGoodsBrand `json:"brands" gorm:"foreignkey:cate_id;PRELOAD:false"`
 }
 
@@ -24,9 +29,9 @@ func GetGoodsCateLimitNum(num int64) ([]*ShopGoodsCate, error) {
 
 }
 
-func GetCateWithBrand() ([]*ShopGoodsCate, error) {
+func GetCateWithBrand() ([]*ShopGoodsCateWithBrand, error) {
 
-	goodsCates := make([]*ShopGoodsCate, 0)
+	goodsCates := make([]*ShopGoodsCateWithBrand, 0)
 
 	res := db.DB.Self.Preload("Brands").Select("shop_goods_cates.*").Find(&goodsCates)
 
