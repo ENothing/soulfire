@@ -43,6 +43,11 @@ func PreOrderDetail(ctx *gin.Context) {
 
 	data := make(map[string]interface{}, 0)
 
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
 	defaultAddress, _ := models.GetDefaultAddress(userId)
 
 	goodsSpu, err := models.GetGoodsSpuById(goodsSpuId)
