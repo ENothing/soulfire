@@ -10,7 +10,7 @@ import (
 func CanUseCouponsList(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
-	goodsId, _ := strconv.ParseInt(ctx.PostForm("goods_id"), 10, 64)
+	goodsId, _ := strconv.ParseInt(ctx.Query("goods_id"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 
@@ -34,7 +34,7 @@ func CanUseCouponsList(ctx *gin.Context) {
 func UserCouponList(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
-	status, _ := strconv.ParseInt(ctx.PostForm("status"), 10, 64)
+	status, _ := strconv.ParseInt(ctx.Query("status"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 

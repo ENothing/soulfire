@@ -125,8 +125,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		}
 		mc := app.Group("coupon").Use(middleware.Verify())
 		{
-			mc.POST("can_use_coupons", coupon.CanUseCouponsList) //可用优惠券列表
-			mc.POST("user_coupons", coupon.UserCouponList)       //用户优惠券列表
+			mc.GET("can_use_coupons", coupon.CanUseCouponsList) //可用优惠券列表
+			mc.GET("user_coupons", coupon.UserCouponList)       //用户优惠券列表
 		}
 	}
 

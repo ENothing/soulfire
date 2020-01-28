@@ -2,6 +2,7 @@ package shop
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"soulfire/models"
 	"soulfire/pkg/rsp"
 	"strconv"
@@ -48,7 +49,10 @@ func PreOrderDetail(ctx *gin.Context) {
 		return
 	}
 
-	defaultAddress, _ := models.GetDefaultAddress(userId)
+	defaultAddress, err := models.GetDefaultAddress(userId)
+	if err != nil || err == gorm.ErrRecordNotFound {
+		defaultAddress = nil
+	}
 
 	goodsSpu, err := models.GetGoodsSpuById(goodsSpuId)
 	if err != nil {

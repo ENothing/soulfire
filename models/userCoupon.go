@@ -10,21 +10,30 @@ import (
 
 type UserCoupon struct {
 	Model
-	UserId           int64     `json:"user_id" gorm:"column:user_id;not null"`
-	CouponId         int64     `json:"coupon_id" gorm:"column:coupon_id;not null"`
-	ReceiveTime      time.Time `json:"receive_time" gorm:"column:receive_time;not null"`
-	EndTime          time.Time `json:"end_time" gorm:"column:end_time;not null"`
-	IsUsed           int64     `json:"is_used" gorm:"column:is_used;not null"`
-	Coupon           Coupon    `json:"coupon" gorm:"foreignkey:coupon_id;PRELOAD:false"`
-	CouponType       int64     `json:"coupon_type" gorm:"column:coupon_type;not null"`
-	FullPrice        float64   `json:"full_price" gorm:"column:full_price;not null"`
-	ReductionPrice   float64   `json:"reduction_price" gorm:"column:reduction_price;not null"`
-	ImmediatelyPrice float64   `json:"immediately_price" gorm:"column:immediately_price;not null"`
-	Discount         float64   `json:"discount" gorm:"column:discount;not null"`
+	UserId            int64     `json:"user_id" gorm:"column:user_id;not null"`
+	CouponId          int64     `json:"coupon_id" gorm:"column:coupon_id;not null"`
+	ReceiveTime       time.Time `json:"receive_time" gorm:"column:receive_time;not null"`
+	EndTime           time.Time `json:"end_time" gorm:"column:end_time;not null"`
+	IsUsed            int64     `json:"is_used" gorm:"column:is_used;not null"`
+	Coupon            Coupon    `json:"coupon" gorm:"foreignkey:coupon_id;PRELOAD:false"`
+	CouponType        int64     `json:"coupon_type" gorm:"column:coupon_type;not null"`
+	FullPrice         float64   `json:"full_price" gorm:"column:full_price;not null"`
+	ReductionPrice    float64   `json:"reduction_price" gorm:"column:reduction_price;not null"`
+	ImmediatelyPrice  float64   `json:"immediately_price" gorm:"column:immediately_price;not null"`
+	Discount          float64   `json:"discount" gorm:"column:discount;not null"`
+	ReceiveTimeFormat string    `json:"receive_time_format" gorm:"column:receive_time_format"`
+	EndTimeFormat     string    `json:"end_time_format" gorm:"column:end_time_format"`
 }
 
 func (UserCoupon) TableName() string {
 	return "user_coupons"
+}
+
+func (u *UserCoupon) AfterFind() (err error) {
+
+	u.ReceiveTimeFormat = utils.TimeFormat(u.ReceiveTime, 1)
+	u.EndTimeFormat = utils.TimeFormat(u.EndTime, 1)
+	return
 }
 
 func UpdateUserCouponIsUsed(userId, couponId int64, transaction *gorm.DB) error {
