@@ -144,13 +144,13 @@ func UserCouponsPaginate(page int64, pageSize int64, userId, status int64) (user
 	res := db.DB.Self.Where("user_id = ?", userId)
 
 	switch status {
-	case 0:
+	case int64(0):
 		res = res.Where("is_used = ?", 0).Where("end_time >= ?", nowTime)
 		break
-	case 1:
+	case int64(1):
 		res = res.Where("is_used = ?", 1)
 		break
-	case 2:
+	case int64(2):
 		res = res.Where("is_used = ?", 0).Where("end_time < ?", nowTime)
 		break
 	default:

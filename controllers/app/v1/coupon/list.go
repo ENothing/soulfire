@@ -40,6 +40,11 @@ func UserCouponList(ctx *gin.Context) {
 
 	data := make(map[string]interface{})
 
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
 	userCoupons, total, lastPage, err := models.UserCouponsPaginate(page, pageSize, userId, status)
 
 	if err != nil {
