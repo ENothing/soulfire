@@ -33,7 +33,7 @@ func PersonalCollection(ctx *gin.Context) {
 
 	data["list"] = dataList
 	data["total"] = total
-	data["lastPage"] = lastPage
+	data["last_page"] = lastPage
 	data["err"] = err
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")

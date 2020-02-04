@@ -11,8 +11,8 @@ type ShopGoodsSpu struct {
 	Name      string  `json:"name" gorm:"column:name;not null"`
 	Price     float64 `json:"price" gorm:"column:price;not null"`
 	Stock     int64   `json:"stock" gorm:"column:stock;not null"`
-	GoodsName string  `json:"goods_name" gorm:"column:goods_name;not null"`
-	Thumb     string  `json:"thumb" gorm:"column:thumb;not null"`
+	//GoodsName string  `json:"goods_name" gorm:"column:goods_name;not null"`
+	//Thumb     string  `json:"thumb" gorm:"column:thumb;not null"`
 	PostPrice float64 `json:"post_price" gorm:"column:post_price;not null"`
 }
 

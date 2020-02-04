@@ -28,7 +28,7 @@ func GoodsList(ctx *gin.Context) {
 
 	data["goods"] = goods
 	data["total"] = total
-	data["lastPage"] = lastPage
+	data["last_page"] = lastPage
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
@@ -51,7 +51,7 @@ func PurchasersList(ctx *gin.Context) {
 
 	data["purchasers"] = purchasers
 	data["total"] = total
-	data["lastPage"] = lastPage
+	data["last_page"] = lastPage
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
@@ -88,7 +88,7 @@ func OrderList(ctx *gin.Context) {
 
 	data["orders"] = orders
 	data["total"] = total
-	data["lastPage"] = lastPage
+	data["last_page"] = lastPage
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 }

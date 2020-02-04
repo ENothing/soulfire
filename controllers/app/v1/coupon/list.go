@@ -25,7 +25,7 @@ func CanUseCouponsList(ctx *gin.Context) {
 
 	data["coupons"] = userCoupons
 	data["total"] = total
-	data["lastPage"] = lastPage
+	data["last_page"] = lastPage
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
@@ -54,7 +54,7 @@ func UserCouponList(ctx *gin.Context) {
 
 	data["coupons"] = userCoupons
 	data["total"] = total
-	data["lastPage"] = lastPage
+	data["last_page"] = lastPage
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 

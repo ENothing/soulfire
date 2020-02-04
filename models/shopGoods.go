@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type ShopGoods struct {
+type BaseShopGoods struct {
 	Model
 	CateId          int64       `json:"cate_id" gorm:"column:cate_id;not null"`
 	BrandId         int64       `json:"brand_id" gorm:"column:brand_id;not null"`
@@ -21,10 +21,17 @@ type ShopGoods struct {
 	OriPrice        float64     `json:"ori_price" gorm:"column:ori_price;not null"`
 	Stock           int64       `json:"stock" gorm:"column:stock;not null"`
 	Sold            int64       `json:"sold" gorm:"column:sold;not null"`
+	IsShelf         int64       `json:"is_shelf" gorm:"column:is_shelf;not null"`
+	GoodsN          string      `json:"goods_n" gorm:"column:goods_n;not null"`
 	CreatedAt       time.Time   `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt       time.Time   `gorm:";column:updated_at" json:"updated_at"`
 	PublishAt       time.Time   `gorm:";column:publish_at" json:"publish_at"`
 	DeletedAt       *time.Time  `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+}
+
+
+type ShopGoods struct {
+	BaseShopGoods
 	DecodeBanners   interface{} `json:"decode_banners" gorm:"column:decode_banners"`
 	PublishAtFormat string      `json:"publish_at_format" gorm:"column:publish_at_format"`
 }
@@ -44,6 +51,11 @@ func (sg *ShopGoods) AfterFind() (err error) {
 func (ShopGoods) TableName() string {
 	return "shop_goods"
 }
+
+func (BaseShopGoods) TableName() string {
+	return "shop_goods"
+}
+
 
 func CutGoodsStockAndAddSold(goodsId, num int64, transaction *gorm.DB) error {
 
