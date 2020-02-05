@@ -8,6 +8,7 @@ import (
 	"soulfire/controllers/app/v1/bbs"
 	"soulfire/controllers/app/v1/coupon"
 	"soulfire/controllers/app/v1/shop"
+	"soulfire/controllers/app/v1/tool"
 	"soulfire/controllers/app/v1/user"
 	"soulfire/router/middleware"
 )
@@ -111,6 +112,12 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 			ms.POST("exp_info", shop.GetExpress) //快递查询
 
+
+			ms.GET("search_history", shop.GetHistory) //获取历史和热门搜索
+			ms.GET("dynamic_history", shop.DynamicHistory) //动态获取相似搜索内容
+
+
+
 		}
 
 		mad := app.Group("address").Use(middleware.Verify())
@@ -128,6 +135,15 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mc.GET("can_use_coupons", coupon.CanUseCouponsList) //可用优惠券列表
 			mc.GET("user_coupons", coupon.UserCouponList)       //用户优惠券列表
 		}
+
+
+
+		t := app.Group("tool")
+		{
+			t.GET("goods", tool.GenerateGoods)
+		}
+
+
 	}
 
 	return g

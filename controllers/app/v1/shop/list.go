@@ -9,6 +9,7 @@ import (
 
 func GoodsList(ctx *gin.Context) {
 
+	userId := ctx.MustGet("user_id").(int64)
 	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	brandId, _ := strconv.ParseInt(ctx.DefaultQuery("brand_id", "0"), 10, 64)
 	name := ctx.Query("goods_name")
@@ -18,6 +19,15 @@ func GoodsList(ctx *gin.Context) {
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 
 	data := make(map[string]interface{})
+
+	if name != "" && userId != int64(0){
+		shopSearchHistory := models.ShopSearchHistory{
+			UserId:userId,
+			Kword:name,
+		}
+
+		_ = shopSearchHistory.Create()
+	}
 
 	goods, total, lastPage, err := models.ShopGoodsPaginate(page, pageSize, sortType, sort, name, cateId, brandId)
 
