@@ -37,3 +37,20 @@ func DynamicHistory(ctx *gin.Context)  {
 	rsp.JsonResonse(ctx,rsp.OK,shopSearchHistory,"")
 
 }
+
+func DelSearchHistory(ctx *gin.Context)  {
+
+	userId := ctx.MustGet("user_id").(int64)
+
+	err := models.DelAllHistoryByUserId(userId)
+	if err != nil {
+
+		rsp.JsonResonse(ctx,rsp.ShopHistoryDelFailed,nil,"")
+		return
+
+	}
+
+	rsp.JsonResonse(ctx,rsp.OK,nil,"")
+
+
+}

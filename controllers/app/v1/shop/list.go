@@ -1,6 +1,7 @@
 package shop
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"soulfire/models"
 	"soulfire/pkg/rsp"
@@ -12,7 +13,7 @@ func GoodsList(ctx *gin.Context) {
 	userId := ctx.MustGet("user_id").(int64)
 	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	brandId, _ := strconv.ParseInt(ctx.DefaultQuery("brand_id", "0"), 10, 64)
-	name := ctx.Query("goods_name")
+	kword := ctx.DefaultQuery("kword", "")
 	sort, _ := strconv.ParseInt(ctx.DefaultQuery("sort", "0"), 10, 64)
 	sortType, _ := strconv.ParseInt(ctx.DefaultQuery("sort_type", "0"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
@@ -20,16 +21,16 @@ func GoodsList(ctx *gin.Context) {
 
 	data := make(map[string]interface{})
 
-	if name != "" && userId != int64(0){
+	if kword != "" && userId != int64(0){
 		shopSearchHistory := models.ShopSearchHistory{
 			UserId:userId,
-			Kword:name,
+			Kword:kword,
 		}
 
 		_ = shopSearchHistory.Create()
 	}
 
-	goods, total, lastPage, err := models.ShopGoodsPaginate(page, pageSize, sortType, sort, name, cateId, brandId)
+	goods, total, lastPage, err := models.ShopGoodsPaginate(page, pageSize, sortType, sort, kword, cateId, brandId)
 
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.GoodsListNotExits, nil, "")

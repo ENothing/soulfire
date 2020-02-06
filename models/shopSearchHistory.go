@@ -42,6 +42,11 @@ func (ssh *ShopSearchHistory)Create()(err error) {
 
 }
 
+func DelAllHistoryByUserId(userId int64)error  {
+	return db.DB.Self.Where("user_id = ?", userId).Delete(&ShopSearchHistory{}).Error
+}
+
+
 func GetHistoryByUserId(userId int64)(shopSearchHistory []*ShopSearchHistory,err error)  {
 
 	err = db.DB.Self.Where("user_id = ?",userId).Order("updated_at desc").Find(&shopSearchHistory).Error
@@ -53,6 +58,7 @@ func GetHistoryByUserId(userId int64)(shopSearchHistory []*ShopSearchHistory,err
 func GetHotHistory()(shopHotHistory []*shopHotHistory,err error){
 
 	err = db.DB.Self.
+		Unscoped().
 		Select("kword").
 		Group("kword").
 		Order("count(id) desc").
@@ -65,7 +71,7 @@ func GetHotHistory()(shopHotHistory []*shopHotHistory,err error){
 
 func GetDynamicHistory(kword string)(shopSearchHistory []*ShopSearchHistory,err error)  {
 
-	err = db.DB.Self.Where("kword LIKE ?", "%"+kword+"%").Order("updated_at desc").Limit(20).Find(&shopSearchHistory).Error
+	err = db.DB.Self.Unscoped().Where("kword LIKE ?", "%"+kword+"%").Group("kword").Order("updated_at desc").Limit(20).Find(&shopSearchHistory).Error
 
 	return
 

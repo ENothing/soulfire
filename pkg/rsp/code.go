@@ -63,6 +63,9 @@ var (
 	ShopOrderRefundPostFailed  = &Errno{10713, "退款表单提交失败"}
 	ShopOrderRefundReasonEmpty = &Errno{10714, "退款理由不能为空"}
 
+	ShopHistoryDelFailed = &Errno{10715, "历史搜索记录删除失败"}
+
+
 	//地址
 	AddAddressRequired         = &Errno{10801, "地址添加缺少参数"}
 	AddAddressFailed           = &Errno{10802, "地址添加失败"}

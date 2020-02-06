@@ -90,14 +90,19 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		s := app.Group("shop")
 		{
 			s.GET("index", shop.Index)                         //商城首页上部分
-			s.GET("list", shop.GoodsList)                      //商品列表
 			s.GET("goods_detail/:id", shop.GoodsDetail)        //商品详情
 			s.GET("purchasers/:id", shop.PurchasersList)       //商品购买人列表
 			s.GET("cates_with_brands", shop.CateWithBrandList) //分类列表
+			s.GET("dynamic_history", shop.DynamicHistory) //动态获取相似搜索内容
+
 		}
 
 		ms := app.Group("shop").Use(middleware.Verify())
 		{
+			ms.GET("list", shop.GoodsList)                      //商品列表
+
+
+
 			ms.GET("pre_order_detail/:goods_spu_id", shop.PreOrderDetail) //预订单详情
 			ms.GET("order_detail/:order_id", shop.OrderDetail)            //订单详情
 
@@ -114,7 +119,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 
 			ms.GET("search_history", shop.GetHistory) //获取历史和热门搜索
-			ms.GET("dynamic_history", shop.DynamicHistory) //动态获取相似搜索内容
+
+			ms.GET("del_search_history", shop.DelSearchHistory) //删除历史搜索记录
 
 
 
