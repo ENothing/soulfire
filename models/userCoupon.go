@@ -83,27 +83,29 @@ func GetUserCouponById(userId, goodsId, couponId int64) (map[string]interface{},
 
 }
 
-func GetCanUseCouponCountById(userId int64, goodsId int64) (count int64) {
+func GetCanUseCoupons(userId int64, goodsId int64) (userCoupon []*UserCoupon,err error) {
 
 	nowTime := utils.TimeFormat(time.Now(), 0)
 
-	err := db.DB.Self.Model(&UserCoupon{}).
+	err = db.DB.Self.Model(&UserCoupon{}).
+		Preload("Coupon").
 		Where("is_used = ?", 0).
 		Where("user_id = ?", userId).
 		Where("end_time >= ?", nowTime).
 		Where("is_goods = 1 AND FIND_IN_SET(?,goods_ids)", goodsId).
-		Or("is_goods = 0").
+		Or("is_goods = 0 AND is_used = ? AND user_id = ? AND end_time >= ?",0,userId,nowTime).
 		Joins("LEFT JOIN coupons as c on c.id = user_coupons.coupon_id").
-		Select("user_coupons.*").
-		Count(&count).Error
+		Select("" +
+			"user_coupons.*," +
+			"c.coupon_type as coupon_type," +
+			"c.full_price as full_price," +
+			"c.reduction_price as reduction_price," +
+			"c.immediately_price as immediately_price," +
+			"c.discount as discount").
+		Find(&userCoupon).Error
 
-	if err != nil {
 
-		return 0
-
-	}
-
-	return count
+	return
 
 }
 

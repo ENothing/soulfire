@@ -1,7 +1,6 @@
 package shop
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"soulfire/models"
 	"soulfire/pkg/rsp"
