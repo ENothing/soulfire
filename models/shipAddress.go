@@ -88,7 +88,7 @@ func AddressPaginate(page int64, pageSize int64, userId int64) (shipAddresses []
 
 	offset := (page - 1) * pageSize
 
-	res := db.DB.Self.Where("user_id = ?", userId).Limit(pageSize).Offset(offset).Find(&shipAddresses)
+	res := db.DB.Self.Where("user_id = ?", userId).Order("is_default desc").Limit(pageSize).Offset(offset).Find(&shipAddresses)
 	db.DB.Self.Model(&shipAddresses).Where("user_id = ?", userId).Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
