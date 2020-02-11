@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/jinzhu/gorm"
 	"math"
 	"soulfire/pkg/db"
 	"time"
@@ -43,6 +44,34 @@ func (sa *ShipAddress) Delete(id, userId int64) error {
 
 }
 
+func GetAddress(id, userId int64) (*ShipAddress, error) {
+
+	address := &ShipAddress{}
+	shipAddress := &ShipAddress{}
+	defaultShipAddress := &ShipAddress{}
+
+	res := db.DB.Self.Where("user_id = ?", userId)
+
+	if id == 0 {
+
+		defaultAddressRes := res.Where("is_default = ?", 1).First(&defaultShipAddress)
+		if defaultAddressRes.Error != nil || defaultAddressRes.Error == gorm.ErrRecordNotFound {
+
+			addressRes := res.Order("created_at desc").First(&address)
+
+			return address, addressRes.Error
+
+		}
+
+		return defaultShipAddress, defaultAddressRes.Error
+
+	}
+
+	res = res.Where("id = ?", id).First(&shipAddress)
+
+	return shipAddress, res.Error
+}
+
 func GetAddressById(id, userId int64) (*ShipAddress, error) {
 
 	shipAddress := &ShipAddress{}
@@ -63,6 +92,17 @@ func GetDefaultAddress(userId int64) (*ShipAddress, error) {
 		First(&defaultShipAddress)
 
 	return defaultShipAddress, res.Error
+
+}
+
+func GetDefaultAddressCount(userId int64) (num int64) {
+
+	db.DB.Self.
+		Where("user_id = ?", userId).
+		Where("is_default = ?", 1).
+		Count(&num)
+
+	return
 
 }
 

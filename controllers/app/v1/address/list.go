@@ -23,12 +23,13 @@ func AddressList(ctx *gin.Context) {
 		rsp.JsonResonse(ctx, rsp.ActivityListNotExits, nil, "")
 		return
 	}
-
+	defaultCount := models.GetDefaultAddressCount(userId)
 	data := make(map[string]interface{})
 
 	data["total"] = total
 	data["last_page"] = lastPage
 	data["ship_addresses"] = shipAddresses
+	data["default_count"] = defaultCount
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 

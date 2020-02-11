@@ -49,10 +49,7 @@ func PreOrderDetail(ctx *gin.Context) {
 		return
 	}
 
-	defaultAddress, err := models.GetDefaultAddress(userId)
-	if err != nil || err == gorm.ErrRecordNotFound {
-		defaultAddress = nil
-	}
+
 
 	goodsSpu, err := models.GetGoodsSpuById(goodsSpuId)
 	if err != nil {
@@ -66,7 +63,6 @@ func PreOrderDetail(ctx *gin.Context) {
 	}
 
 	data["goods_spu"] = goodsSpu
-	data["default_address"] = defaultAddress
 	data["coupons"] = coupons
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")

@@ -133,6 +133,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mad.POST("update/:id", address.UpdateAddress)               //更新地址
 			mad.GET("update_default/:id", address.UpdateDefaultAddress) //修改默认地址
 			mad.GET("detail/:id", address.Detail)                       //地址详情
+			mad.GET("detail_to_order", address.DetailToOrder)                       //地址详情
 			mad.GET("del/:id", address.DelAddress)                      //删除地址
 
 		}

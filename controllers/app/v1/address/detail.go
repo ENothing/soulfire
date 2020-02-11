@@ -22,3 +22,14 @@ func Detail(ctx *gin.Context) {
 	rsp.JsonResonse(ctx, rsp.OK, shipAddress, "")
 
 }
+
+func DetailToOrder(ctx *gin.Context) {
+
+	userId := ctx.MustGet("user_id").(int64)
+	id, _ := strconv.ParseInt(ctx.DefaultQuery("id","0"), 10, 64)
+
+	shipAddress, _ := models.GetAddress(id, userId)
+
+	rsp.JsonResonse(ctx, rsp.OK, shipAddress, "")
+
+}
