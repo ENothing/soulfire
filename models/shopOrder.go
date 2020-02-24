@@ -180,13 +180,13 @@ func ShopOrderPaginate(page int64, pageSize int64, userId int64, status string) 
 
 	if status != "" {
 
-		if status == "4" { //退款退货
+		if status == "5" { //退款退货
 
 			res = res.Where("shop_orders.refund_id != ?", 0)
 
 		} else {
 
-			res = res.Where("shop_orders.status = ?", status)
+			res = res.Where("shop_orders.status = ?", status).Where("shop_orders.refund_id = ?", 0)
 
 		}
 
@@ -203,7 +203,7 @@ func ShopOrderPaginate(page int64, pageSize int64, userId int64, status string) 
 		Offset(offset).
 		Find(&shopOrder)
 
-	db.DB.Self.Model(&shopOrder).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 

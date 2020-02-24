@@ -67,7 +67,7 @@ func ArticleCommentPaginate(page int64, pageSize int64, articleId int64) (articl
 
 	res = res.Limit(pageSize).Offset(offset).Find(&articleComments)
 
-	db.DB.Self.Model(&articleComments).Where("article_id = ?", articleId).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 

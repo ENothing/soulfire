@@ -157,7 +157,7 @@ func ActivityPaginate(page int64, pageSize int64, sort int64, cateId int64, titl
 	}
 
 	res = res.Limit(pageSize).Offset(offset).Find(&activity)
-	db.DB.Self.Model(&activity).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 

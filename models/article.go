@@ -188,7 +188,7 @@ func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title
 		Limit(pageSize).
 		Offset(offset).
 		Find(&articles)
-	db.DB.Self.Model(&articles).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 
@@ -206,7 +206,7 @@ func UserArticlePaginate(page int64, pageSize int64, userId int64) (articles []*
 	res = res.Order("created_at desc")
 
 	res = res.Limit(pageSize).Offset(offset).Find(&articles)
-	db.DB.Self.Model(&articles).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 

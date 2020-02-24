@@ -73,7 +73,7 @@ func ActivityOrderPaginate(page int64, pageSize int64, userId int64, status stri
 	}
 
 	res = res.Order("created_at desc").Limit(pageSize).Offset(offset).Find(&activity)
-	db.DB.Self.Model(&activity).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 

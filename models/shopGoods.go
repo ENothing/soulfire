@@ -116,7 +116,7 @@ func ShopGoodsPaginate(page int64, pageSize int64, sortType int64, sort int64, n
 	}
 
 	res = res.Limit(pageSize).Offset(offset).Find(&shopGoods)
-	db.DB.Self.Model(&shopGoods).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 

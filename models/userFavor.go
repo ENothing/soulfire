@@ -63,7 +63,7 @@ func GetActivityFavorPaginate(page int64, pageSize int64, userId int64) (activit
 	res = res.Order("created_at desc")
 
 	res = res.Limit(pageSize).Offset(offset).Find(&activity)
-	db.DB.Self.Model(&activity).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 
@@ -85,7 +85,7 @@ func GetArticleFavorPaginate(page int64, pageSize int64, userId int64) (article 
 	res = res.Order("created_at desc")
 
 	res = res.Limit(pageSize).Offset(offset).Find(&article)
-	db.DB.Self.Model(&res).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 

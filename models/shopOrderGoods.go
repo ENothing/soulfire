@@ -105,7 +105,7 @@ func ShopOrderGoodsPaginate(page int64, pageSize int64, goodsId int64) (shopOrde
 		value.CreatedAtFormat = utils.TimeSpan(value.CreatedAt)
 	}
 
-	db.DB.Self.Model(&shopOrderGoods).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 

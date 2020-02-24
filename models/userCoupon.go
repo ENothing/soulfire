@@ -128,7 +128,7 @@ func CanUseCouponsPaginate(page int64, pageSize int64, userId, goodsId int64) (u
 		Offset(offset).
 		Find(&userCoupon)
 
-	db.DB.Self.Model(&userCoupon).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 
@@ -162,7 +162,7 @@ func UserCouponsPaginate(page int64, pageSize int64, userId, status int64) (user
 	res = res.Joins("LEFT JOIN coupons as c on c.id = user_coupons.coupon_id").
 		Preload("Coupon").Limit(pageSize).Offset(offset).Find(&userCoupon)
 
-	db.DB.Self.Model(&userCoupon).Count(&total)
+	res.Count(&total)
 
 	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
 
