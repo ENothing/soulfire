@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"os"
+	"path"
 	"soulfire/models"
+	"soulfire/pkg/config"
 	"soulfire/pkg/db"
+	"soulfire/pkg/qiniu"
 	"soulfire/pkg/rsp"
 	"soulfire/utils"
 	"strconv"
@@ -207,9 +211,8 @@ func InitiateRefund(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
 	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
-	orderGoodsId, _ := strconv.ParseInt(ctx.PostForm("order_goods_id"), 10, 64)
 	reason := ctx.PostForm("reason")
-	rType, _ := strconv.ParseInt(ctx.DefaultPostForm("r_type", "0"), 10, 64)
+	rType, _ := strconv.ParseInt(ctx.DefaultPostForm("r_type", "1"), 10, 64)
 	reasonPics := ctx.PostForm("reason_pics")
 
 	nowTime := utils.TimeFormat(time.Now(), 0)
@@ -224,7 +227,7 @@ func InitiateRefund(ctx *gin.Context) {
 		return
 	}
 
-	hasShopOrderRefund, err := models.GetShopOrderRefundByAnotherId(userId, orderId, orderGoodsId)
+	hasShopOrderRefund, err := models.GetShopOrderRefundByAnotherId(userId, orderId)
 	if err == nil && err != gorm.ErrRecordNotFound {
 		if hasShopOrderRefund.Status == models.PendingReview || hasShopOrderRefund.Status == models.Refunding || hasShopOrderRefund.Status == models.Refunded || hasShopOrderRefund.Status == models.AgreeRefund || hasShopOrderRefund.Status == models.PendingPass {
 			rsp.JsonResonse(ctx, rsp.ReShopOrderRefund, nil, "")
@@ -260,7 +263,6 @@ func InitiateRefund(ctx *gin.Context) {
 	}
 
 	shopOrderRefund := models.ShopOrderRefund{
-		OrderGoodsId: orderGoodsId,
 		RefundN:      utils.Uid("RO"),
 		Price:        price,
 		Status:       models.PendingReview,
@@ -324,5 +326,38 @@ func PostReturnInfo(ctx *gin.Context) {
 	}
 
 	rsp.JsonResonse(ctx, rsp.OK, nil, "")
+
+}
+
+func Upload(ctx *gin.Context)  {
+
+		app, _ := config.Cfg.GetSection("qiniu")
+		MediaUrl := app.Key("MediaUrl").String()
+		file, _ := ctx.FormFile("file")
+		bucket := "soulfire-media"
+
+		ext := path.Ext(file.Filename)
+		key := utils.Uid("FE") + ext
+
+		dst := "runtime/tmp/imgs/" + key
+
+		err := ctx.SaveUploadedFile(file, dst)
+		if err != nil {
+			rsp.JsonResonse(ctx, rsp.UploadErr, nil, "")
+			return
+		}
+
+		img, err := qiniu.Upload(bucket, dst, "shop/refund/"+key)
+
+		url := MediaUrl  + "/"+img
+
+		if err != nil {
+			rsp.JsonResonse(ctx, rsp.UploadErr, nil, "")
+			return
+		}
+
+		_ = os.Remove(dst)
+
+		rsp.JsonResonse(ctx, rsp.OK, url, "")
 
 }

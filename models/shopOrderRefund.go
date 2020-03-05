@@ -70,14 +70,13 @@ func GetShopOrderRefundById(userId, id int64) (*ShopOrderRefund, error) {
 
 }
 
-func GetShopOrderRefundByAnotherId(userId, orderId, orderGoodsId int64) (*ShopOrderRefund, error) {
+func GetShopOrderRefundByAnotherId(userId, orderId int64) (*ShopOrderRefund, error) {
 
 	shopOrderRefund := &ShopOrderRefund{}
 
 	res := db.DB.Self.
 		Where("user_id = ?", userId).
 		Where("order_id = ?", orderId).
-		Where("order_goods_id", orderGoodsId).
 		First(&shopOrderRefund)
 
 	return shopOrderRefund, res.Error

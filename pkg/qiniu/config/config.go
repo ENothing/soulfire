@@ -9,7 +9,7 @@ import (
 type Config struct {
 	AccessKey   string
 	SecretKey   string
-	BbsMediaUrl string
+	MediaUrl string
 }
 
 func GetQiniuConfig() *Config {
@@ -18,12 +18,10 @@ func GetQiniuConfig() *Config {
 
 	accessKey := app.Key("AccessKey").String()
 	secretKey := app.Key("SecretKey").String()
-	mediaUrl := app.Key("BbsMediaUrl").String()
 
 	return &Config{
 		AccessKey:   accessKey,
 		SecretKey:   secretKey,
-		BbsMediaUrl: mediaUrl,
 	}
 
 }

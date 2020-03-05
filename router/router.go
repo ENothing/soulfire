@@ -123,6 +123,9 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			ms.GET("del_search_history", shop.DelSearchHistory) //删除历史搜索记录
 
 
+			ms.POST("upload", shop.Upload) //退款上传图片
+
+
 
 		}
 

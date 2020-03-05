@@ -241,7 +241,7 @@ func Favor(ctx *gin.Context) {
 func Upload(ctx *gin.Context) {
 
 	app, _ := config.Cfg.GetSection("qiniu")
-	bbsMediaUrl := app.Key("BbsMediaUrl").String()
+	MediaUrl := app.Key("MediaUrl").String()
 	file, _ := ctx.FormFile("file")
 	bucket := "soulfire-bbs"
 
@@ -256,9 +256,9 @@ func Upload(ctx *gin.Context) {
 		return
 	}
 
-	img, err := qiniu.Upload(bucket, dst, key)
+	img, err := qiniu.Upload(bucket, dst, "bbs/"+key)
 
-	url := bbsMediaUrl + "/" + img
+	url := MediaUrl + "/" + img
 
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.UploadErr, nil, "")
