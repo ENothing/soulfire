@@ -213,7 +213,7 @@ func InitiateRefund(ctx *gin.Context) {
 	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
 	reason := ctx.PostForm("reason")
 	rType, _ := strconv.ParseInt(ctx.DefaultPostForm("r_type", "1"), 10, 64)
-	reasonPics := ctx.PostForm("reason_pics")
+	reasonPics := ctx.PostForm("imgs")
 
 	nowTime := utils.TimeFormat(time.Now(), 0)
 
@@ -227,13 +227,13 @@ func InitiateRefund(ctx *gin.Context) {
 		return
 	}
 
-	hasShopOrderRefund, err := models.GetShopOrderRefundByAnotherId(userId, orderId)
-	if err == nil && err != gorm.ErrRecordNotFound {
-		if hasShopOrderRefund.Status == models.PendingReview || hasShopOrderRefund.Status == models.Refunding || hasShopOrderRefund.Status == models.Refunded || hasShopOrderRefund.Status == models.AgreeRefund || hasShopOrderRefund.Status == models.PendingPass {
-			rsp.JsonResonse(ctx, rsp.ReShopOrderRefund, nil, "")
-			return
-		}
-	}
+	//hasShopOrderRefund, err := models.GetShopOrderRefundByOrderId(userId, orderId)
+	//if err == nil && err != gorm.ErrRecordNotFound {
+	//	if hasShopOrderRefund.Status == models.PendingReview || hasShopOrderRefund.Status == models.Refunding || hasShopOrderRefund.Status == models.Refunded || hasShopOrderRefund.Status == models.AgreeRefund || hasShopOrderRefund.Status == models.PendingPass {
+	//		rsp.JsonResonse(ctx, rsp.ReShopOrderRefund, nil, "")
+	//		return
+	//	}
+	//}
 
 	order, err := models.GetOrderById(userId, orderId)
 	if err != nil {
@@ -241,12 +241,17 @@ func InitiateRefund(ctx *gin.Context) {
 		return
 	}
 
-	if order.Status != models.ToBeDelivered && order.Status != models.ToBeReceived && order.Status != models.Completed {
+	if order.RefundId != 0 {
+		rsp.JsonResonse(ctx, rsp.ReShopOrderRefund, nil, "")
+		return
+	}
+
+	if order.Status == models.PendingPay || order.Status == models.CancelOrder {
 		rsp.JsonResonse(ctx, rsp.ShopOrderRefundRejected, nil, "")
 		return
 	}
 
-	if order.CompletedAtFormat != "" {
+	if order.Status == models.Completed {
 		duringDays := utils.BetweenDays(nowTime, order.CompletedAtFormat)
 		if duringDays > int64(7) {
 			rsp.JsonResonse(ctx, rsp.ShopOrderRefundRejected, nil, "")
@@ -262,14 +267,22 @@ func InitiateRefund(ctx *gin.Context) {
 		}
 	}
 
+	var imgs string
+	if reasonPics != "" {
+		imgs = utils.JsonEncode(reasonPics)
+	} else {
+		imgs = ""
+	}
+
 	shopOrderRefund := models.ShopOrderRefund{
-		RefundN:      utils.Uid("RO"),
-		Price:        price,
-		Status:       models.PendingReview,
-		RType:        rType,
-		ReasonPics:   reasonPics,
-		Reason:       reason,
-		UserId:       userId,
+		RefundN:    utils.Uid("RO"),
+		Price:      price,
+		Status:     models.PendingReview,
+		RType:      rType,
+		ReasonPics: imgs,
+		Reason:     reason,
+		UserId:     userId,
+		OrderId:    orderId,
 	}
 
 	refundId, err := shopOrderRefund.Create()
@@ -329,35 +342,35 @@ func PostReturnInfo(ctx *gin.Context) {
 
 }
 
-func Upload(ctx *gin.Context)  {
+func Upload(ctx *gin.Context) {
 
-		app, _ := config.Cfg.GetSection("qiniu")
-		MediaUrl := app.Key("MediaUrl").String()
-		file, _ := ctx.FormFile("file")
-		bucket := "soulfire-media"
+	app, _ := config.Cfg.GetSection("qiniu")
+	MediaUrl := app.Key("MediaUrl").String()
+	file, _ := ctx.FormFile("file")
+	bucket := "soulfire-media"
 
-		ext := path.Ext(file.Filename)
-		key := utils.Uid("FE") + ext
+	ext := path.Ext(file.Filename)
+	key := utils.Uid("FE") + ext
 
-		dst := "runtime/tmp/imgs/" + key
+	dst := "runtime/tmp/imgs/" + key
 
-		err := ctx.SaveUploadedFile(file, dst)
-		if err != nil {
-			rsp.JsonResonse(ctx, rsp.UploadErr, nil, "")
-			return
-		}
+	err := ctx.SaveUploadedFile(file, dst)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.UploadErr, nil, "")
+		return
+	}
 
-		img, err := qiniu.Upload(bucket, dst, "shop/refund/"+key)
+	img, err := qiniu.Upload(bucket, dst, "shop/refund/"+key)
 
-		url := MediaUrl  + "/"+img
+	url := MediaUrl + "/" + img
 
-		if err != nil {
-			rsp.JsonResonse(ctx, rsp.UploadErr, nil, "")
-			return
-		}
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.UploadErr, nil, "")
+		return
+	}
 
-		_ = os.Remove(dst)
+	_ = os.Remove(dst)
 
-		rsp.JsonResonse(ctx, rsp.OK, url, "")
+	rsp.JsonResonse(ctx, rsp.OK, url, "")
 
 }

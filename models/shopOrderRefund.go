@@ -7,22 +7,23 @@ import (
 
 type ShopOrderRefund struct {
 	Model
-	OrderGoodsId int64      `json:"order_goods_id" gorm:"column:order_goods_id;not null"`
-	RefundN      string     `json:"refund_n" gorm:"column:refund_n;not null"`
-	Price        float64    `json:"price" gorm:"column:price;not null"`
-	Status       int64      `json:"status" gorm:"column:status;not null"`
-	RType        int64      `json:"r_type" gorm:"column:r_type;not null"`
-	ReasonPics   string     `json:"reason_pics" gorm:"column:reason_pics;not null"`
-	Reason       string     `json:"reason" gorm:"column:reason;not null"`
-	ReplyReason  string     `json:"reply_reason" gorm:"column:reply_reason;not null"`
-	CreatedAt    time.Time  `gorm:";column:created_at" json:"created_at"`
-	UpdatedAt    time.Time  `gorm:";column:updated_at" json:"updated_at"`
-	DeletedAt    *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
-	UserId       int64      `gorm:"column:user_id" json:"user_id"`
-	OrderId      int64      `gorm:"column:order_id" json:"order_id"`
-	ExpressId    int64      `gorm:"column:express_id" json:"express_id"`
-	ExpressN     string     `gorm:"column:express_n" json:"express_n"`
-	RWay         int64      `gorm:"column:r_way"  json:"r_way"`
+	//OrderGoodsId int64      `json:"order_goods_id" gorm:"column:order_goods_id;not null"`
+	RefundN     string     `json:"refund_n" gorm:"column:refund_n;not null"`
+	Price       float64    `json:"price" gorm:"column:price;not null"`
+	Status      int64      `json:"status" gorm:"column:status;not null"`
+	RType       int64      `json:"r_type" gorm:"column:r_type;not null"`
+	ReasonPics  string     `json:"reason_pics" gorm:"column:reason_pics;not null"`
+	Reason      string     `json:"reason" gorm:"column:reason;not null"`
+	ReplyReason string     `json:"reply_reason" gorm:"column:reply_reason;not null"`
+	CreatedAt   time.Time  `gorm:";column:created_at" json:"created_at"`
+	UpdatedAt   time.Time  `gorm:";column:updated_at" json:"updated_at"`
+	DeletedAt   *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	UserId      int64      `gorm:"column:user_id" json:"user_id"`
+	OrderId     int64      `gorm:"column:order_id" json:"order_id"`
+	ExpressId   int64      `gorm:"column:express_id" json:"express_id"`
+	ExpressN    string     `gorm:"column:express_n" json:"express_n"`
+	RWay        int64      `gorm:"column:r_way"  json:"r_way"`
+	RStatus     int64      `gorm:"column:r_status"  json:"r_status"`
 }
 
 const (
@@ -70,7 +71,7 @@ func GetShopOrderRefundById(userId, id int64) (*ShopOrderRefund, error) {
 
 }
 
-func GetShopOrderRefundByAnotherId(userId, orderId int64) (*ShopOrderRefund, error) {
+func GetShopOrderRefundByOrderId(userId, orderId int64) (*ShopOrderRefund, error) {
 
 	shopOrderRefund := &ShopOrderRefund{}
 
