@@ -331,7 +331,7 @@ func PostReturnInfo(ctx *gin.Context) {
 		ExpressN:  expressN,
 		Status:    models.PendingPass,
 	}
-	err = shopOrderRefundUpdate.UpdateShopOrderRefundExpress()
+	err = shopOrderRefundUpdate.UpdateShopOrderRefundExpress(refundId)
 
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.ShopOrderRefundPostFailed, nil, "")

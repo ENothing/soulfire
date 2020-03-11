@@ -111,7 +111,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			ms.POST("order_cancel", shop.CancelOrder)        //取消订单
 			ms.POST("initiate_refund", shop.InitiateRefund)  //发起退款
 			ms.POST("post_return_info", shop.PostReturnInfo) //填写退款单号
-			ms.GET("order_list", shop.OrderList)             //填写退款单号
+			ms.GET("order_list", shop.OrderList)             //订单列表
 
 			ms.POST("pay", shop.Pay) //支付
 

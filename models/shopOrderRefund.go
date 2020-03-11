@@ -52,9 +52,9 @@ func (sor *ShopOrderRefund) Create() (int64, error) {
 
 }
 
-func (sor *ShopOrderRefund) UpdateShopOrderRefundExpress() error {
+func (sor *ShopOrderRefund) UpdateShopOrderRefundExpress(refundId int64) error {
 
-	return db.DB.Self.Model(&ShopOrderRefund{}).Update(&sor).Error
+	return db.DB.Self.Model(&ShopOrderRefund{}).Where("id = ?",refundId).Update(&sor).Error
 
 }
 
