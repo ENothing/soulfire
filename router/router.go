@@ -8,7 +8,6 @@ import (
 	"soulfire/controllers/app/v1/bbs"
 	"soulfire/controllers/app/v1/coupon"
 	"soulfire/controllers/app/v1/shop"
-	"soulfire/controllers/app/v1/tool"
 	"soulfire/controllers/app/v1/user"
 	"soulfire/router/middleware"
 )
@@ -43,6 +42,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			a.GET("list", activity.ActivityList)   //活动列表
 			a.GET("detail/:id", activity.Detail)   //活动详情
 			a.GET("cates", activity.ActivityCates) //活动分类
+			a.GET("dynamic_history", shop.DynamicHistory) //动态获取相似搜索内容
 
 		}
 		ma := app.Group("activity").Use(middleware.Verify())
@@ -54,6 +54,10 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			ma.GET("order_list", activity.ActivityOrderList) //活动订单列表
 
 			ma.GET("favor/:id", activity.Favor) //收藏活动
+
+			ma.GET("search_history", shop.GetHistory) //获取历史和热门搜索
+
+			ma.GET("del_search_history", shop.DelSearchHistory) //删除历史搜索记录
 
 		}
 
@@ -148,10 +152,10 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 
 
-		t := app.Group("tool")
-		{
-			t.GET("goods", tool.GenerateGoods)
-		}
+		//t := app.Group("tool")
+		//{
+		//	t.GET("goods", tool.GenerateGoods)
+		//}
 
 
 	}

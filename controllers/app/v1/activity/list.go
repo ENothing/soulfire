@@ -13,7 +13,7 @@ func ActivityList(ctx *gin.Context) {
 	title := ctx.Query("title")
 	sort, _ := strconv.ParseInt(ctx.DefaultQuery("sort", "0"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
-	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "3"), 10, 64)
+	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "5"), 10, 64)
 
 	data := make(map[string]interface{})
 

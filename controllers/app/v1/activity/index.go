@@ -25,7 +25,7 @@ func Index(ctx *gin.Context) {
 		data["activity_ann"] = activityAnnounce
 	}
 
-	activityCates, err := models.GetActivityCateLimitNum(6)
+	activityCates, err := models.GetActivityCateLimitNum(5)
 	if err != nil || err == gorm.ErrRecordNotFound {
 		data["activity_cates"] = ""
 	} else {
