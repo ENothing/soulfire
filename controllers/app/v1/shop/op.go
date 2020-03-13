@@ -342,6 +342,39 @@ func PostReturnInfo(ctx *gin.Context) {
 
 }
 
+func CancelRefund(ctx *gin.Context)  {
+
+	userId := ctx.MustGet("user_id").(int64)
+	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
+
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
+	_, err := models.GetOrderById(userId, orderId)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderNotExits, nil, "")
+		return
+	}
+
+	err =  models.UpdateOrderRefundToCancel(userId,orderId)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderRefundCancelFailed, nil, "")
+		return
+	}
+
+	refundOrder := models.ShopOrderRefund{}
+	err = refundOrder.Delete(userId,orderId)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ShopOrderRefundCancelFailed, nil, "")
+		return
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
+
+}
+
 func Upload(ctx *gin.Context) {
 
 	app, _ := config.Cfg.GetSection("qiniu")

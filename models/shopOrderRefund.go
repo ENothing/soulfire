@@ -52,6 +52,13 @@ func (sor *ShopOrderRefund) Create() (int64, error) {
 
 }
 
+func (sor *ShopOrderRefund)Delete(userId,orderId int64) error  {
+
+
+	return db.DB.Self.Where("user_id = ?",userId).Where("order_id = ?",orderId).Delete(&sor).Error
+}
+
+
 func (sor *ShopOrderRefund) UpdateShopOrderRefundExpress(refundId int64) error {
 
 	return db.DB.Self.Model(&ShopOrderRefund{}).Where("id = ?",refundId).Update(&sor).Error

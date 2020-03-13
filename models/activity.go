@@ -35,6 +35,8 @@ type Activity struct {
 	StartAtFormat   string     `json:"start_at_format" gorm:"column:start_at_format"`
 	EndAtFormat     string     `json:"end_at_format" gorm:"column:end_at_format"`
 	Mobile          string     `json:"mobile" gorm:"column:mobile"`
+	DetailAddress   string     `json:"detail_address" gorm:"column:detail_address"`
+	ChargeType      int64      `json:"charge_type" gorm:"column:charge_type"`
 }
 
 func (Activity) TableName() string {

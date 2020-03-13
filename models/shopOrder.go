@@ -135,6 +135,16 @@ func UpdateOrderRefundId(userId, orderId, refundId int64) error {
 
 }
 
+func UpdateOrderRefundToCancel(userId,orderId int64) error {
+
+	return db.DB.Self.Model(&ShopOrderCreateForm{}).
+		Where("user_id = ?", userId).
+		Where("id = ?", orderId).
+		Update("refund_id", 0).Error
+
+}
+
+
 func GetOrderDetailById(userId, orderId int64) (interface{}, error) {
 
 	data := make(map[string]interface{})

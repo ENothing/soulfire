@@ -62,6 +62,7 @@ var (
 	ShopOrderRefundNotExits    = &Errno{10712, "退款订单获取失败,请重试"}
 	ShopOrderRefundPostFailed  = &Errno{10713, "退款表单提交失败"}
 	ShopOrderRefundReasonEmpty = &Errno{10714, "退款理由不能为空"}
+	ShopOrderRefundCancelFailed = &Errno{10714, "取消退款失败"}
 
 	ShopHistoryDelFailed = &Errno{10715, "历史搜索记录删除失败"}
 
