@@ -24,17 +24,21 @@ func (ActivitySearchHistory) TableName() string {
 	return "activity_search_histories"
 }
 
+func (ActivityHotHistory) TableName() string {
+	return "activity_search_histories"
+}
+
 func (ash *ActivitySearchHistory)Create()(err error) {
 
 	sh := &ActivitySearchHistory{}
-	res := db.DB.Self.Where("user_id = ",ash.UserId).Where("kword = ?",ash.Kword).First(&sh)
-	if res != nil && res.Error != gorm.ErrRecordNotFound {
+	res := db.DB.Self.Where("user_id = ?",ash.UserId).Where("kword = ?",ash.Kword).First(&sh)
+	if  res.Error == gorm.ErrRecordNotFound {
 
 		err = db.DB.Self.Create(&ash).Error
 
 	}else{
 
-		err = db.DB.Self.Where("user_id = ",ash.UserId).Where("kword = ?",ash.Kword).UpdateColumn("updated_at",time.Now()).Error
+		err = db.DB.Self.Model(&ActivitySearchHistory{}).Where("user_id = ?",ash.UserId).Where("kword = ?",ash.Kword).UpdateColumn("updated_at",time.Now()).Error
 
 	}
 

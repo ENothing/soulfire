@@ -97,7 +97,7 @@ func GetDefaultAddress(userId int64) (*ShipAddress, error) {
 
 func GetDefaultAddressCount(userId int64) (num int64) {
 
-	db.DB.Self.
+	db.DB.Self.Model(&ShipAddress{}).
 		Where("user_id = ?", userId).
 		Where("is_default = ?", 1).
 		Count(&num)

@@ -9,6 +9,7 @@ import (
 
 func ActivityList(ctx *gin.Context) {
 
+	userId := ctx.MustGet("user_id").(int64)
 	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	title := ctx.Query("title")
 	sort, _ := strconv.ParseInt(ctx.DefaultQuery("sort", "0"), 10, 64)
@@ -16,6 +17,16 @@ func ActivityList(ctx *gin.Context) {
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "5"), 10, 64)
 
 	data := make(map[string]interface{})
+
+	if title != "" && userId != int64(0){
+		activitySearchHistory := models.ActivitySearchHistory{
+			UserId:userId,
+			Kword:title,
+		}
+
+		_ = activitySearchHistory.Create()
+	}
+
 
 	activities, total, lastPage, err := models.ActivityPaginate(page, pageSize, sort, cateId, title)
 

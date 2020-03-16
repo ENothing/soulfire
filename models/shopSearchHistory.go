@@ -23,12 +23,14 @@ type shopHotHistory struct {
 func (ShopSearchHistory) TableName() string {
 	return "shop_search_histories"
 }
-
+func (shopHotHistory) TableName() string {
+	return "shop_search_histories"
+}
 func (ssh *ShopSearchHistory)Create()(err error) {
 
 	sh := &ShopSearchHistory{}
 	res := db.DB.Self.Where("user_id = ",ssh.UserId).Where("kword = ?",ssh.Kword).First(&sh)
-	if res != nil && res.Error != gorm.ErrRecordNotFound {
+	if  res.Error == gorm.ErrRecordNotFound {
 
 		err = db.DB.Self.Create(&ssh).Error
 

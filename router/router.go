@@ -39,14 +39,14 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		a := app.Group("activity")
 		{
 			a.GET("index", activity.Index)         //活动首页头部
-			a.GET("list", activity.ActivityList)   //活动列表
 			a.GET("detail/:id", activity.Detail)   //活动详情
 			a.GET("cates", activity.ActivityCates) //活动分类
-			a.GET("dynamic_history", shop.DynamicHistory) //动态获取相似搜索内容
+			a.GET("dynamic_history", activity.DynamicHistory) //动态获取相似搜索内容
 
 		}
 		ma := app.Group("activity").Use(middleware.Verify())
 		{
+			ma.GET("list", activity.ActivityList)   //活动列表
 			ma.GET("like/:id", activity.Like)                //用户like
 			ma.POST("enter", activity.Enter)                 //活动报名
 			ma.GET("order/:id", activity.OrderDetail)        //活动订单详情
@@ -55,9 +55,9 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 			ma.GET("favor/:id", activity.Favor) //收藏活动
 
-			ma.GET("search_history", shop.GetHistory) //获取历史和热门搜索
+			ma.GET("search_history", activity.GetHistory) //获取历史和热门搜索
 
-			ma.GET("del_search_history", shop.DelSearchHistory) //删除历史搜索记录
+			ma.GET("del_search_history", activity.DelSearchHistory) //删除历史搜索记录
 
 		}
 
