@@ -15,7 +15,7 @@ type EnterForm struct {
 	Gender    int64  `json:"gender"`
 	Mobile    string `json:"mobile" valid:"Required;Mobile" ch:"手机号"`
 	SmsCode   string `json:"sms_code" valid:"Required" ch:"验证码"`
-	PersonNum int64  `json:"person_num" valid:"Required" ch:"人数"`
+	CNum      string `json:"c_num" valid:"Required" ch:"证件号码"`
 }
 
 /**
@@ -28,9 +28,11 @@ func Enter(ctx *gin.Context) {
 	id, _ := strconv.ParseInt(ctx.PostForm("id"), 10, 64)
 	name := ctx.PostForm("name")
 	gender, _ := strconv.ParseInt(ctx.DefaultPostForm("gender", "1"), 10, 64)
+	cType, _ := strconv.ParseInt(ctx.DefaultPostForm("c_type", "1"), 10, 64)
+	cNum := ctx.PostForm("c_num")
 	mobile := ctx.PostForm("mobile")
 	smsCode := ctx.PostForm("sms_code")
-	personNum, _ := strconv.ParseInt(ctx.PostForm("person_num"), 10, 64)
+	personNum, _ := strconv.ParseInt(ctx.DefaultPostForm("person_num", "1"), 10, 64)
 	//couponId, _ := strconv.ParseInt(ctx.PostForm("coupon_id"), 10, 64)
 
 	if userId == 0 {
@@ -44,7 +46,7 @@ func Enter(ctx *gin.Context) {
 		gender,
 		mobile,
 		smsCode,
-		personNum,
+		cNum,
 	}
 
 	message := verify.FormVerify(&enter)
@@ -83,9 +85,11 @@ func Enter(ctx *gin.Context) {
 		TotalPrice:    totalPrice,
 		RealPrice:     realPrice,
 		DiscountPrice: discountPrice,
+		CType:         cType,
+		CNum:          cNum,
 	}
 
-	err = activityOrder.Create()
+	id,err = activityOrder.Create()
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.CreateActivityOrderFaild, nil, "")
 		return
@@ -93,6 +97,6 @@ func Enter(ctx *gin.Context) {
 
 	_ = models.ActivitySoldOne(activity.Id)
 
-	rsp.JsonResonse(ctx, rsp.OK, nil, "")
+	rsp.JsonResonse(ctx, rsp.OK, id, "")
 
 }

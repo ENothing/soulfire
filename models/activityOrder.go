@@ -19,30 +19,46 @@ type ActivityOrder struct {
 	PersonNum     int64      `json:"person_num" gorm:"column:person_num;not null"`
 	TotalPrice    float64    `json:"total_price" gorm:"column:total_price;not null"`
 	RealPrice     float64    `json:"real_price" gorm:"column:real_price;not null"`
-	DiscountPrice float64    `gorm:";column:discount_price" json:"discount_price"`
-	Status        int64      `gorm:";column:status" json:"status"`
-	CreatedAt     time.Time  `gorm:";column:created_at" json:"created_at"`
-	UpdatedAt     time.Time  `gorm:";column:updated_at" json:"updated_at"`
+	DiscountPrice float64    `gorm:"column:discount_price" json:"discount_price"`
+	Status        int64      `gorm:"column:status" json:"status"`
+	CreatedAt     time.Time  `gorm:"column:created_at" json:"created_at"`
+	UpdatedAt     time.Time  `gorm:"column:updated_at" json:"updated_at"`
 	DeletedAt     *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
-	Activity      Activity   `json:"activity" gorm:"foreignkey:ActivityId"`
+	CType         int64      `gorm:"column:c_type" json:"c_type"`
+	CNum          string     `gorm:"column:c_num" json:"c_num"`
 }
+
+type ActivityOrderRelated struct {
+	ActivityOrder
+	Activity      Activity   `json:"activity" gorm:"foreignkey:ActivityId;PRELOAD:false"`
+	RefundOrder      ActivityOrderRefund   `json:"activity_refund_order" gorm:"foreignkey:RefundId;PRELOAD:false"`
+	//Refund      Activity   `json:"activity" gorm:"foreignkey:ActivityId"`
+}
+
+
 
 func (ActivityOrder) TableName() string {
 	return "activity_orders"
 }
+func (ActivityOrderRelated) TableName() string {
+	return "activity_orders"
+}
 
-func (ao *ActivityOrder) Create() error {
 
-	return db.DB.Self.Create(&ao).Error
+func (ao *ActivityOrder) Create() (id int64, err error) {
+
+	res := db.DB.Self.Create(&ao)
+	return ao.Id,  res.Error
 
 }
 
-func GetActivityOrderById(id,userId int64) (*ActivityOrder, error) {
+func GetActivityOrderById(id, userId int64) (*ActivityOrderRelated, error) {
 
-	activityOrder := &ActivityOrder{}
+	activityOrder := &ActivityOrderRelated{}
 
-	db.DB.Self.Where("id = ?", id).Where("user_id = ?",userId).First(&activityOrder)
-	res := db.DB.Self.Model(&activityOrder).Select([]string{"title,thumb,kind"}).Related(&activityOrder.Activity)
+	res := db.DB.Self.Where("id = ?", id).Where("user_id = ?", userId).Preload("Activity").Preload("RefundOrder").First(&activityOrder)
+
+	//db.DB.Self.Model(&activityOrder).Select([]string{"title,thumb"}).Related(&activityOrder.Activity)
 
 	return activityOrder, res.Error
 
@@ -60,11 +76,11 @@ func ActivityOrderPaginate(page int64, pageSize int64, userId int64, status stri
 
 	if status != "" {
 
-		if status == "4" {//退款退货
+		if status == "4" { //退款退货
 
 			res = res.Where("refund_id != ?", 0)
 
-		}else{
+		} else {
 
 			res = res.Where("status = ?", status)
 

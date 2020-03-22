@@ -21,6 +21,6 @@ func Uid(prefix string) string {
 
 	uid := uuid.Must(uuid.NewV4(), nil)
 
-	return (prefix + uid.String())[0:32]
+	return (prefix + uid.String())[0:24]
 
 }

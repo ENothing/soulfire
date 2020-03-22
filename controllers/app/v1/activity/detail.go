@@ -35,6 +35,11 @@ func OrderDetail(ctx *gin.Context)  {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
 	activityOrder,err := models.GetActivityOrderById(id,userId)
 
 	if err != nil {
