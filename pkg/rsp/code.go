@@ -32,7 +32,17 @@ var (
 	EnterActivityRequired    = &Errno{10406, "报名信息填写不完整"}
 	CreateActivityOrderFaild = &Errno{10407, "活动订单创建失败"}
 	ActivityOrderNotExits    = &Errno{10408, "活动订单不存在"}
-	ActivityPersonIsFull    = &Errno{10408, "活动名额不足"}
+	ActivityPersonIsFull    = &Errno{10409, "活动名额不足"}
+	ActivityOrderRefundReasonEmpty    = &Errno{10410, "活动发起退款理由不能为空哦~"}
+
+	ReActivityOrderRefund          = &Errno{10411, "请勿重复发起退款"}
+	ActivityOrderRefundRejected          = &Errno{10412, "发起退款失败,请重试"}
+	ActivityOrderRefundTimeOver          = &Errno{10413, "该订单不支持发起退款申请"}
+	ActivityOrderRefundFailed          = &Errno{10414, "发起退款失败,请重试"}
+	ActivityOrderFinishedFailed          = &Errno{10415, "确认完成失败，请重试~"}
+	ActivityOrderListNotExits          = &Errno{10416, "订单列表拉取失败，请重试~"}
+
+
 
 	//bbs
 	ArticleNotExits      = &Errno{10501, "文章不存在"}

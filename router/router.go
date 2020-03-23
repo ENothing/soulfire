@@ -50,14 +50,17 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			ma.GET("like/:id", activity.Like)                //用户like
 			ma.POST("enter", activity.Enter)                 //活动报名
 			ma.GET("order/:id", activity.OrderDetail)        //活动订单详情
+			ma.GET("finish/:id", activity.FinishOrder)        //订单确认完成
+
 			ma.POST("pay", activity.Pay)                     //活动支付
 			ma.GET("order_list", activity.ActivityOrderList) //活动订单列表
 
 			ma.GET("favor/:id", activity.Favor) //收藏活动
 
 			ma.GET("search_history", activity.GetHistory) //获取历史和热门搜索
-
 			ma.GET("del_search_history", activity.DelSearchHistory) //删除历史搜索记录
+
+			ma.POST("initiate_refund", activity.InitiateRefund) //发起退款
 
 		}
 

@@ -61,12 +61,17 @@ func ActivityOrderList(ctx *gin.Context) {
 	userId := ctx.MustGet("user_id").(int64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
-	status := ctx.DefaultQuery("pageSize", "")
+	status := ctx.DefaultQuery("status", "")
+
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 
 	activityOrderList, total, lastPage, err := models.ActivityOrderPaginate(page, pageSize, userId, status)
 
 	if err != nil {
-		rsp.JsonResonse(ctx, rsp.ActivityListNotExits, nil, "")
+		rsp.JsonResonse(ctx, rsp.ActivityOrderListNotExits, nil, "")
 		return
 	}
 
@@ -74,7 +79,7 @@ func ActivityOrderList(ctx *gin.Context) {
 
 	data["total"] = total
 	data["last_page"] = lastPage
-	data["activities"] = activityOrderList
+	data["orders"] = activityOrderList
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 

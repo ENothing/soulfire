@@ -9,8 +9,10 @@ func TimeFormat(t time.Time, formatType int64) (formatTime string) {
 
 	if formatType == 0 {
 		formatTime = t.Format("2006-01-02 15:04:05")
-	} else {
+	} else if formatType == 1 {
 		formatTime = t.Format("2006.01.02")
+	} else{
+		formatTime = t.Format("01月02日")
 	}
 	return formatTime
 }

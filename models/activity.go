@@ -47,8 +47,8 @@ func (Activity) TableName() string {
 func (a *Activity) AfterFind() (err error) {
 
 	a.CreatedAtFormat = utils.TimeFormat(a.CreatedAt, 1)
-	a.StartAtFormat = utils.TimeFormat(a.StartAt, 0)
-	a.EndAtFormat = utils.TimeFormat(a.EndAt, 0)
+	a.StartAtFormat = utils.TimeFormat(a.StartAt, 2)
+	a.EndAtFormat = utils.TimeFormat(a.EndAt, 2)
 	return
 }
 func ActivityViewAddOne(id int64) error {
