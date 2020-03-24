@@ -57,7 +57,6 @@ func ActivityViewAddOne(id int64) error {
 
 	res := db.DB.Self.Model(&activity).
 		Where("id = ?", id).
-		Where("view > 0").
 		Update("view", gorm.Expr("view + ?", 1))
 
 	return res.Error
@@ -70,7 +69,7 @@ func ActivityLikeAddOne(id int64) error {
 
 	res := db.DB.Self.Model(&activity).
 		Where("id = ?", id).
-		Where("likes > 0").
+		Where("likes >= 0").
 		UpdateColumn("likes", gorm.Expr("likes + ?", 1))
 
 	return res.Error
@@ -96,7 +95,7 @@ func ActivityFavorAddOne(id int64) error {
 
 	res := db.DB.Self.Model(&activity).
 		Where("id = ?", id).
-		Where("favor > 0").
+		Where("favor >= 0").
 		UpdateColumn("favor", gorm.Expr("favor + ?", 1))
 
 	return res.Error

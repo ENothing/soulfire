@@ -90,3 +90,27 @@ func Login(ctx *gin.Context) {
 	}
 
 }
+
+func Info(ctx *gin.Context)  {
+
+
+	userId := ctx.MustGet("user_id").(int64)
+
+	data := make(map[string]interface{})
+
+	user,err := models.GetUserInfoById(userId)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.UserInfoGotFailed, nil, "")
+		return
+	}
+	activityOrderUnpayCount := models.GetActivityOrderUnpayCount(userId)
+	shopOrderUnpayCount := models.GetShopOrderUnpayCount(userId)
+
+	data["user_info"] = user
+	data["aorder_unpay"] = activityOrderUnpayCount
+	data["sorder_unpay"] = shopOrderUnpayCount
+
+	rsp.JsonResonse(ctx, rsp.OK, data, "")
+
+}
+

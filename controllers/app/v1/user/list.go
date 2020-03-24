@@ -10,7 +10,7 @@ import (
 func PersonalCollection(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
-	status := ctx.DefaultQuery("status", "")
+	//status := ctx.DefaultQuery("status", "")
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 
@@ -25,11 +25,11 @@ func PersonalCollection(ctx *gin.Context) {
 		return
 	}
 
-	if status == "" {
-		dataList, total, lastPage, err = models.GetActivityFavorPaginate(page, pageSize, userId)
-	} else {
-		dataList, total, lastPage, err = models.GetArticleFavorPaginate(page, pageSize, userId)
-	}
+	//if status == "" {
+	//	dataList, total, lastPage, err = models.GetActivityFavorPaginate(page, pageSize, userId)
+	//} else {
+		dataList, total, lastPage, err = models.GetArticleLikePaginate(page, pageSize, userId)
+	//}
 
 	data["list"] = dataList
 	data["total"] = total

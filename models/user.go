@@ -38,6 +38,16 @@ func GetUserByOpenid(openid string) (*User, error) {
 
 }
 
+func GetUserInfoById(id int64)(*User, error){
+
+	user := &User{}
+
+	res := db.DB.Self.Where("id = ?", id).Select("follows, is_followed").First(&user)
+
+	return user, res.Error
+
+}
+
 func (u *User) GetUserById(id, userId int64) (*User, error) {
 
 	res := db.DB.Self.

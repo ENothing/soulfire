@@ -97,6 +97,13 @@ func (sof *ShopOrderCreateForm) Create(transaction *gorm.DB) (id int64, err erro
 
 }
 
+func GetShopOrderUnpayCount(userId int64)(total int64) {
+
+	db.DB.Self.Model(&ShopOrder{}).Where("user_id = ?",userId ).Where("status = ?", 0).Where("refund_id = ?", 0).Count(&total)
+
+	return
+}
+
 func GetOrderById(userId, orderId int64) (*ShopOrder, error) {
 
 	order := &ShopOrder{}

@@ -19,7 +19,6 @@ type Article struct {
 	View       int64      `json:"view" gorm:"column:view;not null"`
 	CateId     int64      `json:"cate_id" gorm:"column:cate_id;not null"`
 	IsPublish  int64      `json:"is_publish" gorm:"column:is_publish;not null"`
-	IsFollowed int64      `json:"is_followed" gorm:"column:is_followed;not null"`
 	CreatedAt  time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt  time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt  *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
@@ -32,6 +31,8 @@ type ArticleDetail struct {
 	Liked           bool   `json:"liked" gorm:"column:liked;not null"`
 	Follows         int64  `json:"follows" gorm:"column:follows;not null"`
 	CreatedAtFormat string `json:"created_at_format" gorm:"column:created_at_format"`
+	IsFollowed int64      `json:"is_followed" gorm:"column:is_followed;not null"`
+
 }
 
 func (Article) TableName() string {
@@ -68,7 +69,6 @@ func ArticleViewAddOne(id int64) error {
 
 	res := db.DB.Self.Model(&article).
 		Where("id = ?", id).
-		Where("view > 0").
 		Update("view", gorm.Expr("view + ?", 1))
 
 	return res.Error
@@ -81,7 +81,7 @@ func ArticleLikeAddOne(id int64) error {
 
 	res := db.DB.Self.Model(&article).
 		Where("id = ?", id).
-		Where("likes > 0").
+		Where("likes >= 0").
 		UpdateColumn("likes", gorm.Expr("likes + ?", 1))
 
 	return res.Error
@@ -107,7 +107,7 @@ func ArticleFavorAddOne(id int64) error {
 
 	res := db.DB.Self.Model(&article).
 		Where("id = ?", id).
-		Where("favor > 0").
+		Where("favor >= 0").
 		UpdateColumn("favor", gorm.Expr("favor + ?", 1))
 
 	return res.Error
@@ -134,7 +134,8 @@ func GetArticleById(id, userId int64) (*ArticleDetail, error) {
 	res := db.DB.Self.
 		Where("articles.id = ?", id).
 		Joins("LEFT JOIN users AS u ON u.id=articles.user_id").
-		Select("articles.*,u.nickname as nickname,u.head_url as avatar,u.follows as follows").
+		Joins("LEFT JOIN user_likes AS ul ON ul.type_id=articles.id AND ul.own=2 AND ul.user_id = ?", userId).
+		Select("articles.*,u.nickname as nickname,u.head_url as avatar,u.follows as follows,if(ul.id is null,false,true) as liked").
 		First(&article)
 
 	isFollowed := GetUserFollowById(userId, article.UserId)

@@ -1,6 +1,10 @@
 package models
 
-import "soulfire/pkg/db"
+import (
+	"fmt"
+	"math"
+	"soulfire/pkg/db"
+)
 
 type UserLike struct {
 	Model
@@ -38,5 +42,30 @@ func LikeAndUnlike(userId, typeId, own int64) bool {
 	db.DB.Self.Delete(&userLike)
 
 	return false
+
+}
+
+func GetArticleLikePaginate(page int64, pageSize int64, userId int64) (article []*Article, total int64, lastPage int64, err error) {
+
+	var typeIds []int64
+	var userLike []*UserLike
+	article = make([]*Article, 0)
+
+	db.DB.Self.Where("user_id = ?", userId).Where("own = ?", IsArticle).Find(&userLike).Pluck("type_id", &typeIds)
+
+	fmt.Println(typeIds)
+
+	offset := (page - 1) * pageSize
+
+	res := db.DB.Self.Model(&Article{}).Where("id IN (?)", typeIds)
+
+	res = res.Order("created_at desc")
+
+	res = res.Limit(pageSize).Offset(offset).Find(&article)
+	res.Count(&total)
+
+	lastPage = int64(math.Ceil(float64(total) / float64(pageSize)))
+
+	return article, total, lastPage, res.Error
 
 }

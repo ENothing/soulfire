@@ -86,6 +86,12 @@ func GetActivityOrderById(id, userId int64) (*ActivityOrderRelated, error) {
 	return activityOrder, res.Error
 
 }
+func GetActivityOrderUnpayCount(userId int64)(total int64) {
+
+	db.DB.Self.Model(&ActivityOrder{}).Where("user_id = ?",userId ).Where("status = ?", 0).Where("refund_id = ?", 0).Count(&total)
+
+	return
+}
 
 func UpdateActivityOrderRefundId(userId, orderId, refundId int64) error {
 

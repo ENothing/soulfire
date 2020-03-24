@@ -243,7 +243,7 @@ func Upload(ctx *gin.Context) {
 	app, _ := config.Cfg.GetSection("qiniu")
 	MediaUrl := app.Key("MediaUrl").String()
 	file, _ := ctx.FormFile("file")
-	bucket := "soulfire-bbs"
+	bucket := "soulfire-media"
 
 	ext := path.Ext(file.Filename)
 	key := utils.Uid("FE") + ext

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"math"
 	"soulfire/pkg/db"
 )
@@ -77,6 +78,8 @@ func GetArticleFavorPaginate(page int64, pageSize int64, userId int64) (article 
 	article = make([]*Article, 0)
 
 	db.DB.Self.Where("user_id = ?", userId).Where("own = ?", IsArticle).Find(&UserFavor{}).Pluck("type_id", &typeIds)
+
+	fmt.Println(typeIds)
 
 	offset := (page - 1) * pageSize
 
