@@ -24,6 +24,12 @@ type User struct {
 	IsFollowed int64      `json:"is_followed" gorm:"column:is_followed;not null"`
 }
 
+type UserDetail struct {
+	User
+	Likes int64 `json:"likes" gorm:"column:likes;not null"`
+	Attention int64 `json:"attention" gorm:"column:attention;not null"`
+}
+
 func (User) TableName() string {
 	return "users"
 }
@@ -42,32 +48,32 @@ func GetUserInfoById(id int64)(*User, error){
 
 	user := &User{}
 
-	res := db.DB.Self.Where("id = ?", id).Select("follows, is_followed").First(&user)
+	res := db.DB.Self.Where("id = ?", id).Select("id,nickname,head_url,gender,follows, is_followed").First(&user)
 
 	return user, res.Error
 
 }
 
-func (u *User) GetUserById(id, userId int64) (*User, error) {
+func (ud *UserDetail) GetUserById(id, userId int64) (*UserDetail, error) {
 
 	res := db.DB.Self.
 		Where("users.id = ?", id).
 		Joins("LEFT JOIN articles AS a ON a.user_id = users.id").
-		Select("users.id,users.nickname,users.gender,users.head_url,users.sign,SUM(a.likes) as likes").
-		First(&u)
+		Select("users.id,users.nickname,users.gender,users.follows,users.is_followed,users.head_url,users.sign,SUM(a.likes) as likes").
+		First(&ud)
 
-	db.DB.Self.Model(&UserFollow{}).Where("follow_id = ?", id).Count(&u.Follows)
+	//db.DB.Self.Model(&UserFollow{}).Where("follow_id = ?", id).Count(&ud.Follows)
 
-	isFollowed := GetUserFollowById(userId, u.Id)
+	isFollowed := GetUserFollowById(userId, ud.Id)
 
-	status := 0
+	attention := 0
 	if isFollowed {
-		status = 1
+		attention = 1
 	}
 
-	u.IsFollowed = int64(status)
+	ud.Attention = int64(attention)
 
-	return u, res.Error
+	return ud, res.Error
 
 }
 

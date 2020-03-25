@@ -98,11 +98,8 @@ func Info(ctx *gin.Context)  {
 
 	data := make(map[string]interface{})
 
-	user,err := models.GetUserInfoById(userId)
-	if err != nil {
-		rsp.JsonResonse(ctx, rsp.UserInfoGotFailed, nil, "")
-		return
-	}
+	user,_ := models.GetUserInfoById(userId)
+
 	activityOrderUnpayCount := models.GetActivityOrderUnpayCount(userId)
 	shopOrderUnpayCount := models.GetShopOrderUnpayCount(userId)
 

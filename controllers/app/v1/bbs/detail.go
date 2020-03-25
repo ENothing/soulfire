@@ -38,7 +38,7 @@ func UserDetail(ctx *gin.Context) {
 	id, _ := strconv.ParseInt(ctx.Param("user_id"), 10, 64)
 	userId := ctx.MustGet("user_id").(int64)
 
-	user := models.User{}
+	user := models.UserDetail{}
 
 	userInfo, err := user.GetUserById(id, userId)
 

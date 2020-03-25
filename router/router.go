@@ -35,7 +35,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mu.GET("per_collect", user.PersonalCollection) //用户收藏列表
 			mu.POST("upload", user.Upload) //用户收藏列表
 			mu.GET("info", user.Info) //用户收藏列表
-
+			//mu.GET("index/:id", user.Index) //用户个人主页
 		}
 
 		a := app.Group("activity")

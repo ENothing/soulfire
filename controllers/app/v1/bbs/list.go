@@ -60,7 +60,7 @@ func UserArticleList(ctx *gin.Context) {
 
 	userId, _ := strconv.ParseInt(ctx.Param("user_id"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
-	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
+	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "5"), 10, 64)
 
 	data := make(map[string]interface{})
 
