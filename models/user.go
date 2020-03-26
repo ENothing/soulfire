@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/jinzhu/gorm"
 	"soulfire/pkg/db"
 	"time"
 )
@@ -28,6 +29,7 @@ type UserDetail struct {
 	User
 	Likes int64 `json:"likes" gorm:"column:likes;not null"`
 	Attention int64 `json:"attention" gorm:"column:attention;not null"`
+	IsMe int64 `json:"is_me" gorm:"column:is_me;not null"`
 }
 
 func (User) TableName() string {
@@ -71,7 +73,13 @@ func (ud *UserDetail) GetUserById(id, userId int64) (*UserDetail, error) {
 		attention = 1
 	}
 
+	isMe := 0
+	if id == userId {
+		isMe = 1
+	}
+
 	ud.Attention = int64(attention)
+	ud.IsMe = int64(isMe)
 
 	return ud, res.Error
 
@@ -90,4 +98,55 @@ func Delete(ids []string) error {
 	u := User{}
 
 	return db.DB.Self.Where("id in (?)", ids).Delete(&u).Error
+}
+
+func FollowsAddOne(id int64) error {
+
+	user := &User{}
+
+	res := db.DB.Self.Model(&user).
+		Where("id = ?", id).
+		Where("follows >= 0").
+		UpdateColumn("follows", gorm.Expr("follows + ?", 1))
+
+	return res.Error
+
+}
+
+func FollowsCutOne(id int64) error {
+
+	user := &User{}
+
+	res := db.DB.Self.Model(&user).
+		Where("id = ?", id).
+		Where("follows > 0").
+		UpdateColumn("follows", gorm.Expr("follows - ?", 1))
+
+	return res.Error
+
+}
+func IsFollowedAddOne(id int64) error {
+
+	user := &User{}
+
+	res := db.DB.Self.Model(&user).
+		Where("id = ?", id).
+		Where("is_followed >= 0").
+		UpdateColumn("is_followed", gorm.Expr("is_followed + ?", 1))
+
+	return res.Error
+
+}
+
+func IsFollowedCutOne(id int64) error {
+
+	user := &User{}
+
+	res := db.DB.Self.Model(&user).
+		Where("id = ?", id).
+		Where("is_followed > 0").
+		UpdateColumn("is_followed", gorm.Expr("is_followed - ?", 1))
+
+	return res.Error
+
 }

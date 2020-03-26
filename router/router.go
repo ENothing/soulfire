@@ -35,6 +35,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mu.GET("per_collect", user.PersonalCollection) //用户收藏列表
 			mu.POST("upload", user.Upload) //用户收藏列表
 			mu.GET("info", user.Info) //用户收藏列表
+			mu.GET("follow_list", user.FollowsList) //用户收藏列表
+			mu.GET("followed_list", user.FollowedList) //用户收藏列表
 			//mu.GET("index/:id", user.Index) //用户个人主页
 		}
 
@@ -70,6 +72,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		{
 
 			b.GET("user_articles/:user_id", bbs.UserArticleList) //用户个人文章列表
+			b.GET("user_like_articles/:user_id", bbs.UserLikeArticleList) //用户个人文章列表
 
 			b.GET("comment_list", bbs.CommentList) //评论列表
 
@@ -85,12 +88,14 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mb.POST("del_article", bbs.DeleteArticle)      //删除文章
 
 			mb.POST("post_comment", bbs.PostComment) //发表评论
-			mb.POST("follow", bbs.Follow)            //用户关注
+			mb.GET("follow/:follow_id", bbs.Follow)            //用户关注
 			mb.GET("favor/:id", bbs.Favor)           //收藏活动
 
 			mb.GET("list", bbs.ArticleList)                //文章列表
 			mb.GET("user_detail/:user_id", bbs.UserDetail) //用户个人页面信息
 			mb.GET("detail/:id", bbs.Detail)               //文章详情
+			mb.GET("follows_List/:id", bbs.FollowsList)               //文章详情
+			mb.GET("followed_List/:id", bbs.FollowedList)               //文章详情
 
 			mb.POST("upload", bbs.Upload) //文章详情
 

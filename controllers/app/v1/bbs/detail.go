@@ -1,7 +1,6 @@
 package bbs
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"soulfire/models"
 	"soulfire/pkg/rsp"
@@ -13,7 +12,6 @@ func Detail(ctx *gin.Context) {
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	userId := ctx.MustGet("user_id").(int64)
 
-	fmt.Println(userId)
 
 	article, err := models.GetArticleById(id, userId)
 

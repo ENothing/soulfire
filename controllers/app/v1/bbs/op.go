@@ -159,7 +159,7 @@ func DeleteArticle(ctx *gin.Context) {
 func Follow(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
-	followId, _ := strconv.ParseInt(ctx.PostForm("follow_id"), 10, 64)
+	followId, _ := strconv.ParseInt(ctx.Param("follow_id"), 10, 64)
 
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
@@ -187,6 +187,8 @@ func Follow(ctx *gin.Context) {
 			return
 
 		}
+		_ = models.FollowsCutOne(userId)
+		_ = models.IsFollowedCutOne(followId)
 
 	} else {
 
@@ -197,7 +199,8 @@ func Follow(ctx *gin.Context) {
 			return
 
 		}
-
+		_ = models.FollowsAddOne(userId)
+		_ = models.IsFollowedAddOne(followId)
 	}
 
 	rsp.JsonResonse(ctx, rsp.OK, nil, "")

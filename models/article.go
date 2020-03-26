@@ -22,6 +22,8 @@ type Article struct {
 	CreatedAt  time.Time  `gorm:";column:created_at" json:"created_at"`
 	UpdatedAt  time.Time  `gorm:";column:updated_at" json:"updated_at"`
 	DeletedAt  *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	IsFollowed int64      `json:"is_followed" gorm:"column:is_followed;not null"`
+	Follows         int64  `json:"follows" gorm:"column:follows;not null"`
 }
 
 type ArticleDetail struct {
@@ -29,10 +31,8 @@ type ArticleDetail struct {
 	NickName        string `json:"nickname" gorm:"column:nickname;not null"`
 	Avatar          string `json:"avatar" gorm:"column:avatar;not null"`
 	Liked           bool   `json:"liked" gorm:"column:liked;not null"`
-	Follows         int64  `json:"follows" gorm:"column:follows;not null"`
 	CreatedAtFormat string `json:"created_at_format" gorm:"column:created_at_format"`
-	IsFollowed int64      `json:"is_followed" gorm:"column:is_followed;not null"`
-
+	Attention int64 `json:"attention" gorm:"column:attention;not null"`
 }
 
 func (Article) TableName() string {
@@ -135,17 +135,17 @@ func GetArticleById(id, userId int64) (*ArticleDetail, error) {
 		Where("articles.id = ?", id).
 		Joins("LEFT JOIN users AS u ON u.id=articles.user_id").
 		Joins("LEFT JOIN user_likes AS ul ON ul.type_id=articles.id AND ul.own=2 AND ul.user_id = ?", userId).
-		Select("articles.*,u.nickname as nickname,u.head_url as avatar,u.follows as follows,if(ul.id is null,false,true) as liked").
+		Select("articles.*,u.nickname as nickname,u.head_url as avatar,u.is_followed as is_followed,if(ul.id is null,false,true) as liked").
 		First(&article)
 
 	isFollowed := GetUserFollowById(userId, article.UserId)
 
-	status := 0
+	attention := 0
 	if isFollowed {
-		status = 1
+		attention = 1
 	}
 
-	article.IsFollowed = int64(status)
+	article.Attention = int64(attention)
 
 	return article, res.Error
 
