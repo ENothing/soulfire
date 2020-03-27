@@ -2,6 +2,7 @@ package bbs
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"os"
 	"path"
 	"soulfire/models"
@@ -107,24 +108,72 @@ func EditArticle(ctx *gin.Context) {
 	cateId, _ := strconv.ParseInt(ctx.PostForm("cate_id"), 10, 64)
 	isPublish, _ := strconv.ParseInt(ctx.PostForm("is_publish"), 10, 64)
 
+	articleForm := ArticleForm{
+		title,
+		thumb,
+		content,
+		cateId,
+	}
+
+	message := verify.FormVerify(&articleForm)
+	if message != nil {
+
+		rsp.JsonResonse(ctx, rsp.ArticleCreateFailed, nil, message.(string))
+		return
+	}
+
 	_, err := models.GetSelfArticleById(id, userId)
 
-	if err != nil {
+	if err == gorm.ErrRecordNotFound {
 
-		rsp.JsonResonse(ctx, rsp.ArticleNotExits, nil, "")
-		return
+		article := models.Article{
+			UserId:    userId,
+			Thumb:     thumb,
+			Title:     title,
+			Content:   content,
+			CateId:    cateId,
+			IsPublish: isPublish,
+		}
 
+		err := article.Create()
+		if err != nil {
+
+			rsp.JsonResonse(ctx, rsp.ArticleCreateFailed, nil, "")
+			return
+		}
+
+	}else{
+		article := models.Article{
+			Title:     title,
+			Thumb:     thumb,
+			Content:   content,
+			CateId:    cateId,
+			IsPublish: isPublish,
+		}
+
+		err = article.Update(id, userId)
+		if err != nil {
+
+			rsp.JsonResonse(ctx, rsp.ArticleUpdateFailed, nil, "")
+			return
+
+		}
 	}
+
+	rsp.JsonResonse(ctx, rsp.OK, nil, "")
+
+}
+
+func UpdateArticleToPublish(ctx *gin.Context)  {
+
+	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	userId := ctx.MustGet("user_id").(int64)
 
 	article := models.Article{
-		Title:     title,
-		Thumb:     thumb,
-		Content:   content,
-		CateId:    cateId,
-		IsPublish: isPublish,
+		IsPublish: int64(1),
 	}
 
-	err = article.Update(id, userId)
+	err := article.Update(id, userId)
 	if err != nil {
 
 		rsp.JsonResonse(ctx, rsp.ArticleUpdateFailed, nil, "")

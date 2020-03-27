@@ -31,6 +31,27 @@ func Detail(ctx *gin.Context) {
 
 }
 
+func ArticleEditDetail(ctx *gin.Context) {
+
+	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	userId := ctx.MustGet("user_id").(int64)
+
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
+	article, err := models.GetSelfArticleById(id, userId)
+
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ArticleNotExits, nil, "")
+		return
+	}
+
+	rsp.JsonResonse(ctx, rsp.OK, article, "")
+
+}
+
 func UserDetail(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("user_id"), 10, 64)

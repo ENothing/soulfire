@@ -102,3 +102,24 @@ func FollowedList(ctx *gin.Context)  {
 
 
 }
+
+func MyArticleList(ctx *gin.Context)  {
+	userId := ctx.MustGet("user_id").(int64)
+	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
+	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "5"), 10, 64)
+
+	data := make(map[string]interface{})
+
+	articles, total, lastPage, err := models.UserArticlePaginate(page, pageSize, userId,0)
+
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.ArticleNotExits, nil, "")
+		return
+	}
+
+	data["total"] = total
+	data["last_page"] = lastPage
+	data["articles"] = articles
+
+	rsp.JsonResonse(ctx, rsp.OK, data, "")
+}

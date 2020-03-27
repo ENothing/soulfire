@@ -37,6 +37,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mu.GET("info", user.Info) //用户收藏列表
 			mu.GET("follow_list", user.FollowsList) //用户收藏列表
 			mu.GET("followed_list", user.FollowedList) //用户收藏列表
+			mu.GET("article", user.MyArticleList) //用户收藏列表
 			//mu.GET("index/:id", user.Index) //用户个人主页
 		}
 
@@ -84,8 +85,10 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			mb.GET("like/:id", bbs.Like) //文章like
 
 			mb.POST("publish_article", bbs.PublishArticle) //发布文章
-			mb.POST("edit_article", bbs.EditArticle)       //编辑文章
-			mb.POST("del_article", bbs.DeleteArticle)      //删除文章
+			mb.POST("edit_article/:id", bbs.EditArticle)       //编辑文章
+			mb.GET("del_article/:id", bbs.DeleteArticle)      //删除文章
+			mb.GET("edit_article_detail/:id", bbs.ArticleEditDetail)      //删除文章
+			mb.GET("publish/:id", bbs.UpdateArticleToPublish)      //删除文章
 
 			mb.POST("post_comment", bbs.PostComment) //发表评论
 			mb.GET("follow/:follow_id", bbs.Follow)            //用户关注

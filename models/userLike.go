@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"math"
 	"soulfire/pkg/db"
 )
@@ -53,11 +52,10 @@ func GetArticleLikePaginate(page int64, pageSize int64, userId int64) (article [
 
 	db.DB.Self.Where("user_id = ?", userId).Where("own = ?", IsArticle).Find(&userLike).Pluck("type_id", &typeIds)
 
-	fmt.Println(typeIds)
 
 	offset := (page - 1) * pageSize
 
-	res := db.DB.Self.Model(&Article{}).Where("id IN (?)", typeIds)
+	res := db.DB.Self.Model(&Article{}).Where("id IN (?)", typeIds).Where("status = ?",1).Where("is_publish = ?",1)
 
 	res = res.Order("created_at desc")
 

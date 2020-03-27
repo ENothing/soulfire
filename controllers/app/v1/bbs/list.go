@@ -64,7 +64,7 @@ func UserArticleList(ctx *gin.Context) {
 
 	data := make(map[string]interface{})
 
-	articles, total, lastPage, err := models.UserArticlePaginate(page, pageSize, userId)
+	articles, total, lastPage, err := models.UserArticlePaginate(page, pageSize, userId,1)
 
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.ArticleNotExits, nil, "")

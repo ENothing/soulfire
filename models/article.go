@@ -10,20 +10,19 @@ import (
 
 type Article struct {
 	Model
-	UserId     int64      `json:"user_id" gorm:"column:user_id;not null"`
-	Thumb      string     `json:"thumb" gorm:"column:thumb;not null"`
-	Title      string     `json:"title" gorm:"column:title;not null"`
-	Content    string     `json:"content" gorm:"column:content;not null"`
-	Likes      int64      `json:"likes" gorm:"column:likes;not null"`
-	Favor      int64      `json:"favor" gorm:"column:favor;not null"`
-	View       int64      `json:"view" gorm:"column:view;not null"`
-	CateId     int64      `json:"cate_id" gorm:"column:cate_id;not null"`
-	IsPublish  int64      `json:"is_publish" gorm:"column:is_publish;not null"`
-	CreatedAt  time.Time  `gorm:";column:created_at" json:"created_at"`
-	UpdatedAt  time.Time  `gorm:";column:updated_at" json:"updated_at"`
-	DeletedAt  *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
-	IsFollowed int64      `json:"is_followed" gorm:"column:is_followed;not null"`
-	Follows         int64  `json:"follows" gorm:"column:follows;not null"`
+	UserId    int64      `json:"user_id" gorm:"column:user_id;not null"`
+	Thumb     string     `json:"thumb" gorm:"column:thumb;not null"`
+	Title     string     `json:"title" gorm:"column:title;not null"`
+	Content   string     `json:"content" gorm:"column:content;not null"`
+	Likes     int64      `json:"likes" gorm:"column:likes;not null"`
+	Favor     int64      `json:"favor" gorm:"column:favor;not null"`
+	View      int64      `json:"view" gorm:"column:view;not null"`
+	CateId    int64      `json:"cate_id" gorm:"column:cate_id;not null"`
+	IsPublish int64      `json:"is_publish" gorm:"column:is_publish;not null"`
+	CreatedAt time.Time  `gorm:";column:created_at" json:"created_at"`
+	UpdatedAt time.Time  `gorm:";column:updated_at" json:"updated_at"`
+	DeletedAt *time.Time `gorm:"column:deleted_at" sql:"index" json:"deleted_at"`
+	Status    int64      `json:"status" gorm:"column:status;not null"`
 }
 
 type ArticleDetail struct {
@@ -32,7 +31,9 @@ type ArticleDetail struct {
 	Avatar          string `json:"avatar" gorm:"column:avatar;not null"`
 	Liked           bool   `json:"liked" gorm:"column:liked;not null"`
 	CreatedAtFormat string `json:"created_at_format" gorm:"column:created_at_format"`
-	Attention int64 `json:"attention" gorm:"column:attention;not null"`
+	Attention       int64  `json:"attention" gorm:"column:attention;not null"`
+	IsFollowed      int64  `json:"is_followed" gorm:"column:is_followed;not null"`
+	Follows         int64  `json:"follows" gorm:"column:follows;not null"`
 }
 
 func (Article) TableName() string {
@@ -167,7 +168,7 @@ func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title
 
 	offset := (page - 1) * pageSize
 
-	res := db.DB.Self
+	res := db.DB.Self.Where("status = ?",1).Where("is_publish = ?",1)
 
 	if cateId != 0 {
 		res = res.Where("cate_id = ?", cateId)
@@ -196,13 +197,18 @@ func ArticlePaginate(page int64, pageSize int64, sort int64, cateId int64, title
 	return articles, total, lastPage, res.Error
 }
 
-func UserArticlePaginate(page int64, pageSize int64, userId int64) (articles []*Article, total int64, lastPage int64, err error) {
+func UserArticlePaginate(page int64, pageSize int64, userId int64,flag int64) (articles []*Article, total int64, lastPage int64, err error) {
 
 	articles = make([]*Article, 0)
 
 	offset := (page - 1) * pageSize
 
 	res := db.DB.Self.Where("user_id = ?", userId)
+
+	if flag == int64(1) {
+		res = res.Where("status = ?",1).Where("is_publish = ?",1)
+	}
+
 
 	res = res.Order("created_at desc")
 
