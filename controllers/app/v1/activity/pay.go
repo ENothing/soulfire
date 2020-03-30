@@ -15,7 +15,10 @@ func Pay(ctx *gin.Context)  {
 	userId := ctx.MustGet("user_id").(int64)
 
 	id,_ := strconv.ParseInt(ctx.PostForm("id"),10,64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 
 	_,err := models.GetActivityOrderById(id,userId)
 

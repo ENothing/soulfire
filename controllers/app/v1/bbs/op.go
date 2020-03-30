@@ -20,6 +20,11 @@ func Like(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
 	likes := models.LikeAndUnlike(userId, id, 2)
 
 	if likes == true {
@@ -64,6 +69,11 @@ func PublishArticle(ctx *gin.Context) {
 	cateId, _ := strconv.ParseInt(ctx.PostForm("cate_id"), 10, 64)
 	isPublish, _ := strconv.ParseInt(ctx.PostForm("is_publish"), 10, 64)
 
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
+
 	articleForm := ArticleForm{
 		title,
 		thumb,
@@ -107,6 +117,11 @@ func EditArticle(ctx *gin.Context) {
 	content := ctx.PostForm("content")
 	cateId, _ := strconv.ParseInt(ctx.PostForm("cate_id"), 10, 64)
 	isPublish, _ := strconv.ParseInt(ctx.PostForm("is_publish"), 10, 64)
+
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 
 	articleForm := ArticleForm{
 		title,
@@ -168,7 +183,10 @@ func UpdateArticleToPublish(ctx *gin.Context)  {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	userId := ctx.MustGet("user_id").(int64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	article := models.Article{
 		IsPublish: int64(1),
 	}
@@ -189,7 +207,10 @@ func DeleteArticle(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	userId := ctx.MustGet("user_id").(int64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	article := models.Article{}
 
 	err := article.Delete(id, userId)
@@ -261,7 +282,10 @@ func Favor(ctx *gin.Context) {
 	userId := ctx.MustGet("user_id").(int64)
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	favor := models.FavorAndUnFavor(userId, id, 2)
 
 	if favor == true {

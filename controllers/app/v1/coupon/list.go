@@ -15,7 +15,10 @@ func CanUseCouponsList(ctx *gin.Context) {
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 
 	data := make(map[string]interface{})
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	userCoupons, total, lastPage, err := models.CanUseCouponsPaginate(page, pageSize, userId, goodsId)
 
 	if err != nil {

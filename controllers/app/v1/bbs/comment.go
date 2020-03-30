@@ -15,7 +15,10 @@ func PostComment(ctx *gin.Context)  {
 	parentId, _ := strconv.ParseInt(ctx.PostForm("parent_id"), 10, 64)
 	replyId, _ := strconv.ParseInt(ctx.PostForm("reply_id"), 10, 64)
 	content := ctx.PostForm("content")
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	comment := models.ArticleComment{
 		UserId:    userId,
 		ArticleId: id,

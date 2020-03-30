@@ -11,7 +11,10 @@ func Detail(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	shipAddress, err := models.GetAddressById(id, userId)
 
 	if err != nil {

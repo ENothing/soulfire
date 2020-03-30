@@ -12,7 +12,10 @@ func Like(ctx *gin.Context) {
 	userId := ctx.MustGet("user_id").(int64)
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	likes := models.LikeAndUnlike(userId, id, 1)
 
 	if likes == true {
@@ -47,7 +50,10 @@ func Favor(ctx *gin.Context) {
 	userId := ctx.MustGet("user_id").(int64)
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	favor := models.FavorAndUnFavor(userId, id, 1)
 
 	if favor == true {

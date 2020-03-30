@@ -109,7 +109,10 @@ func MyArticleList(ctx *gin.Context)  {
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "5"), 10, 64)
 
 	data := make(map[string]interface{})
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	articles, total, lastPage, err := models.UserArticlePaginate(page, pageSize, userId,0)
 
 	if err != nil {

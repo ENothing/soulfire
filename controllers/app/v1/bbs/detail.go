@@ -35,7 +35,10 @@ func ArticleEditDetail(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	userId := ctx.MustGet("user_id").(int64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return

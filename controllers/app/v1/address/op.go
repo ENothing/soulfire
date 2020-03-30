@@ -29,7 +29,10 @@ func AddAddress(ctx *gin.Context) {
 	city := ctx.PostForm("city")
 	district := ctx.PostForm("district")
 	detailAddress := ctx.PostForm("detail_address")
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	adForm := AdForm{
 		name,
 		mobile,
@@ -91,7 +94,10 @@ func UpdateAddress(ctx *gin.Context) {
 	city := ctx.PostForm("city")
 	district := ctx.PostForm("district")
 	detailAddress := ctx.PostForm("detail_address")
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	_, err := models.GetAddressById(id, userId)
 	if err != nil {
 
@@ -143,7 +149,10 @@ func UpdateDefaultAddress(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	err := models.UpdateDefaultAddress(id, userId)
 
 	if err != nil {
@@ -160,7 +169,10 @@ func DelAddress(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	shipAddress := models.ShipAddress{}
 
 	err := shipAddress.Delete(id, userId)

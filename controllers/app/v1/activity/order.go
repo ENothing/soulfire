@@ -35,7 +35,10 @@ func FinishOrder(ctx *gin.Context)  {
 	userId := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
-
+	if userId == 0 {
+		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
+		return
+	}
 	err := models.UpdateActivityOrderToFinished(userId,id)
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.ActivityOrderFinishedFailed, nil,"")
