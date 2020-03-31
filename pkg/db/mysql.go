@@ -33,7 +33,9 @@ func GetSelfDB() *gorm.DB {
 	user := mysqlConfig.Key("USER").String()
 	password := mysqlConfig.Key("PASSWORD").String()
 
-	fmt.Println(mysqlConfig)
+	logging.Logging(logging.ERR, "数据库账号"+user)
+	logging.Logging(logging.ERR, "数据库密码"+password)
+
 
 	return connect(user, password, host+":"+port, database)
 }
