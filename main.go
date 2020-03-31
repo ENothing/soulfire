@@ -22,7 +22,7 @@ func main() {
 
 	router.Load(g, middlewares...)
 
-	log.Printf("服务开始运行：%s", ":8080")
-	log.Printf(http.ListenAndServe(":8080", g).Error())
+	log.Printf("服务开始运行：%s", ":8081")
+	log.Printf(http.ListenAndServe(":8081", g).Error())
 
 }
