@@ -11,6 +11,7 @@ import (
 	"soulfire/pkg/db"
 	"soulfire/pkg/qiniu"
 	"soulfire/pkg/rsp"
+	"soulfire/pkg/wechat/qrcode"
 	"soulfire/utils"
 	"strconv"
 	"time"
@@ -405,5 +406,18 @@ func Upload(ctx *gin.Context) {
 	_ = os.Remove(dst)
 
 	rsp.JsonResonse(ctx, rsp.OK, url, "")
+
+}
+
+func Share(ctx *gin.Context){
+
+
+	qrcode.Get("id=1","page/index/index")
+
+
+
+
+
+
 
 }

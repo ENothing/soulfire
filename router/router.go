@@ -111,6 +111,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			s.GET("purchasers/:id", shop.PurchasersList)       //商品购买人列表
 			s.GET("cates_with_brands", shop.CateWithBrandList) //分类列表
 			s.GET("dynamic_history", shop.DynamicHistory) //动态获取相似搜索内容
+			s.POST("share", shop.Share) //动态获取相似搜索内容
 
 		}
 

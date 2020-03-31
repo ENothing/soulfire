@@ -15,6 +15,7 @@ const (
 	Code2SessionURL = "https://api.weixin.qq.com/sns/jscode2session"
 	AccessTokenURL  = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential"
 	TemplateSendURL = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send"
+	GetWxACodeUnlimitURL = "https://api.weixin.qq.com/wxa/getwxacodeunlimit"
 )
 
 func NewConfig() *Config {
