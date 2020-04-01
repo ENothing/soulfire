@@ -14,6 +14,7 @@ func (d *Decrypt) UserInfo(sessionKey, encryptedData, iv string) *UserInfo {
 	logging.Logging(logging.INFO, sessionKey)
 	logging.Logging(logging.INFO, encryptedData)
 	logging.Logging(logging.INFO, iv)
+	logging.Logging(logging.INFO, res)
 	logging.Logging(logging.ERR, err)
 	if err != nil {
 
