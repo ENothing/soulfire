@@ -12,7 +12,7 @@ import (
 func Detail(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 
 
 	article, err := models.GetArticleById(id, userId)
@@ -36,7 +36,7 @@ func Detail(ctx *gin.Context) {
 func ArticleEditDetail(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
