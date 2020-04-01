@@ -1,5 +1,7 @@
 package decrypt
 
+import "soulfire/pkg/logging"
+
 type UserInfo struct {
 	HeadUrl  string
 	NickName string
@@ -10,6 +12,8 @@ func (d *Decrypt) UserInfo(sessionKey, encryptedData, iv string) *UserInfo {
 
 	res, err := ToDecrypt(sessionKey, encryptedData, iv)
 	if err != nil {
+		logging.Logging(logging.INFO, res)
+		logging.Logging(logging.ERR, err)
 		return nil
 	}
 
