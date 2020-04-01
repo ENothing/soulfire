@@ -9,7 +9,7 @@ import (
 
 func ActivityList(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	title := ctx.Query("title")
 	sort, _ := strconv.ParseInt(ctx.DefaultQuery("sort", "0"), 10, 64)
@@ -58,7 +58,7 @@ func ActivityCates(ctx *gin.Context) {
 
 func ActivityOrderList(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 	status := ctx.DefaultQuery("status", "")

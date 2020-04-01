@@ -10,6 +10,7 @@ import (
 	"soulfire/pkg/rsp"
 	"soulfire/pkg/verify"
 	"soulfire/utils"
+	"strconv"
 )
 
 type FeedbackForm struct {
@@ -19,7 +20,7 @@ type FeedbackForm struct {
 
 func PostFeedback(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	title := ctx.PostForm("title")
 	content := ctx.PostForm("content")
 	pics := ctx.PostForm("pics")

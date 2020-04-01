@@ -60,7 +60,7 @@ func ArticleEditDetail(ctx *gin.Context) {
 func UserDetail(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("user_id"), 10, 64)
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	fmt.Println(id)
 	fmt.Println(userId)
 

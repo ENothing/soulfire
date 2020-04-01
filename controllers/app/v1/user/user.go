@@ -1,13 +1,16 @@
 package user
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/silenceper/wechat"
 	"soulfire/models"
+	"soulfire/pkg/auth"
 	"soulfire/pkg/config"
 	"soulfire/pkg/rsp"
-	jwt "soulfire/pkg/token"
+	"strconv"
+	"time"
 )
 
 func Login(ctx *gin.Context) {
@@ -17,7 +20,6 @@ func Login(ctx *gin.Context) {
 	encryptedData := ctx.PostForm("encryptedData")
 
 	var userId int64
-	var nickName string
 
 	if code == "" {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
@@ -66,22 +68,13 @@ func Login(ctx *gin.Context) {
 			return
 		}
 
-		nickName = userInfo.NickName
-
 	} else {
 
 		userId = user.Id
-		nickName = user.NickName
 	}
 
-	userToken := jwt.UserToken{
-		userId,
-		nickName,
-		data.OpenID,
-		data.SessionKey,
-	}
+	token,err := generateToken(userId)
 
-	token, err := jwt.Encode(userToken)
 
 	if err != nil {
 
@@ -97,7 +90,7 @@ func Login(ctx *gin.Context) {
 
 func Info(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 
 	data := make(map[string]interface{})
 
@@ -112,4 +105,21 @@ func Info(ctx *gin.Context) {
 
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
+}
+
+func generateToken(userId int64)(string,error) {
+
+	j := auth.NewJWT()
+	claims := auth.CustomClaims{
+		userId,
+		jwt.StandardClaims{
+			NotBefore: int64(time.Now().Unix() - 1000), // 签名生效时间
+			ExpiresAt: int64(time.Now().Unix() + 10800), // 过期时间 一小时
+			Issuer:    "en",
+		},
+	}
+
+	token, err:= j.CreateToken(claims)
+
+	return token, err
 }

@@ -22,7 +22,7 @@ func AddAddress(ctx *gin.Context) {
 
 	var isDefault int64
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	name := ctx.PostForm("name")
 	mobile := ctx.PostForm("mobile")
 	province := ctx.PostForm("province")
@@ -85,7 +85,7 @@ func AddAddress(ctx *gin.Context) {
 
 func UpdateAddress(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	name := ctx.PostForm("name")
@@ -147,7 +147,7 @@ func UpdateAddress(ctx *gin.Context) {
 
 func UpdateDefaultAddress(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
@@ -167,7 +167,7 @@ func UpdateDefaultAddress(ctx *gin.Context) {
 
 func DelAddress(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")

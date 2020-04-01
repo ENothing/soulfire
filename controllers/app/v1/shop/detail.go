@@ -39,7 +39,7 @@ func GoodsDetail(ctx *gin.Context) {
 
 func PreOrderDetail(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	goodsSpuId, _ := strconv.ParseInt(ctx.Param("goods_spu_id"), 10, 64)
 
 	data := make(map[string]interface{}, 0)
@@ -71,7 +71,7 @@ func PreOrderDetail(ctx *gin.Context) {
 
 func OrderDetail(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	orderId, _ := strconv.ParseInt(ctx.Param("order_id"), 10, 64)
 
 	if userId == int64(0) {

@@ -12,7 +12,7 @@ func Pay(ctx *gin.Context)  {
 	//todo 调起支付
 
 	//
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 
 	id,_ := strconv.ParseInt(ctx.PostForm("id"),10,64)
 	if userId == 0 {

@@ -3,7 +3,8 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	jwt "soulfire/pkg/token"
+	"soulfire/pkg/auth"
+	"soulfire/pkg/rsp"
 	"strings"
 )
 
@@ -13,33 +14,26 @@ func Verify() gin.HandlerFunc {
 
 		token := ctx.Request.Header.Get("Authorization")
 		fmt.Println(token)
-
-		if len(token) == 0 {
-
-			ctx.Set("user_id", int64(0))
-
-		} else if token == "Bearer" {
-
-			ctx.Set("user_id", int64(0))
-
-		}else {
-
-			token = strings.Fields(token)[1]
-
-			userToken, err := jwt.Parse(token)
-
-			if err != nil {
-
-				ctx.Set("user_id", int64(0))
-
-			} else {
-
-				ctx.Set("user_id", userToken.Id)
-			}
-
+		if s := strings.Split(token, " "); len(s) == 2 {
+			token = s[1]
 		}
-
-		ctx.Next()
+		if token == "" || token == "Bearer" {
+			ctx.Set("user_id", "0")
+		} else {
+			j := auth.NewJWT()
+			claims, err := j.ParseToken(token)
+			if err != nil {
+				if err == auth.TokenExpired {
+					rsp.JsonResonse(ctx, rsp.TokenExpried, nil, "")
+					ctx.Abort()
+					return
+				}
+				rsp.JsonResonse(ctx, rsp.InvalidToken, nil, "")
+				ctx.Abort()
+				return
+			}
+			ctx.Set("user_id", claims.Id)
+		}
 
 	}
 

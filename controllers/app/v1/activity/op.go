@@ -9,7 +9,7 @@ import (
 
 func Like(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if userId == 0 {
@@ -47,7 +47,7 @@ func Like(ctx *gin.Context) {
 
 func Favor(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if userId == 0 {

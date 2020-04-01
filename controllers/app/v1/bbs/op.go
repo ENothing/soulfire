@@ -16,7 +16,7 @@ import (
 
 func Like(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
@@ -62,7 +62,7 @@ type ArticleForm struct {
 
 func PublishArticle(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	thumb := ctx.PostForm("thumb")
 	title := ctx.PostForm("title")
 	content := ctx.PostForm("content")
@@ -111,7 +111,7 @@ func PublishArticle(ctx *gin.Context) {
 func EditArticle(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	thumb := ctx.PostForm("thumb")
 	title := ctx.PostForm("title")
 	content := ctx.PostForm("content")
@@ -182,7 +182,7 @@ func EditArticle(ctx *gin.Context) {
 func UpdateArticleToPublish(ctx *gin.Context)  {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
@@ -206,7 +206,7 @@ func UpdateArticleToPublish(ctx *gin.Context)  {
 func DeleteArticle(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
@@ -228,7 +228,7 @@ func DeleteArticle(ctx *gin.Context) {
 
 func Follow(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	followId, _ := strconv.ParseInt(ctx.Param("follow_id"), 10, 64)
 
 	if userId == 0 {
@@ -279,7 +279,7 @@ func Follow(ctx *gin.Context) {
 
 func Favor(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if userId == 0 {

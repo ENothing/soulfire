@@ -22,6 +22,7 @@ var (
 	FeedbackPostFailed  = &Errno{10307, "反馈提交失败,请重试"}
 	UserInfoGotFailed   = &Errno{10308, "用户信息获取失败"}
 	UserCreateFailed    = &Errno{10309, "用户信息创建失败,请重试"}
+	TokenExpried    = &Errno{10305, "用户授权已过期"}
 
 	//4活动
 	BannersNotExits          = &Errno{10401, "活动banner不存在"}

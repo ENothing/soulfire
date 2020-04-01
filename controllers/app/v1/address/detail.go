@@ -9,7 +9,7 @@ import (
 
 func Detail(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if userId == 0 {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
@@ -28,7 +28,7 @@ func Detail(ctx *gin.Context) {
 
 func DetailToOrder(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	id, _ := strconv.ParseInt(ctx.DefaultQuery("id","0"), 10, 64)
 
 	shipAddress, _ := models.GetAddress(id, userId)

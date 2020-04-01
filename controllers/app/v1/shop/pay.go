@@ -9,7 +9,7 @@ import (
 
 func Pay(ctx *gin.Context) {
 
-	userId := ctx.MustGet("user_id").(int64)
+	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
 	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
 	data := make(map[string]interface{})
 
