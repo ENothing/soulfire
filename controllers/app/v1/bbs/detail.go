@@ -1,8 +1,10 @@
 package bbs
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"soulfire/models"
+	"soulfire/pkg/logging"
 	"soulfire/pkg/rsp"
 	"strconv"
 )
@@ -59,12 +61,15 @@ func UserDetail(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("user_id"), 10, 64)
 	userId := ctx.MustGet("user_id").(int64)
+	fmt.Println(id)
+	fmt.Println(userId)
 
 	user := models.UserDetail{}
 
 	userInfo, err := user.GetUserById(id, userId)
 
 	if err != nil {
+		logging.Logging(logging.ERR, err)
 		rsp.JsonResonse(ctx, rsp.UserNotExits, nil, "")
 		return
 	}
