@@ -21,7 +21,7 @@ import (
 */
 func Buy(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	num, _ := strconv.ParseInt(ctx.DefaultPostForm("num", "1"), 10, 64)
 	goodsSpuId, _ := strconv.ParseInt(ctx.PostForm("goods_spu_id"), 10, 64)
 	goodsId, _ := strconv.ParseInt(ctx.PostForm("goods_id"), 10, 64)
@@ -30,7 +30,7 @@ func Buy(ctx *gin.Context) {
 	var realPrice float64
 	var discountPrice float64
 
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}
@@ -186,7 +186,7 @@ func Buy(ctx *gin.Context) {
 */
 func CancelOrder(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
 
 	if userId == 0 {
@@ -209,7 +209,7 @@ func CancelOrder(ctx *gin.Context) {
 */
 func InitiateRefund(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
 	reason := ctx.PostForm("reason")
 	rType, _ := strconv.ParseInt(ctx.DefaultPostForm("r_type", "1"), 10, 64)
@@ -306,7 +306,7 @@ func InitiateRefund(ctx *gin.Context) {
 */
 func PostReturnInfo(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	refundId, _ := strconv.ParseInt(ctx.PostForm("refund_id"), 10, 64)
 	expressN := ctx.PostForm("express_n")
 	expressId, _ := strconv.ParseInt(ctx.PostForm("express_id"), 10, 64)
@@ -344,7 +344,7 @@ func PostReturnInfo(ctx *gin.Context) {
 
 func CancelRefund(ctx *gin.Context)  {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
 
 	if userId == 0 {

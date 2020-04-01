@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"soulfire/pkg/auth"
 	"soulfire/pkg/rsp"
@@ -21,8 +20,6 @@ func Verify() gin.HandlerFunc {
 		} else {
 			j := auth.NewJWT()
 			claims, err := j.ParseToken(token)
-			fmt.Println(claims)
-			fmt.Println(claims.Id)
 
 			if err != nil {
 				if err == auth.TokenExpired {
@@ -34,7 +31,7 @@ func Verify() gin.HandlerFunc {
 				ctx.Abort()
 				return
 			}
-			ctx.Set("user_id", claims.Id)
+			ctx.Set("user_id", claims.ID)
 		}
 
 	}

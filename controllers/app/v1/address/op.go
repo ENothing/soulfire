@@ -22,14 +22,14 @@ func AddAddress(ctx *gin.Context) {
 
 	var isDefault int64
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	name := ctx.PostForm("name")
 	mobile := ctx.PostForm("mobile")
 	province := ctx.PostForm("province")
 	city := ctx.PostForm("city")
 	district := ctx.PostForm("district")
 	detailAddress := ctx.PostForm("detail_address")
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}
@@ -85,7 +85,7 @@ func AddAddress(ctx *gin.Context) {
 
 func UpdateAddress(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	name := ctx.PostForm("name")
@@ -94,7 +94,7 @@ func UpdateAddress(ctx *gin.Context) {
 	city := ctx.PostForm("city")
 	district := ctx.PostForm("district")
 	detailAddress := ctx.PostForm("detail_address")
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}
@@ -147,9 +147,9 @@ func UpdateAddress(ctx *gin.Context) {
 
 func UpdateDefaultAddress(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}
@@ -167,9 +167,9 @@ func UpdateDefaultAddress(ctx *gin.Context) {
 
 func DelAddress(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}

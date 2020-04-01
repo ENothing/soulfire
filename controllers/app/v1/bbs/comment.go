@@ -10,12 +10,12 @@ import (
 
 func PostComment(ctx *gin.Context)  {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.PostForm("id"), 10, 64)
 	parentId, _ := strconv.ParseInt(ctx.PostForm("parent_id"), 10, 64)
 	replyId, _ := strconv.ParseInt(ctx.PostForm("reply_id"), 10, 64)
 	content := ctx.PostForm("content")
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}

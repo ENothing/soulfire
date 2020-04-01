@@ -9,7 +9,7 @@ import (
 
 func AddressList(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 

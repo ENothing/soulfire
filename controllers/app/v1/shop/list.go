@@ -9,7 +9,7 @@ import (
 
 func GoodsList(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	brandId, _ := strconv.ParseInt(ctx.DefaultQuery("brand_id", "0"), 10, 64)
 	kword := ctx.DefaultQuery("kword", "")

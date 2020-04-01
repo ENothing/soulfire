@@ -9,7 +9,7 @@ import (
 
 func ArticleList(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	cateId, _ := strconv.ParseInt(ctx.DefaultQuery("cate_id", "0"), 10, 64)
 	title := ctx.Query("title")
 	sort, _ := strconv.ParseInt(ctx.DefaultQuery("sort", "0"), 10, 64)
@@ -126,7 +126,7 @@ func ArticleCateList(ctx *gin.Context) {
 
 func FollowsList(ctx *gin.Context)  {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
@@ -155,7 +155,7 @@ func FollowsList(ctx *gin.Context)  {
 
 func FollowedList(ctx *gin.Context)  {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)

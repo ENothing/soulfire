@@ -1,7 +1,6 @@
 package bbs
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"soulfire/models"
 	"soulfire/pkg/logging"
@@ -12,7 +11,7 @@ import (
 func Detail(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 
 
 	article, err := models.GetArticleById(id, userId)
@@ -36,15 +35,12 @@ func Detail(ctx *gin.Context) {
 func ArticleEditDetail(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 64)
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
-	if userId == 0 {
+	userId,_ := ctx.MustGet("user_id").(int64)
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}
-	if userId == 0 {
-		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
-		return
-	}
+
 
 	article, err := models.GetSelfArticleById(id, userId)
 
@@ -60,9 +56,7 @@ func ArticleEditDetail(ctx *gin.Context) {
 func UserDetail(ctx *gin.Context) {
 
 	id, _ := strconv.ParseInt(ctx.Param("user_id"), 10, 64)
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
-	fmt.Println(id)
-	fmt.Println(userId)
+	userId,_ := ctx.MustGet("user_id").(int64)
 
 	user := models.UserDetail{}
 

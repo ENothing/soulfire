@@ -4,12 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"soulfire/models"
 	"soulfire/pkg/rsp"
-	"strconv"
 )
 
 func GetHistory(ctx *gin.Context)  {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	data := make(map[string]interface{})
 
 	shopSearchHistory,_ := models.GetHistoryByUserId(userId)
@@ -41,7 +40,7 @@ func DynamicHistory(ctx *gin.Context)  {
 
 func DelSearchHistory(ctx *gin.Context)  {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 
 	err := models.DelAllHistoryByUserId(userId)
 	if err != nil {

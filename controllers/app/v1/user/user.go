@@ -9,7 +9,6 @@ import (
 	"soulfire/pkg/auth"
 	"soulfire/pkg/config"
 	"soulfire/pkg/rsp"
-	"strconv"
 	"time"
 )
 
@@ -90,7 +89,7 @@ func Login(ctx *gin.Context) {
 
 func Info(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 
 	data := make(map[string]interface{})
 

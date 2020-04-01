@@ -10,7 +10,7 @@ import (
 
 func GetExpress(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
 
 	if userId == int64(0) {

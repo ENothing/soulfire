@@ -9,7 +9,7 @@ import (
 
 func CanUseCouponsList(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	goodsId, _ := strconv.ParseInt(ctx.Query("goods_id"), 10, 64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
@@ -43,7 +43,7 @@ func UserCouponList(ctx *gin.Context) {
 
 	data := make(map[string]interface{})
 
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}

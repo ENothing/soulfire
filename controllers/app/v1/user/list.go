@@ -9,7 +9,7 @@ import (
 
 func PersonalCollection(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	//status := ctx.DefaultQuery("status", "")
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
@@ -41,7 +41,7 @@ func PersonalCollection(ctx *gin.Context) {
 
 func FollowsList(ctx *gin.Context)  {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 
@@ -73,7 +73,7 @@ func FollowsList(ctx *gin.Context)  {
 
 func FollowedList(ctx *gin.Context)  {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "10"), 10, 64)
 
@@ -104,12 +104,12 @@ func FollowedList(ctx *gin.Context)  {
 }
 
 func MyArticleList(ctx *gin.Context)  {
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	page, _ := strconv.ParseInt(ctx.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseInt(ctx.DefaultQuery("pageSize", "5"), 10, 64)
 
 	data := make(map[string]interface{})
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}

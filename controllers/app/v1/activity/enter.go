@@ -23,7 +23,7 @@ type EnterForm struct {
 */
 func Enter(ctx *gin.Context) {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 
 	id, _ := strconv.ParseInt(ctx.PostForm("id"), 10, 64)
 	name := ctx.PostForm("name")
@@ -35,7 +35,7 @@ func Enter(ctx *gin.Context) {
 	personNum, _ := strconv.ParseInt(ctx.DefaultPostForm("person_num", "1"), 10, 64)
 	//couponId, _ := strconv.ParseInt(ctx.PostForm("coupon_id"), 10, 64)
 
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}

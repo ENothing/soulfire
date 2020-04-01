@@ -11,14 +11,14 @@ import (
 
 func InitiateRefund(ctx *gin.Context)  {
 
-	userId,_ := strconv.ParseInt(ctx.MustGet("user_id").(string), 10, 64)
+	userId,_ := ctx.MustGet("user_id").(int64)
 	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
 	reason := ctx.PostForm("reason")
 
 
 	nowTime := utils.TimeFormat(time.Now(), 0)
 
-	if userId == 0 {
+	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
 		return
 	}
