@@ -61,7 +61,7 @@ func (ud *UserDetail) GetUserById(id, userId int64) (*UserDetail, error) {
 	res := db.DB.Self.
 		Where("users.id = ?", id).
 		Joins("LEFT JOIN articles AS a ON a.user_id = users.id").
-		Select("users.id,users.nickname,users.gender,users.follows,users.is_followed,users.head_url,users.sign,SUM(a.likes) as likes").
+		Select("users.id as id,users.nickname as nickname,users.gender as gender,users.follows as follows,users.is_followed as is_followed,users.head_url as head_url,users.sign as sign,SUM(a.likes) as likes").
 		First(&ud)
 
 	//db.DB.Self.Model(&UserFollow{}).Where("follow_id = ?", id).Count(&ud.Follows)
