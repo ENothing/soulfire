@@ -13,7 +13,6 @@ func Verify() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		token := ctx.Request.Header.Get("Authorization")
-		fmt.Println(token)
 		if s := strings.Split(token, " "); len(s) == 2 {
 			token = s[1]
 		}
@@ -22,6 +21,9 @@ func Verify() gin.HandlerFunc {
 		} else {
 			j := auth.NewJWT()
 			claims, err := j.ParseToken(token)
+			fmt.Println(claims)
+			fmt.Println(claims.Id)
+
 			if err != nil {
 				if err == auth.TokenExpired {
 					rsp.JsonResonse(ctx, rsp.TokenExpried, nil, "")
