@@ -3,10 +3,11 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/silenceper/wechat"
 	"soulfire/models"
+	"soulfire/pkg/config"
 	"soulfire/pkg/rsp"
 	jwt "soulfire/pkg/token"
-	"soulfire/pkg/wechat"
 )
 
 func Login(ctx *gin.Context) {
@@ -23,36 +24,39 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	wc := wechat.Wc{}
+	app, _ := config.Cfg.GetSection("wechat")
+	wc := wechat.NewWechat(&wechat.Config{
+		AppID:     app.Key("APPID").String(),
+		AppSecret: app.Key("SECRET").String(),
+	})
 
-	data := wc.Login().Code2Session(code)
+	wxa := wc.GetMiniProgram()
 
-	if data["errcode"] != nil && data["errcode"] != int64(0) {
-		rsp.JsonResonse(ctx, rsp.LoginFailed, nil, (data["errmsg"]).(string))
+	data, err := wxa.Code2Session(code)
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.LoginFailed, nil, "")
 		return
 	}
 
-	openid := (data["openid"]).(string)
-	sessionKey := (data["session_key"]).(string)
-
-	user, err := models.GetUserByOpenid(openid)
+	user, err := models.GetUserByOpenid(data.OpenID)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		rsp.JsonResonse(ctx, rsp.DatabaseErr, nil, "")
 		return
 	}
+
 	if err == gorm.ErrRecordNotFound {
 
-		userInfo := wc.Decrypt().UserInfo(sessionKey, encryptedData, iv)
-		if userInfo == nil {
-			rsp.JsonResonse(ctx, rsp.UserInfoGotFailed, nil, "")
+		userInfo, err := wxa.Decrypt(data.SessionKey, encryptedData, iv)
+		if err != nil {
+			rsp.JsonResonse(ctx, rsp.LoginFailed, nil, "")
 			return
 		}
 
 		user := models.User{
-			Openid:   openid,
-			HeadUrl:  userInfo.HeadUrl,
+			Openid:   userInfo.OpenID,
+			HeadUrl:  userInfo.AvatarURL,
 			NickName: userInfo.NickName,
-			Gender:   userInfo.Gender,
+			Gender:   int64(userInfo.Gender),
 		}
 
 		userId, err = user.Create()
@@ -73,8 +77,8 @@ func Login(ctx *gin.Context) {
 	userToken := jwt.UserToken{
 		userId,
 		nickName,
-		openid,
-		sessionKey,
+		data.OpenID,
+		data.SessionKey,
 	}
 
 	token, err := jwt.Encode(userToken)
@@ -91,14 +95,13 @@ func Login(ctx *gin.Context) {
 
 }
 
-func Info(ctx *gin.Context)  {
-
+func Info(ctx *gin.Context) {
 
 	userId := ctx.MustGet("user_id").(int64)
 
 	data := make(map[string]interface{})
 
-	user,_ := models.GetUserInfoById(userId)
+	user, _ := models.GetUserInfoById(userId)
 
 	activityOrderUnpayCount := models.GetActivityOrderUnpayCount(userId)
 	shopOrderUnpayCount := models.GetShopOrderUnpayCount(userId)
@@ -110,4 +113,3 @@ func Info(ctx *gin.Context)  {
 	rsp.JsonResonse(ctx, rsp.OK, data, "")
 
 }
-

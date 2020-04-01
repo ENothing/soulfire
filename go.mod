@@ -24,6 +24,7 @@ require (
 	github.com/qiniu/api.v7 v7.2.5+incompatible
 	github.com/qiniu/x v7.0.8+incompatible
 	github.com/satori/go.uuid v1.2.0
+	github.com/silenceper/wechat v2.0.1+incompatible
 	github.com/stretchr/objx v0.2.0 // indirect
 	golang.org/x/crypto v0.0.0-20200109152110-61a87790db17 // indirect
 	golang.org/x/mod v0.2.0 // indirect

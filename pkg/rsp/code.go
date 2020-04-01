@@ -13,7 +13,7 @@ var (
 	UploadErr   = &Errno{10202, "文件上传失败，请重试"}
 
 	//3 用户
-	LoginFailed         = &Errno{10301, "登录失败"}
+	LoginFailed         = &Errno{10301, "登录失败,请重试"}
 	GenerateTokenErr    = &Errno{10302, "Generare Token Error"}
 	InvalidToken        = &Errno{10303, "Invalid token"}
 	UserNotExits        = &Errno{10304, "用户信息获取失败"}
