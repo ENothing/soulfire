@@ -9,7 +9,7 @@ import (
 type User struct {
 	Model
 	Username   string     `json:"username" gorm:"column:username;not null" binding:"required" validate:"min=1,max=32"`
-	ParentId   int64      `json:"parent_id" gorm:"column:parent_id;not null"`
+	//ParentId   int64      `json:"parent_id" gorm:"column:parent_id;not null"`
 	Openid     string     `json:"openid" gorm:"column:openid;not null"`
 	NickName   string     `json:"nickname" gorm:"column:nickname;not null"`
 	Gender     int64      `json:"gender" gorm:"column:gender;not null"`
