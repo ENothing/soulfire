@@ -11,7 +11,9 @@ type UserInfo struct {
 func (d *Decrypt) UserInfo(sessionKey, encryptedData, iv string) *UserInfo {
 
 	res, err := ToDecrypt(sessionKey, encryptedData, iv)
-	logging.Logging(logging.INFO, res)
+	logging.Logging(logging.INFO, sessionKey)
+	logging.Logging(logging.INFO, encryptedData)
+	logging.Logging(logging.INFO, iv)
 	logging.Logging(logging.ERR, err)
 	if err != nil {
 
