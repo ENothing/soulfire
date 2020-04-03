@@ -113,7 +113,7 @@ func generateToken(userId int64)(string,error) {
 		userId,
 		jwt.StandardClaims{
 			NotBefore: int64(time.Now().Unix() - 1000), // 签名生效时间
-			ExpiresAt: int64(time.Now().Unix() + 10800), // 过期时间 一小时
+			ExpiresAt: int64(time.Now().Unix() + 28800), // 过期时间 8小时
 			Issuer:    "en",
 		},
 	}
