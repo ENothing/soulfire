@@ -47,6 +47,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 			a.GET("detail/:id", activity.Detail)   //活动详情
 			a.GET("cates", activity.ActivityCates) //活动分类
 			a.GET("dynamic_history", activity.DynamicHistory) //动态获取相似搜索内容
+			a.POST("send_sms", activity.SendSms) //动态获取相似搜索内容
+			a.POST("get_code", activity.GetCode) //动态获取相似搜索内容
 
 		}
 		ma := app.Group("activity").Use(middleware.Verify())

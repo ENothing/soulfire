@@ -4,6 +4,8 @@ import (
 	"crypto/md5"
 	"fmt"
 	uuid "github.com/satori/go.uuid"
+	"math/rand"
+	"time"
 )
 
 /**
@@ -22,5 +24,11 @@ func Uid(prefix string) string {
 	uid := uuid.Must(uuid.NewV4(), nil)
 
 	return (prefix + uid.String())[0:24]
+
+}
+
+func Code() string{
+
+	return fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(1000000))
 
 }

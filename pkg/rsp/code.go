@@ -45,6 +45,7 @@ var (
 
 
 
+
 	//bbs
 	ArticleNotExits      = &Errno{10501, "文章不存在"}
 	ArticleCreateFailed  = &Errno{10502, "文章发表失败"}
@@ -97,4 +98,8 @@ var (
 
 	//快递
 	ExpressGetFailed = &Errno{12001, "暂未获取到快递信息"}
+
+	//SMS
+	MobileEmpty = &Errno{13001, "手机号不能为空哦~"}
+	SendSmsFailed = &Errno{13002, "短信发送失败，请重试"}
 )
