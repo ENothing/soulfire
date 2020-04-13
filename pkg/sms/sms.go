@@ -1,8 +1,9 @@
 package sms
 
 import (
-	"fmt"
-	"github.com/patrickmn/go-cache"
+	"encoding/json"
+	"soulfire/pkg/config"
+	"soulfire/pkg/db"
 	"soulfire/utils"
 	"time"
 )
@@ -11,25 +12,44 @@ const Url = "http(s)://cxkjsms.market.alicloudapi.com/chuangxinsms/dxjk"
 
 type Sms struct {
 	mobile string
-	cache  *cache.Cache
+}
+type Response struct {
+
 }
 
-func NewSms(mobile string) *Sms {
-	return &Sms{mobile: mobile, cache: cache.New(30*time.Second, 20*time.Minute)}
+func New(mobile string) *Sms {
+	return &Sms{mobile: mobile}
 }
 
-func (s *Sms) SendCode() {
+func (s *Sms) SendCode()(  error){
+
+	app, _ := config.Cfg.GetSection("aliyun")
 
 	code := utils.Code()
 
-	fmt.Println(code)
-	s.cache.Set(s.mobile, code, cache.DefaultExpiration)
+	header := []utils.Header{
+		utils.Header{
+			Key:   "Authorization",
+			Value: "APPCODE " + app.Key("AppCode").String(),
+		},
+	}
+
+	_, err := utils.HttpPost(Url,nil, header)
+	if err != nil {
+		return err
+	}
+
+
+
+
+	//err = json.Unmarshal(res,Response)
+
+
+	db.RedisDb.Set(s.mobile,code,10*time.Minute)
+
 
 }
 
-func (s *Sms)GetCode() (interface{},bool ){
-	fmt.Println(s.mobile)
-
-	return s.cache.Get(s.mobile)
-
+func (s *Sms) GetCode() (string, error) {
+	return db.RedisDb.Get(s.mobile).Result()
 }

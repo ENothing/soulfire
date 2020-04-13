@@ -32,7 +32,7 @@ const ExpInfoUrl = "https://ali-deliver.showapi.com/showapi_expInfo"
 
 func GetExpInfo(com, nu, receiverPhone, senderPhone string) *Express {
 
-	app, _ := config.Cfg.GetSection("express")
+	app, _ := config.Cfg.GetSection("aliyun")
 
 	url := ExpInfoUrl + "?com=" + com + "&nu=" + nu + "&receiverPhone=" + receiverPhone + "&senderPhone=" + senderPhone
 
