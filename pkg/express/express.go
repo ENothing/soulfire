@@ -2,9 +2,12 @@ package express
 
 import (
 	"encoding/json"
+	"fmt"
 	"soulfire/pkg/config"
+	"soulfire/pkg/db"
 	"soulfire/pkg/logging"
 	"soulfire/utils"
+	"time"
 )
 
 /**
@@ -17,7 +20,7 @@ senderPhone	STRING	可选	寄件人手机号后四位【手机号后四位填一
 type Express struct {
 	ShowApiResCode  int64   `json:"showapi_res_code"`
 	ShowApiResError string  `json:"showapi_res_error"`
-	ShowApiResBody  ResBody `json:"showapi_res_body"`
+	ShowApiResBody  interface{} `json:"showapi_res_body"`
 }
 
 type ResBody struct {
@@ -32,9 +35,32 @@ const ExpInfoUrl = "https://ali-deliver.showapi.com/showapi_expInfo"
 
 func GetExpInfo(com, nu, receiverPhone, senderPhone string) *Express {
 
+
+	cacheExpress ,err := db.RedisDb.Get(com+"-"+nu).Result()
+	if err == nil {
+
+		exp := utils.JsonDecode(cacheExpress)
+
+		express := &Express{}
+
+		express.ShowApiResBody = exp["showapi_res_body"]
+		express.ShowApiResError = (exp["showapi_res_error"]).(string)
+		express.ShowApiResCode = int64((exp["showapi_res_code"]).(float64))
+
+		if express.ShowApiResCode != int64(0) || express.ShowApiResError != "" {
+			logging.Logging(logging.ERR, "快递信息接口返回失败："+express.ShowApiResError)
+			return nil
+		}
+
+		db.RedisDb.Set(com+"-"+nu,utils.JsonEncode(express),time.Hour)
+
+		return express
+	}
+
 	app, _ := config.Cfg.GetSection("aliyun")
 
-	url := ExpInfoUrl + "?com=" + com + "&nu=" + nu + "&receiverPhone=" + receiverPhone + "&senderPhone=" + senderPhone
+	//url := ExpInfoUrl + "?com=" + com + "&nu=" + nu + "&receiverPhone=" + receiverPhone + "&senderPhone=" + senderPhone
+	url := "https://www.fastmock.site/mock/2e0245a5857209a26b82c6a67956af38/soulfire/express"
 
 	header := []utils.Header{
 		utils.Header{
@@ -55,11 +81,13 @@ func GetExpInfo(com, nu, receiverPhone, senderPhone string) *Express {
 		logging.Logging(logging.ERR, "快递信息json解析失败："+err.Error())
 		return nil
 	}
+	fmt.Println(express)
 
 	if express.ShowApiResCode != int64(0) || express.ShowApiResError != "" {
 		logging.Logging(logging.ERR, "快递信息接口返回失败："+express.ShowApiResError)
 		return nil
 	}
+	db.RedisDb.Set(com+"-"+nu,utils.JsonEncode(express),time.Hour)
 
 	return express
 

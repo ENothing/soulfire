@@ -4,18 +4,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"soulfire/models"
 	"soulfire/pkg/rsp"
+	"soulfire/pkg/sms"
 	"soulfire/pkg/verify"
 	"soulfire/utils"
 	"strconv"
 )
 
 type EnterForm struct {
-	Id        int64  `json:"id"`
-	Name      string `json:"name"  valid:"Required" ch:"姓名"`
-	Gender    int64  `json:"gender"`
-	Mobile    string `json:"mobile" valid:"Required;Mobile" ch:"手机号"`
-	SmsCode   string `json:"sms_code" valid:"Required" ch:"验证码"`
-	CNum      string `json:"c_num" valid:"Required" ch:"证件号码"`
+	Id      int64  `json:"id"`
+	Name    string `json:"name"  valid:"Required" ch:"姓名"`
+	Gender  int64  `json:"gender"`
+	Mobile  string `json:"mobile" valid:"Required;Mobile" ch:"手机号"`
+	SmsCode string  `json:"sms_code" valid:"Required" ch:"验证码"`
+	CNum    string `json:"c_num" valid:"Required" ch:"证件号码"`
 }
 
 /**
@@ -23,7 +24,7 @@ type EnterForm struct {
 */
 func Enter(ctx *gin.Context) {
 
-	userId,_ := ctx.MustGet("user_id").(int64)
+	userId, _ := ctx.MustGet("user_id").(int64)
 
 	id, _ := strconv.ParseInt(ctx.PostForm("id"), 10, 64)
 	name := ctx.PostForm("name")
@@ -52,6 +53,12 @@ func Enter(ctx *gin.Context) {
 	message := verify.FormVerify(&enter)
 	if message != nil {
 		rsp.JsonResonse(ctx, rsp.EnterActivityRequired, nil, message.(string))
+		return
+	}
+
+	cacheCode,err := sms.New(mobile).GetCode()
+	if err != nil || smsCode != cacheCode {
+		rsp.JsonResonse(ctx, rsp.SmsError, nil, "")
 		return
 	}
 
@@ -89,7 +96,7 @@ func Enter(ctx *gin.Context) {
 		CNum:          cNum,
 	}
 
-	id,err = activityOrder.Create()
+	id, err = activityOrder.Create()
 	if err != nil {
 		rsp.JsonResonse(ctx, rsp.CreateActivityOrderFaild, nil, "")
 		return

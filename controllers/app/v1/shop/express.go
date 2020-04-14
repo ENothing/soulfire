@@ -11,7 +11,7 @@ import (
 func GetExpress(ctx *gin.Context) {
 
 	userId,_ := ctx.MustGet("user_id").(int64)
-	orderId, _ := strconv.ParseInt(ctx.PostForm("order_id"), 10, 64)
+	orderId, _ := strconv.ParseInt(ctx.Query("order_id"), 10, 64)
 
 	if userId == int64(0) {
 		rsp.JsonResonse(ctx, rsp.PleaseLogin, nil, "")
@@ -39,17 +39,17 @@ func GetExpress(ctx *gin.Context) {
 
 	expInfo := express.GetExpInfo(abbreviation, deliveryN, "", "")
 
-	if expInfo == nil {
-		rsp.JsonResonse(ctx, rsp.ExpressGetFailed, nil, "")
-		return
-	}
-	if expInfo.ShowApiResBody.Flag == false || expInfo.ShowApiResBody.RetCode != int64(0) {
-		rsp.JsonResonse(ctx, rsp.ExpressGetFailed, nil, "")
-		return
-	}
+	//if expInfo == nil {
+	//	rsp.JsonResonse(ctx, rsp.ExpressGetFailed, nil, "")
+	//	return
+	//}
+	//if expInfo.ShowApiResBody.Flag == false || expInfo.ShowApiResBody.RetCode != int64(0) {
+	//	rsp.JsonResonse(ctx, rsp.ExpressGetFailed, nil, "")
+	//	return
+	//}
 
 	data := make(map[string]interface{})
-	data["path"] = expInfo.ShowApiResBody.Data
+	data["path"] = expInfo.ShowApiResBody
 	data["delivery_n"] = deliveryN
 	data["expressName"] = expressName
 

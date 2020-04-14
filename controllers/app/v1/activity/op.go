@@ -1,7 +1,6 @@
 package activity
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"soulfire/models"
 	"soulfire/pkg/rsp"
@@ -89,28 +88,21 @@ func SendSms(ctx *gin.Context)  {
 
 	mobile := ctx.PostForm("mobile")
 
-
 	if mobile == "" {
-
 		rsp.JsonResonse(ctx, rsp.MobileEmpty, nil, "")
-
+		return
 	}
 
-	sms.NewSms(mobile).SendCode()
-
-
-
+	err := sms.New(mobile).SendCode()
+	if err != nil {
+		rsp.JsonResonse(ctx, rsp.SendSmsFailed, nil, "")
+		return
+	}
 
 	rsp.JsonResonse(ctx, rsp.OK, nil, "")
 
 }
 
-func GetCode(ctx *gin.Context)  {
 
-	mobile := ctx.PostForm("mobile")
-	fmt.Println(sms.NewSms(mobile).GetCode())
-
-
-}
 
 

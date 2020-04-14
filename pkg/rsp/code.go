@@ -102,4 +102,5 @@ var (
 	//SMS
 	MobileEmpty = &Errno{13001, "手机号不能为空哦~"}
 	SendSmsFailed = &Errno{13002, "短信发送失败，请重试"}
+	SmsError = &Errno{13002, "验证码错误，请重试"}
 )
