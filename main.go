@@ -14,7 +14,7 @@ func main() {
 	db.DB.Init()
 	defer db.DB.Close()
 
-	db.RedisInit()
+	//db.RedisInit()
 
 	gin.SetMode(config.Runmode)
 
