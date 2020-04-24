@@ -8,6 +8,7 @@ import (
 	"soulfire/controllers/app/v1/bbs"
 	"soulfire/controllers/app/v1/coupon"
 	"soulfire/controllers/app/v1/shop"
+	"soulfire/controllers/app/v1/temp"
 	"soulfire/controllers/app/v1/user"
 	"soulfire/router/middleware"
 )
@@ -167,10 +168,10 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 
 
-		//t := app.Group("tool")
-		//{
-		//	t.GET("goods", tool.GenerateGoods)
-		//}
+		t := app.Group("tool")
+		{
+			t.POST("upload",temp.Upload)
+		}
 
 
 	}
