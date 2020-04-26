@@ -1,16 +1,14 @@
 package auth
 
 import (
-	"qiniupkg.com/x/errors.v7"
-	"soulfire/pkg/config"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/spf13/viper"
+	"qiniupkg.com/x/errors.v7"
 	"time"
 )
 
-var (
-	app, _    = config.Cfg.GetSection("app")
-	jwtSecret = []byte(app.Key("JWT_SECRET").String())
-)
+var jwtSecret = []byte(viper.GetString("App.Jwt_Secret"))
+
 
 // JWT 签名结构
 type JWT struct {

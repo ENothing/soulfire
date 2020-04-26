@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"soulfire/pkg/config"
@@ -11,12 +13,16 @@ import (
 
 func main() {
 
+	config.Conf().Init()
+
 	db.DB.Init()
 	defer db.DB.Close()
 
-	//db.RedisInit()
+	db.RedisInit()
 
-	gin.SetMode(config.Runmode)
+	fmt.Println(viper.GetString("App.Mode"))
+
+	gin.SetMode(viper.GetString("App.Mode"))
 
 	g := gin.New()
 

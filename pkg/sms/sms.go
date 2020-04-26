@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"soulfire/pkg/config"
+	"github.com/gomodule/redigo/redis"
+	"github.com/spf13/viper"
 	"soulfire/pkg/db"
 	"soulfire/pkg/logging"
 	"soulfire/utils"
@@ -31,24 +32,22 @@ func New(mobile string) *Sms {
 
 func (s *Sms) SendCode() error {
 
-	app, _ := config.Cfg.GetSection("aliyun")
-
 	code := utils.Code()
 
 	header := []utils.Header{
 		utils.Header{
 			Key:   "Authorization",
-			Value: "APPCODE " + app.Key("AppCode").String(),
+			Value: "APPCODE " + viper.GetString("AppCode"),
 		},
 	}
 
 	data := make(map[string]interface{})
 	data["mobile"] = s.mobile
-	data["content"] = "【SoulFire】你的验证码是："+code+"，10分钟内有效！"
+	data["content"] = "【SoulFire】你的验证码是：" + code + "，10分钟内有效！"
 
 	res, err := utils.HttpPost(Url, data, header)
 	if err != nil {
-		logging.Logging(logging.ERR,"短信接口请求失败原因："+err.Error())
+		logging.Logging(logging.ERR, "短信接口请求失败原因："+err.Error())
 		return err
 	}
 
@@ -60,18 +59,18 @@ func (s *Sms) SendCode() error {
 		return err
 	}
 
-	if resBody.ReturnStatus != "Success"{
-		logging.Logging(logging.ERR,"短信发送失败原因："+resBody.Message)
+	if resBody.ReturnStatus != "Success" {
+		logging.Logging(logging.ERR, "短信发送失败原因："+resBody.Message)
 		return errors.New(resBody.Message)
 	}
 
-
-	db.RedisDb.Set(s.mobile, code, 10*time.Minute)
-
+	db.R.Do("SET", s.mobile, code, "EX", 10*time.Minute)
 	return nil
 
 }
 
 func (s *Sms) GetCode() (string, error) {
-	return db.RedisDb.Get(s.mobile).Result()
+
+	return redis.String(db.R.Do("GET", s.mobile))
+
 }

@@ -1,23 +1,25 @@
 package db
 
 import (
-	"github.com/go-redis/redis/v7"
+	"fmt"
+	"github.com/gomodule/redigo/redis"
+	"github.com/spf13/viper"
+	"soulfire/pkg/logging"
 )
 
-var RedisDb *redis.Client
-
+var R redis.Conn
 
 func RedisInit()  {
-	RedisDb = redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379", // Redis地址
-		Password: "GUhcF7bSK?u@Rtp",  // Redis账号
-		DB:       1,   // Redis库
-		//PoolSize: 10,  // Redis连接池大小
-		//MaxRetries: 3,              // 最大重试次数
-		//IdleTimeout: 10*time.Second,            // 空闲链接超时时间
-	})
-	_, err := RedisDb.Ping().Result()
+
+	var err error
+	address := viper.GetString("Redis.address")+":"+viper.GetString("Redis.port")
+	R ,err = redis.Dial("tcp",address)
+
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		logging.Logging(logging.ERR,err.Error())
 	}
+
+	defer R.Close()
+
 }

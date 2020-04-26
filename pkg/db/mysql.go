@@ -4,7 +4,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"soulfire/pkg/config"
+	"github.com/spf13/viper"
 	"soulfire/pkg/logging"
 )
 
@@ -13,9 +13,8 @@ type Database struct {
 	//Docker *gorm.DB
 }
 
-var (
-	DB *Database
-)
+var DB *Database
+
 
 func (db *Database) Init() {
 	DB = &Database{
@@ -25,30 +24,16 @@ func (db *Database) Init() {
 
 func GetSelfDB() *gorm.DB {
 
-	mysqlConfig, _ := config.Cfg.GetSection("mysql")
-
-	host := mysqlConfig.Key("HOST").String()
-	port := mysqlConfig.Key("PORT").String()
-	database := mysqlConfig.Key("DATABASE").String()
-	user := mysqlConfig.Key("USER").String()
-	password := mysqlConfig.Key("PASSWORD").String()
+	host := viper.GetString("Mysql.Host")
+	port := viper.GetString("Mysql.Port")
+	database := viper.GetString("Mysql.Database")
+	user := viper.GetString("Mysql.Username")
+	password := viper.GetString("Mysql.Password")
 
 
 	return connect(user, password, host+":"+port, database)
 }
 
-//func GetDockerDB() *gorm.DB {
-//
-//	mysql_config, _ := config.Cfg.GetSection("mysql")
-//
-//	host := mysql_config.Key("HOST").String()
-//	port := mysql_config.Key("PORT").String()
-//	database := mysql_config.Key("DATABASE").String()
-//	user := mysql_config.Key("USER").String()
-//	password := mysql_config.Key("PASSWORD").String()
-//
-//	return connect(user,password,host+":"+port,database)
-//}
 
 func connect(user, password, host, database string) *gorm.DB {
 

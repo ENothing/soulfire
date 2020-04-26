@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/qiniu/api.v7/auth/qbox"
 	"github.com/qiniu/api.v7/storage"
-	"soulfire/pkg/config"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -14,10 +14,8 @@ type Config struct {
 
 func GetQiniuConfig() *Config {
 
-	app, _ := config.Cfg.GetSection("qiniu")
-
-	accessKey := app.Key("AccessKey").String()
-	secretKey := app.Key("SecretKey").String()
+	accessKey := viper.GetString("Qiniu.AccessKey")
+	secretKey := viper.GetString("Qiniu.SecretKey")
 
 	return &Config{
 		AccessKey:   accessKey,

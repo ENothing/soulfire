@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/silenceper/wechat"
+	"github.com/spf13/viper"
 	"soulfire/models"
 	"soulfire/pkg/auth"
-	"soulfire/pkg/config"
 	"soulfire/pkg/rsp"
 	"time"
 )
@@ -25,10 +25,9 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	app, _ := config.Cfg.GetSection("wechat")
 	wc := wechat.NewWechat(&wechat.Config{
-		AppID:     app.Key("APPID").String(),
-		AppSecret: app.Key("SECRET").String(),
+		AppID:     viper.GetString("Wechat.AppId"),
+		AppSecret: viper.GetString("Wechat.Secret"),
 	})
 
 	wxa := wc.GetMiniProgram()

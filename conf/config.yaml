@@ -1,0 +1,35 @@
+App:
+  Mode: debug
+  Jwt_Secret:
+  Token_Expries_At: 86400
+
+Mysql:
+  Host: 127.0.0.1
+  Port: 3306
+  Database:
+  Username: root
+  Password: root
+
+Redis:
+  Address:
+  Port:
+  Db:
+  Password:
+
+Wechat:
+  AppId:
+  Secret:
+  MchId:
+  Key:
+
+Aliyun:
+  AppKey:
+  AppSecret:
+  AppCode:
+
+Qiniu:
+  AccessKey:
+  SecretKey:
+  MediaUrl:
+
+

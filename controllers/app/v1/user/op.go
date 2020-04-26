@@ -2,10 +2,10 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 	"os"
 	"path"
 	"soulfire/models"
-	"soulfire/pkg/config"
 	"soulfire/pkg/qiniu"
 	"soulfire/pkg/rsp"
 	"soulfire/pkg/verify"
@@ -60,8 +60,7 @@ func PostFeedback(ctx *gin.Context) {
 
 func Upload(ctx *gin.Context) {
 
-	app, _ := config.Cfg.GetSection("qiniu")
-	MediaUrl := app.Key("MediaUrl").String()
+	MediaUrl := viper.GetString("Qiniu.MediaUrl")
 	file, _ := ctx.FormFile("file")
 	bucket := "soulfire-media"
 
